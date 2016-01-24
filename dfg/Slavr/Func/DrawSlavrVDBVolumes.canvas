@@ -1,0 +1,63 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "title" : "DrawSlavrVDBVolumes",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "volumeInstance",
+      "execPortType" : "Out",
+      "typeSpec" : "InlineInstance"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "IO",
+      "name" : "result",
+      "execPortType" : "IO",
+      "typeSpec" : "Vec3"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "handle",
+      "execPortType" : "IO",
+      "typeSpec" : "DrawingHandle"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
+        },
+      "nodePortType" : "IO",
+      "name" : "volume",
+      "execPortType" : "IO",
+      "typeSpec" : "VDBVolumes"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "path",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "String" : "density"
+        },
+      "name" : "field",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "D3AF63512E2BDD19241914AB1A284828",
+  "code" : "require Slavr;\n\ndfgEntry {\n  drawSlavrVDBVolumes(volumeInstance, result, handle, volume, path, field);\n}\n"
+  }

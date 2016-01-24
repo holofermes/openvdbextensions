@@ -1,0 +1,42 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by PixelRegion"
+    },
+  "title" : "PixelRegion",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "a",
+      "execPortType" : "In",
+      "typeSpec" : "Vec2"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "b",
+      "execPortType" : "In",
+      "typeSpec" : "Vec2"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "PixelRegion"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "B58DF94CD0A28F03C75675CEFAC839D0",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = PixelRegion(a, b);\n}\n"
+  }

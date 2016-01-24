@@ -1,0 +1,19 @@
+// Created by kl2dfg (processConstant)
+{
+  "objectType" : "Func",
+  "title" : "VolumeRender_State_Rendering",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "value",
+      "execPortType" : "Out",
+      "typeSpec" : "VolumeRender_State"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "EB3B67AD4E635E415D4CBD6E23C93E63",
+  "code" : "require Slavr;\n\ndfgEntry {\n  value = VolumeRender_State_Rendering;\n}\n"
+  }

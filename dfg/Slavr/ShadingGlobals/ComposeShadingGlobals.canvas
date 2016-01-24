@@ -1,0 +1,57 @@
+// Created by kl2dfg (processComposeFunction)
+{
+  "objectType" : "Func",
+  "title" : "-> ShadingGlobals",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "scene",
+      "execPortType" : "In",
+      "typeSpec" : "Ref<RTCScene>"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "light",
+      "execPortType" : "In",
+      "typeSpec" : "Ref<SlavrLight>"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "materials",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrMaterial<>"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "pixel",
+      "execPortType" : "In",
+      "typeSpec" : "Vec2"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "geo",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrGeo"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "ShadingGlobals"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "ED0AA50CE031E30228BE862C4F9681D3",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result.scene = scene;\n  result.light = light;\n  result.materials = materials;\n  result.pixel = pixel;\n  result.geo = geo;\n}\n"
+  }

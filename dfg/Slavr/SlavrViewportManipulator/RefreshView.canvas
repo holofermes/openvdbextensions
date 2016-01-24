@@ -1,0 +1,22 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by SlavrViewportManipulator"
+    },
+  "title" : "RefreshView",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrViewportManipulator"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "6DF18D1DE23308FDFFCE917BCB1152FD",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.refreshView();\n}\n"
+  }

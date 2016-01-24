@@ -1,0 +1,49 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "title" : "AddCuboidAndVertexColor",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
+        },
+      "nodePortType" : "IO",
+      "name" : "mesh",
+      "execPortType" : "IO",
+      "typeSpec" : "Ref<PolygonMesh>"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 249,\n  \"g\" : 157,\n  \"b\" : 28\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "xfo",
+      "execPortType" : "In",
+      "typeSpec" : "Xfo"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "attr",
+      "execPortType" : "IO",
+      "typeSpec" : "Ref<ColorAttribute>"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 0,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "value",
+      "execPortType" : "In",
+      "typeSpec" : "Color"
+      }
+    ],
+  "extDeps" : {
+    "VdbVoxelizer" : "*"
+    },
+  "presetGUID" : "8B12D277D106B2B50F3E7CA19342B456",
+  "code" : "require VdbVoxelizer;\n\ndfgEntry {\n  Ref<PolygonMesh> mesh_ref = mesh;\n  Ref<ColorAttribute> attr_ref = attr;\n  addCuboidAndVertexColor(mesh_ref, xfo, attr_ref, value);\n}\n"
+  }

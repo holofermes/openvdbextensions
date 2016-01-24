@@ -1,0 +1,22 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by SlavrViewport"
+    },
+  "title" : "CommitScene",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrViewport"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "DCC6D6AF09FBD40A298804A499F6244E",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.commitScene();\n}\n"
+  }

@@ -1,0 +1,110 @@
+require FabricSynchronization;
+require Singletons;
+require OpenVDB;
+
+object VolumeCache{
+  GridBase mGrids[String];
+  FloatGrid mFloatGrids[String];
+  SimpleLock lock;
+};
+
+function VolumeCache VolumeCache.getInstance() {
+  return VolumeCache_GetInstance();
+}
+
+function VolumeCache() {
+  if(VolumeCache(this).type() == VolumeCache)
+    this.init('VolumeCache');
+}
+
+function VolumeCache(String name) {
+  this.init(name);
+}
+
+function VolumeCache.init!(String name) {
+  this.lock = SimpleLock(name);
+}
+
+function Ref<GridBase> VolumeCache.getSet!(String filename, String field) {
+  AutoLock AL(this.lock);
+
+  String cacheName = filename+"."+field;
+  Boolean hasCache = false;
+
+  for (cache in this.mGrids)
+    if(cache==cacheName){
+      hasCache=true;
+      break;
+    }
+
+  if (!hasCache){
+    FileVDB file(filename);
+    file.open();
+    if(!file.hasGrid(field)){
+      setError("Error, file :"+filename+" does not have: "+field+".");
+      file.close();
+      return null;
+    } else{
+      report("Reading from file :"+filename+" field: "+field+".");
+      this.mGrids[cacheName]=file.readGrid(field);
+      file.close();
+    }
+  }
+  return this.mGrids[cacheName];
+}
+
+function Ref<FloatGrid> VolumeCache.setGet!(String filename, String field) {
+  AutoLock AL(this.lock);
+
+  String cacheName = filename+"."+field;
+  Boolean hasCache = false;
+
+  for (cache in this.mGrids)
+    if(cache==cacheName){
+      hasCache=true;
+      break;
+    }
+
+  if (!hasCache){
+    FileVDB file(filename);
+    file.open();
+    if(!file.hasGrid(field)){
+      setError("Error, file :"+filename+" does not have: "+field+".");
+      file.close();
+      return null;
+    } else{
+      report("Reading from file :"+filename+" field: "+field+".");
+      this.mGrids[cacheName]=file.readGrid(field);
+      this.mFloatGrids[cacheName]=FloatGrid(this.mGrids[cacheName]);
+      file.close();
+    }
+  }
+  hasCache=false;
+  for (cache in this.mFloatGrids)
+    if(cache==cacheName){
+      hasCache=true;
+      break;
+    }
+  if (!hasCache){
+    this.mFloatGrids[cacheName]=FloatGrid(this.mGrids[cacheName]);
+  }
+
+  return this.mFloatGrids[cacheName];
+}
+
+
+
+function VolumeCache VolumeCache_GetInstance() {
+  SimpleLock lock = SimpleLock("OpenVDB_VolumeCache_Lock");
+  AutoLock AL(lock);
+
+  Object volumeCache = Singleton_get("VolumeCache");
+
+  // Initialize the cache
+  if(volumeCache == null) {
+    volumeCache = VolumeCache();
+    Singleton_set("VolumeCache", volumeCache);
+  }
+
+  return volumeCache;
+}

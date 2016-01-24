@@ -1,0 +1,156 @@
+// Created by kl2dfg (processDecomposeFunction)
+{
+  "objectType" : "Func",
+  "title" : "PolygonMeshTo ->",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "value",
+      "execPortType" : "In",
+      "typeSpec" : "PolygonMeshTo"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "flags",
+      "execPortType" : "Out",
+      "typeSpec" : "UInt32"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
+        },
+      "nodePortType" : "In",
+      "name" : "imesh",
+      "execPortType" : "Out",
+      "typeSpec" : "Ref<PolygonMesh>"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "voxelSize",
+      "execPortType" : "Out",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "inBand",
+      "execPortType" : "Out",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "extBand",
+      "execPortType" : "Out",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 249,\n  \"g\" : 157,\n  \"b\" : 28\n  }"
+        },
+      "nodePortType" : "In",
+      "name" : "imat",
+      "execPortType" : "Out",
+      "typeSpec" : "Xfo"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
+        },
+      "nodePortType" : "In",
+      "name" : "points",
+      "execPortType" : "Out",
+      "typeSpec" : "Points"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "sampleGradient",
+      "execPortType" : "Out",
+      "typeSpec" : "Boolean"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "cull",
+      "execPortType" : "Out",
+      "typeSpec" : "Boolean"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "minCutoff",
+      "execPortType" : "Out",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "maxCutoff",
+      "execPortType" : "Out",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "In",
+      "name" : "minBBox",
+      "execPortType" : "Out",
+      "typeSpec" : "Vec3"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "In",
+      "name" : "maxBBox",
+      "execPortType" : "Out",
+      "typeSpec" : "Vec3"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 249,\n  \"g\" : 157,\n  \"b\" : 28\n  }"
+        },
+      "nodePortType" : "In",
+      "name" : "voxelXfo",
+      "execPortType" : "Out",
+      "typeSpec" : "Xfo"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "positions",
+      "execPortType" : "Out",
+      "typeSpec" : "Vec3Attribute"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "normals",
+      "execPortType" : "Out",
+      "typeSpec" : "Vec3Attribute"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "samples",
+      "execPortType" : "Out",
+      "typeSpec" : "ScalarAttribute"
+      }
+    ],
+  "extDeps" : {
+    "VdbVoxelizer" : "*"
+    },
+  "presetGUID" : "D222C8B7BFDF1FF34B6F4E6D97300710",
+  "code" : "require VdbVoxelizer;\n\ndfgEntry {\n  flags = value.flags;\n  imesh = value.imesh;\n  voxelSize = value.voxelSize;\n  inBand = value.inBand;\n  extBand = value.extBand;\n  imat = value.imat;\n  points = value.points;\n  sampleGradient = value.sampleGradient;\n  cull = value.cull;\n  minCutoff = value.minCutoff;\n  maxCutoff = value.maxCutoff;\n  minBBox = value.minBBox;\n  maxBBox = value.maxBBox;\n  voxelXfo = value.voxelXfo;\n  positions = value.positions;\n  normals = value.normals;\n  samples = value.samples;\n}\n"
+  }

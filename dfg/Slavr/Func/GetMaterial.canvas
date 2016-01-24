@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by ShadingGlobals,Slavr"
+    },
+  "title" : "GetMaterial",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "this",
+      "execPortType" : "In",
+      "typeSpec" : "$TYPE$"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "geomID",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrGeo"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "SlavrMaterial"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "E62A2741642D7BE45F4B3726BF324BFA",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.getMaterial(geomID);\n}\n"
+  }

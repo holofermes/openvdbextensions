@@ -1,0 +1,57 @@
+// Created by kl2dfg (processStructConstant)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiAlwaysShowDaisyChainPorts" : "true"
+    },
+  "title" : "IntegrationResult",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "IntegrationResult" : {
+          "luminance" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+            },
+          "transmittance" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+            },
+          "state" : {
+            "mEye" : {
+              "x" : 0,
+              "y" : 0,
+              "z" : 0
+              },
+            "mDir" : {
+              "x" : 1,
+              "y" : 0,
+              "z" : 0
+              },
+            "mInvDir" : {
+              "x" : 1,
+              "y" : null,
+              "z" : null
+              },
+            "mTimeSpan" : {
+              "t0" : 1e-09,
+              "t1" : 1.79769e+308
+              }
+            }
+          }
+        },
+      "name" : "value",
+      "execPortType" : "In",
+      "typeSpec" : "IntegrationResult"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "49CB17236621631965FCC692F8B35711",
+  "code" : "dfgEntry {\n}\n"
+  }

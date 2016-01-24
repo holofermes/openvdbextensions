@@ -1,0 +1,47 @@
+
+////////////////////////////////////////////////////////////////////////////////
+//                        Directional Light                                   //
+////////////////////////////////////////////////////////////////////////////////
+
+interface SlavrLightBase{
+  Vec3 direction?();
+  Vec3 irradiance?();
+};
+
+
+object SlavrLight: SlavrLightBase{
+  Vec3 D;                  //!< Light direction
+  Vec3 E;                  //!< Irradiance (W/m^2)
+};
+
+
+inline Vec3 SlavrLight.direction(){
+  Ref<SlavrLightBase> light = this;
+  return light.direction();
+}
+
+
+inline Vec3 SlavrLight.irradiance(){
+  Ref<SlavrLightBase> light = this;
+  return light.irradiance();
+}
+
+
+object SlavrDirectionalLight: SlavrLight{};
+
+
+inline SlavrDirectionalLight(Vec3 direction, Vec3 irradiance){
+  this.D = (direction).unit();
+  this.E = irradiance;
+}
+
+inline Vec3 SlavrDirectionalLight.direction(){
+  return this.D;
+}
+
+
+inline Vec3 SlavrDirectionalLight.irradiance(){
+  return this.E;
+}
+
+

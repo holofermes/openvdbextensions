@@ -1,0 +1,19 @@
+// Created by kl2dfg (processConstant)
+{
+  "objectType" : "Func",
+  "title" : "SCENE_LOCK",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "value",
+      "execPortType" : "Out",
+      "typeSpec" : "String"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "068423BEE7AD4C3092095195723D07AD",
+  "code" : "require Slavr;\n\ndfgEntry {\n  value = SCENE_LOCK;\n}\n"
+  }

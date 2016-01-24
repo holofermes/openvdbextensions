@@ -1,0 +1,22 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by SlavrVolumeMaterial"
+    },
+  "title" : "Load",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrVolumeMaterial"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "EFFB9ACFBFF2526DF3401467D620F5C2",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.load();\n}\n"
+  }

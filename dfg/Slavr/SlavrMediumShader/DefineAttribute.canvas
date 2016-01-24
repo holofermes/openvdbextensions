@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "define a surface attribute with a given name and type\n\n Supported by SlavrMediumShader"
+    },
+  "title" : "DefineAttribute",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrMediumShader"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "name",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "attributeType",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "C23F724D1AA0D92F9C0783E3E5BC8899",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.defineAttribute(name, attributeType);\n}\n"
+  }

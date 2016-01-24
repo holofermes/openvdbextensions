@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by InlineViewportVDB"
+    },
+  "title" : "InlineViewportVDB",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "viewport",
+      "execPortType" : "In",
+      "typeSpec" : "InlineViewport"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "region",
+      "execPortType" : "In",
+      "typeSpec" : "PixelRegion"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "InlineViewportVDB"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "AD7FB25EAD74A2A5936EFB353FDB06A5",
+  "code" : "require Slavr;\n\ndfgEntry {\n  Ref<InlineViewport> viewport_ref = viewport;\n  result = InlineViewportVDB(viewport_ref, region);\n}\n"
+  }

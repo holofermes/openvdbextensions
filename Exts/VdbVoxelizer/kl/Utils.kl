@@ -1,0 +1,40 @@
+inline addCuboidAndVertexColor(io Ref<PolygonMesh> mesh, Xfo xfo, io Ref<ColorAttribute> attr, Color value){
+	Size firstPoly = mesh.polygonCount();
+	mesh.addCuboid(xfo, 1, 1, 1, false, false);
+
+	// Face 0 (+Z)
+	mesh.setPolygonAttribute(firstPoly+0, 0, attr, value);
+	mesh.setPolygonAttribute(firstPoly+0, 1, attr, value);
+	mesh.setPolygonAttribute(firstPoly+0, 2, attr, value);
+	mesh.setPolygonAttribute(firstPoly+0, 3, attr, value);
+
+	// Face 1 (-Z)
+	mesh.setPolygonAttribute(firstPoly+1, 0, attr, value);
+	mesh.setPolygonAttribute(firstPoly+1, 1, attr, value);
+	mesh.setPolygonAttribute(firstPoly+1, 2, attr, value);
+	mesh.setPolygonAttribute(firstPoly+1, 3, attr, value);
+
+	// Face 2 (+Y)
+	mesh.setPolygonAttribute(firstPoly+2, 0, attr, value);
+	mesh.setPolygonAttribute(firstPoly+2, 1, attr, value);
+	mesh.setPolygonAttribute(firstPoly+2, 2, attr, value);
+	mesh.setPolygonAttribute(firstPoly+2, 3, attr, value);
+
+	// Face 3 (-Y)
+	mesh.setPolygonAttribute(firstPoly+3, 0, attr, value);
+	mesh.setPolygonAttribute(firstPoly+3, 1, attr, value);
+	mesh.setPolygonAttribute(firstPoly+3, 2, attr, value);
+	mesh.setPolygonAttribute(firstPoly+3, 3, attr, value);
+
+	// Face 4 (+X)
+	mesh.setPolygonAttribute(firstPoly+4, 0, attr, value);
+	mesh.setPolygonAttribute(firstPoly+4, 1, attr, value);
+	mesh.setPolygonAttribute(firstPoly+4, 2, attr, value);
+	mesh.setPolygonAttribute(firstPoly+4, 3, attr, value); 
+
+	 // Face 5 (-X)
+	mesh.setPolygonAttribute(firstPoly+5, 0, attr, value);
+	mesh.setPolygonAttribute(firstPoly+5, 1, attr, value);
+	mesh.setPolygonAttribute(firstPoly+5, 2, attr, value);
+	mesh.setPolygonAttribute(firstPoly+5, 3, attr, value);
+}

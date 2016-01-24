@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "returns (and eventually creates) a new matching material with a given name\n\n Supported by SlavrMediumShader"
+    },
+  "title" : "GetOrCreateMaterial",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrMediumShader"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "name",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "InlineMaterial"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "C77E9378516A9C2EC2B89059E77E3AD9",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.getOrCreateMaterial(name);\n}\n"
+  }

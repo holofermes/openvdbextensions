@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by Slavr"
+    },
+  "title" : "AddInstanceRef",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "Slavr"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "instance",
+      "execPortType" : "In",
+      "typeSpec" : "InlineInstance"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "SlavrGeo"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "7A64D3F4242636F8A051EAE378966154",
+  "code" : "require Slavr;\n\ndfgEntry {\n  Ref<InlineInstance> instance_ref = instance;\n  result = this.addInstanceRef(instance_ref);\n}\n"
+  }

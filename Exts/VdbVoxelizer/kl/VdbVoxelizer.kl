@@ -1,0 +1,753 @@
+require OpenVDBWrapper;
+
+require InlineDrawing;
+require Points;
+require Math;
+require Geometry;
+
+operator idxToTriangles<<<idx>>>(io Vec3 triangles[],
+                                 in UInt32 triIdx[],
+                                 in Transform tx,
+                                 in Ref<PolygonMesh> inMesh
+                                ){
+  triangles[idx] = tx.worldToIndex(inMesh.getPointPosition(triIdx[idx]));
+}
+
+operator idxToTrianglesXfo<<<idx>>>(io Vec3 triangles[],
+                                 in UInt32 triIdx[],
+                                 in Transform tx,
+                                 in Xfo xfo,
+                                 in Ref<PolygonMesh> inMesh
+                                ){
+  triangles[idx] = tx.worldToIndex(xfo.transformVector(inMesh.getPointPosition(triIdx[idx])));
+}
+
+function FloatGrid polygonMeshToFloatGrid(in Ref<PolygonMesh> inMesh,
+                                          in Float32 voxelSize,
+                                          in Xfo xfo){
+  UInt32 triIdx [];
+  Vec3 triangles[];
+  triIdx = inMesh.generateTriangleList();
+  triangles.resize(triIdx.size());
+  Transform tx();
+  tx.createLinearTransform(voxelSize);
+  Float32 inBand, exBand = 3.0 ;
+  UInt32 conversionFlags = 0;
+
+  idxToTrianglesXfo<<<triangles.size()>>>(triangles, triIdx, tx, xfo, inMesh);
+
+  return MeshToVolume(triangles, tx, inBand, exBand, conversionFlags);
+}
+
+function FloatGrid polygonMeshToFloatGrid(in Ref<PolygonMesh> inMesh,
+                                          in Float32 voxelSize){
+  UInt32 triIdx [];
+  Vec3 triangles[];
+  triIdx = inMesh.generateTriangleList();
+  triangles.resize(triIdx.size());
+  Transform tx();
+  tx.createLinearTransform(voxelSize);
+  Float32 inBand, exBand = 3.0 ;
+  UInt32 conversionFlags = 0;
+
+  idxToTriangles<<<triangles.size()>>>(triangles, triIdx, tx, inMesh);
+
+  return MeshToVolume(triangles, tx, inBand, exBand, conversionFlags);
+}
+function FloatGrid polygonMeshToFloatGrid(in Ref<PolygonMesh> inMesh,
+                                          in Float32 voxelSize,
+                                          in Float32 inBand,
+                                          in Float32 exBand,
+                                          in UInt32 conversionFlags,
+                                          in Xfo xfo){
+  UInt32 triIdx [];
+  Vec3 triangles[];
+  triIdx = inMesh.generateTriangleList();
+  triangles.resize(triIdx.size());
+  Transform tx();
+  tx.createLinearTransform(voxelSize);
+
+  idxToTrianglesXfo<<<triangles.size()>>>(triangles, triIdx, tx, xfo, inMesh);
+
+  return MeshToVolume(triangles, tx, inBand, exBand, conversionFlags);
+}
+
+function FloatGrid polygonMeshToFloatGrid(in Ref<PolygonMesh> inMesh,
+                                          in Float32 voxelSize,
+                                          in Float32 inBand,
+                                          in Float32 exBand,
+                                          in UInt32 conversionFlags){
+  UInt32 triIdx [];
+  Vec3 triangles[];
+  triIdx = inMesh.generateTriangleList();
+  triangles.resize(triIdx.size());
+  Transform tx();
+  tx.createLinearTransform(voxelSize);
+  idxToTriangles<<<triangles.size()>>>(triangles, triIdx, tx, inMesh);
+
+  return MeshToVolume(triangles, tx, inBand, exBand, conversionFlags);
+}
+
+function generateLevelsetPoints(in Ref<PolygonMesh> inMesh,
+                                in Float32 voxelSize,
+                                in Float32 inBand,
+                                in Float32 exBand,
+                                in UInt32 conversionFlags,
+                                io Vec3 points[]){
+  FloatGrid grid = polygonMeshToFloatGrid(inMesh,
+                                          voxelSize,
+                                          inBand,
+                                          exBand,
+                                          conversionFlags);
+  generateLevelsetPoints(grid, points);
+
+}
+function generateLevelsetPoints(in Ref<PolygonMesh> inMesh,
+                                 in Float32 voxelSize,
+                                 io Vec3 points[]){
+  FloatGrid grid = polygonMeshToFloatGrid(inMesh, voxelSize);
+  generateLevelsetPoints(grid, points);
+
+}
+
+function generateLevelsetPoints(Ref<FloatGrid> grid,
+                                 io Points pointsGeo,
+                                 io Vec3Attribute points){
+  FloatLeafManager leafs(grid);
+
+  Float32 minValue, maxValue;
+  FloatMinMaxVoxel(leafs, minValue, maxValue);
+  UInt64 voxelsPerLeaf = grid.activeVoxelCount();
+  if (grid.tree.activeLeafVoxelCount() > maxVoxelPoints) {
+    voxelsPerLeaf = Math_max((maxVoxelPoints / grid.tree.leafCount()), 1);
+  }
+
+  UInt32 voxelCount = 0;
+
+  Size leafCount = Size(leafs.leafCount());
+  UInt32 indexMap[];
+  indexMap.resize(leafCount);
+  for (Size l = 0;  l < leafCount; ++l) {
+    indexMap[l] = voxelCount;
+    voxelCount += Math_min(leafs.leaf(l).onVoxelCount(), voxelsPerLeaf);
+  }
+
+  pointsGeo.resize(0);
+  pointsGeo.addPoints(voxelCount);
+  UInt32 offset = 0;
+  pointGeneratorFloat<<<leafCount>>>(points.values,
+                            indexMap,
+                            leafs,
+                            grid.transform,
+                            voxelsPerLeaf,
+                            offset);
+  points.incrementVersion();
+}
+
+function generateLevelsetPoints(Ref<FloatGrid> grid,
+                                 io Vec3 points[])
+{
+  FloatLeafManager leafs(grid);
+
+  Float32 minValue, maxValue;
+  FloatMinMaxVoxel(leafs, minValue, maxValue);
+  UInt64 voxelsPerLeaf = grid.activeVoxelCount();
+  if (grid.tree.activeLeafVoxelCount() > maxVoxelPoints) {
+    voxelsPerLeaf = Math_max((maxVoxelPoints / grid.tree.leafCount()),1);
+  }
+
+  UInt32 voxelCount = 0;
+
+  Size leafCount = Size(leafs.leafCount());
+  UInt32 indexMap[];
+  indexMap.resize(leafCount);
+  for (Size l = 0;  l < leafCount; ++l) {
+    indexMap[l] = voxelCount;
+    voxelCount += Math_min(leafs.leaf(l).onVoxelCount(), voxelsPerLeaf);
+  }
+
+  points.resize(voxelCount);
+  UInt32 offset = 0;
+  pointGeneratorFloat<<<leafCount>>>(points,
+                            indexMap,
+                            leafs,
+                            grid.transform,
+                            voxelsPerLeaf,
+                            offset);
+}
+
+
+function generateVolumePoints(Ref<FloatGrid> grid,
+                                 io Vec3 points[])
+{
+  UInt64 voxelsPerLeaf = grid.activeVoxelCount();
+  BooleanTree interiorMask(false);
+
+{ // Generate Interior Points
+  interiorMask.topologyUnion(grid.treePtr());
+  interiorMask.voxelizeActiveTiles();
+
+
+  if (interiorMask.activeLeafVoxelCount() > maxVoxelPoints) {
+    voxelsPerLeaf = Math_max(1,
+        (maxVoxelPoints / interiorMask.leafCount()));
+  }
+  ErodeVoxels(interiorMask, 2);
+
+  BooleanLeafManager maskleafs(interiorMask);
+
+  UInt32 voxelCount = 0;
+
+  Size leafCount = Size(maskleafs.leafCount());
+  UInt32 indexMap[];
+  indexMap.resize(leafCount);
+  for (Size l = 0;  l < leafCount; ++l) {
+    indexMap[l] = voxelCount;
+    voxelCount += Math_min(maskleafs.leaf(l).onVoxelCount(), voxelsPerLeaf);
+  }
+
+  points.resize(voxelCount);
+  UInt32 offset = 0;
+  pointGeneratorBoolean<<<leafCount>>>(points,
+                            indexMap,
+                            maskleafs,
+                            grid.transform,
+                            voxelsPerLeaf,
+                            offset);
+}
+
+{ // Generate Surface Points
+
+  BooleanTree surfaceMask(false);
+  surfaceMask.topologyUnion(grid.treePtr());
+  surfaceMask.voxelizeActiveTiles();
+
+
+  BooleanAccessor interiorAcc(interiorMask);
+  BooleanLeafTreeIter leafIt = surfaceMask.beginLeaf();
+  for (;leafIt.test(); leafIt.next())
+  {
+    Boolean valid;
+    BooleanLeafNode lIt = leafIt.getLeaf();
+    BooleanCLeafNode leaf = interiorAcc.probeConstLeaf(lIt.origin(), valid);
+    if(valid) lIt.topologyDifference(leaf, false);
+  }
+  pruneInactive(surfaceMask, true, 1);
+
+  BooleanLeafManager maskleafs(surfaceMask);
+
+  UInt32 voxelCount = 0;
+
+  Size leafCount = Size(maskleafs.leafCount());
+  UInt32 indexMap[];
+
+  indexMap.resize(leafCount);
+  for (Size l = 0;  l < leafCount; ++l) {
+    indexMap[l] = voxelCount;
+    voxelCount += Math_min(maskleafs.leaf(l).onVoxelCount(), voxelsPerLeaf);
+  }
+}
+
+}
+
+
+function  generatePointsAndValuesFromLevelSet(Ref<FloatGrid> grid,
+                                             in Boolean sampleGradient,
+                                             io Points pointsGeo,
+                                             io Vec3Attribute points,
+                                             io Vec3Attribute normals,
+                                             io ScalarAttribute samples)
+{
+
+
+  Color colorMap[4];
+  colorMap[0] = Color(0.3, 0.9, 0.3); // green
+  colorMap[1] = Color(0.9, 0.3, 0.3); // red
+  colorMap[2] = Color(0.9, 0.9, 0.3); // yellow
+  colorMap[3] = Color(0.3, 0.3, 0.9); // blue
+
+  FloatLeafManager leafs(grid);
+
+  Float32 minValue, maxValue;
+  FloatMinMaxVoxel(leafs, minValue, maxValue);
+  UInt64 voxelsPerLeaf = grid.activeVoxelCount();
+  if (grid.tree.activeLeafVoxelCount() > maxVoxelPoints) {
+    voxelsPerLeaf = Math_max((maxVoxelPoints / grid.tree.leafCount()),1);
+  }
+
+
+  UInt32 voxelCount = 0;
+
+  Size leafCount = Size(leafs.leafCount());
+  UInt32 indexMap[];
+  indexMap.resize(leafCount);
+  for (Size l = 0;  l < leafCount; ++l) {
+    indexMap[l] = voxelCount;
+    voxelCount += Math_min(leafs.leaf(l).onVoxelCount(), voxelsPerLeaf);
+  }
+
+  pointsGeo.resize(0);
+  pointsGeo.addPoints(voxelCount);
+
+  UInt32 offset = 0;
+  pointGeneratorFloat<<<leafCount>>>(points.values,
+                            indexMap,
+                            leafs,
+                            grid.transform,
+                            voxelsPerLeaf,
+                            offset);
+  points.incrementVersion();
+  Boolean isLevelSet = grid.isLevelSet() ? sampleGradient : false;
+
+  if(isLevelSet)normals.values.resize(voxelCount);
+  samples.values.resize(voxelCount);
+
+
+  FloatConstAccessor accessors[];
+  for (Size l = 0;  l < getThreadCount(); ++l) {
+    accessors.push(grid.getConstAccessor());
+  }
+
+  pointGeneratorAttribute<<<points.values.size()>>>(samples.values,
+                                     normals.values,
+                                     grid.transform,
+                                     accessors,
+                                     points.values,
+                                     minValue,
+                                     maxValue,
+                                     colorMap,
+                                     offset,
+                                     grid.halfWidth(),
+                                     isLevelSet
+                                     );
+  samples.incrementVersion();
+  if(isLevelSet)normals.incrementVersion();
+
+}
+
+function  generatePointsAndValuesFromVolume(Ref<FloatGrid> grid,
+                                             in Boolean sampleGradient,
+                                             io Points pointsGeo,
+                                             io Vec3Attribute points,
+                                             io Vec3Attribute normals,
+                                             io ScalarAttribute samples)
+{
+
+  Color colorMap[4];
+  colorMap[0] = Color(0.3, 0.9, 0.3); // green
+  colorMap[1] = Color(0.9, 0.3, 0.3); // red
+  colorMap[2] = Color(0.9, 0.9, 0.3); // yellow
+  colorMap[3] = Color(0.3, 0.3, 0.9); // blue
+
+
+  Boolean isLevelSet = grid.isLevelSet() ? sampleGradient : false;
+  BooleanTree interiorMask(false);
+
+  FloatLeafManager leafs(grid);
+
+  Float32 minValue, maxValue;
+  {
+    FloatMinMaxVoxel(leafs, minValue, maxValue);
+    UInt64 voxelsPerLeaf = grid.activeVoxelCount();
+    if (grid.tree.activeLeafVoxelCount() > maxVoxelPoints) {
+      voxelsPerLeaf = Math_max((maxVoxelPoints / grid.tree.leafCount()),1);
+    }
+  }
+
+  UInt64 voxelsPerLeaf = grid.activeVoxelCount();
+
+
+  if (!isLevelSet) {
+    report("im not a levelset so doing bolleanized studd");
+    { // Generate Interior Points
+      interiorMask.topologyUnion(grid.treePtr());
+      interiorMask.voxelizeActiveTiles();
+
+
+      if (interiorMask.activeLeafVoxelCount() > maxVoxelPoints) {
+        voxelsPerLeaf = Math_max(1,
+            (maxVoxelPoints / interiorMask.leafCount()));
+      }
+      ErodeVoxels(interiorMask, 2);
+
+      BooleanLeafManager maskleafs(interiorMask);
+
+      UInt32 voxelCount = 0;
+
+      Size leafCount = Size(maskleafs.leafCount());
+      UInt32 indexMap[];
+      indexMap.resize(leafCount);
+      for (Size l = 0;  l < leafCount; ++l) {
+        indexMap[l] = voxelCount;
+        voxelCount += Math_min(maskleafs.leaf(l).onVoxelCount(), voxelsPerLeaf);
+      }
+      pointsGeo.resize(0);
+      pointsGeo.addPoints(voxelCount);
+      UInt32 offset = 0;
+      pointGeneratorBoolean<<<leafCount>>>(points.values,
+                                indexMap,
+                                maskleafs,
+                                grid.transform,
+                                voxelsPerLeaf,
+                                offset);
+
+      points.incrementVersion();
+      samples.values.resize(voxelCount);
+
+      FloatConstAccessor accessors[];
+      for (Size l = 0;  l < getThreadCount(); ++l) {
+        accessors.push(grid.getConstAccessor());
+      }
+      report("runninf pointGeneratorAttribute with offset: " + offset);
+      report("with total points size: " + points.values.size());
+      report("with total samples size: " + samples.values.size());
+      report("with total normals size: " + normals.values.size());
+      pointGeneratorAttribute<<<points.values.size()>>>(samples.values,
+                                         normals.values,
+                                         grid.transform,
+                                         accessors,
+                                         points.values,
+                                         minValue,
+                                         maxValue,
+                                         colorMap,
+                                         offset,
+                                         grid.halfWidth(),
+                                         isLevelSet
+                                         );
+      samples.incrementVersion();
+    }
+
+    { // Generate Surface Points
+
+      BooleanTree surfaceMask(false);
+      surfaceMask.topologyUnion(grid.treePtr());
+      surfaceMask.voxelizeActiveTiles();
+
+
+      BooleanAccessor interiorAcc(interiorMask);
+      BooleanLeafTreeIter leafIt = surfaceMask.beginLeaf();
+      for (;leafIt.test(); leafIt.next())
+      {
+        Boolean valid;
+        BooleanLeafNode lIt = leafIt.getLeaf();
+        BooleanCLeafNode leaf = interiorAcc.probeConstLeaf(lIt.origin(), valid);
+        if(valid) lIt.topologyDifference(leaf, false);
+      }
+      pruneInactive(surfaceMask, true, 1);
+
+      BooleanLeafManager maskleafs(surfaceMask);
+
+      UInt32 voxelCount = 0;
+
+      Size leafCount = Size(maskleafs.leafCount());
+      UInt32 indexMap[];
+      
+      indexMap.resize(leafCount);
+      for (Size l = 0;  l < leafCount; ++l) {
+        indexMap[l] = voxelCount;
+        voxelCount += Math_min(maskleafs.leaf(l).onVoxelCount(), voxelsPerLeaf);
+      }
+
+      UInt32 offset = pointsGeo.size();
+      pointsGeo.addPoints(voxelCount);
+      pointGeneratorBoolean<<<leafCount>>>(points.values,
+                                indexMap,
+                                maskleafs,
+                                grid.transform,
+                                voxelsPerLeaf,
+                                offset);
+
+      points.incrementVersion();
+      samples.values.resize(offset+voxelCount);
+
+      FloatConstAccessor accessors[];
+      for (Size l = 0;  l < getThreadCount(); ++l) {
+        accessors.push(grid.getConstAccessor());
+      }
+
+      report("runninf pointGeneratorAttribute with offset: " + offset);
+      report("with total points size: " + points.values.size());
+      report("with total samples size: " + samples.values.size());
+      report("with total normals size: " + normals.values.size());
+      pointGeneratorAttribute<<<voxelCount>>>(samples.values,
+                                           normals.values,
+                                           grid.transform,
+                                           accessors,
+                                           points.values,
+                                           minValue,
+                                           maxValue,
+                                           colorMap,
+                                           offset,
+                                           grid.halfWidth(),
+                                           isLevelSet
+                                           );
+        samples.incrementVersion();
+    }
+    return;
+  }
+
+  Size leafCount = Size(leafs.leafCount());
+  UInt32 indexMap[];
+  UInt32 voxelCount = 0;
+  indexMap.resize(leafCount);
+  for (Size l = 0;  l < leafCount; ++l) {
+    indexMap[l] = voxelCount;
+    voxelCount += Math_min(leafs.leaf(l).onVoxelCount(), voxelsPerLeaf);
+  }
+
+  pointsGeo.resize(0);
+  pointsGeo.addPoints(voxelCount);
+
+  UInt32 offset = 0;
+  pointGeneratorFloat<<<leafCount>>>(points.values,
+                            indexMap,
+                            leafs,
+                            grid.transform,
+                            voxelsPerLeaf,
+                            offset);
+  points.incrementVersion();
+
+  if(isLevelSet)normals.values.resize(voxelCount);
+  samples.values.resize(voxelCount);
+
+
+  FloatConstAccessor accessors[];
+  for (Size l = 0;  l < getThreadCount(); ++l) {
+    accessors.push(grid.getConstAccessor());
+  }
+
+  pointGeneratorAttribute<<<points.values.size()>>>(samples.values,
+                                     normals.values,
+                                     grid.transform,
+                                     accessors,
+                                     points.values,
+                                     minValue,
+                                     maxValue,
+                                     colorMap,
+                                     offset,
+                                     grid.halfWidth(),
+                                     isLevelSet
+                                     );
+  samples.incrementVersion();
+  if(isLevelSet)normals.incrementVersion();
+
+}
+
+
+
+
+
+struct PolygonMeshTo{
+  UInt32 flags;
+  Ref<PolygonMesh> imesh;
+  Float32 voxelSize;
+  Float32 inBand;
+  Float32 extBand;
+  Xfo imat;
+  // points generation
+  Points  points;
+  Boolean sampleGradient;
+  Boolean cull;
+  Float32 minCutoff;
+  Float32 maxCutoff;
+  Vec3 minBBox;
+  Vec3 maxBBox;
+  Xfo voxelXfo;
+  Vec3Attribute  positions;
+  Vec3Attribute  normals;
+  ScalarAttribute  samples;
+
+};
+
+inline PolygonMeshTo.doit!(){
+  // UInt32 flags = 0;
+  generatePointsAndValuesFromVolume( polygonMeshToFloatGrid(this.imesh,
+                                         this.voxelSize,
+                                         this.inBand,
+                                         this.extBand,
+                                         this.flags,
+                                         this.imat),
+                                     this.sampleGradient,
+                                     this.points,
+                                     this.positions,
+                                     this.normals,
+                                     this.samples);
+}
+inline PolygonMeshTo.doit!(io PolygonMesh omesh){
+  
+
+  this.doit();
+
+  Xfo voxelXfo();
+  voxelXfo.sc = Vec3(this.voxelSize);
+
+  GeometryAttributes mAttributes = omesh.getAttributes();
+  Ref<ColorAttribute> mVertexColors = omesh.getOrCreateAttribute('vertexColors', ColorAttribute);
+  Size pSize = this.positions.values.size();
+  Ref<PolygonMesh> mesh = omesh;
+  for(Size p=0;p<pSize;p++){
+    Float32 sample = this.samples.values[p];
+    if(!(sample < this.maxCutoff && sample > this.minCutoff))continue;
+    Vec3 pos = this.positions.values[p];
+    if(this.cull && (!_insideBBox(this.minBBox, this.maxBBox, pos)))continue;
+    addCuboidAndVertexColor(mesh, voxelXfo * Xfo(pos), mVertexColors, Color(sample, sample, sample, 1.0));
+  }
+
+}
+
+
+
+/// helper function to draw a mesh given a color + an array of transforms
+/// \dfgPresetCreate
+function DrawingHandle.drawPolygonVoxelsInstances!(String name, Points points, io InlineInstance instance)
+{
+  String uidName = this.uid() + '_' + name;
+
+  InlineDrawing draw = this.getDrawing();
+  InlineShader vShader = createVoxelizerShader('voxelizerVis', draw);
+  InlinePointsShape shape = draw.getShape(uidName);
+  if(shape == null)
+    shape = draw.registerShape(InlinePointsShape(uidName, points));
+
+  if(shape != null)
+    shape.setPoints(points);
+
+  // InlineMaterial mat = this.drawShapeInstances(name, sh, transforms, shape, dummyResult, instance);
+
+  InlineTransform rootTfo = this.getRootTransform();
+  InlineMaterial vMat = vShader.getOrCreateMaterial('voxelizerVis_Material_' + name);
+  InlineTransform vTfo = rootTfo.addChild(StaticInlineTransform('vXfo_' + name));
+  instance = SimpleInlineInstance('vInst_' + name, vTfo, shape);
+  vMat.addInstance(instance);
+
+}
+
+/// helper function to draw a mesh given a color + an array of transforms
+/// \dfgPresetCreate
+function DrawingHandle.drawPolygonVoxelsInstances!(String name, io InlineTransform tfo, Points points)
+{
+  String uidName = this.uid() + '_' + name;
+
+  InlineDrawing draw = this.getDrawing();
+  InlineShader vShader = createVoxelizerShader('voxelizerVis', draw);
+  InlinePointsShape shape = draw.getShape(uidName);
+  if(shape == null)
+    shape = draw.registerShape(InlinePointsShape(uidName, points));
+
+  if(shape != null)
+    shape.setPoints(points);
+
+  // InlineMaterial mat = this.drawShapeInstances(name, sh, transforms, shape, dummyResult, instance);
+
+  InlineMaterial vMat = vShader.getOrCreateMaterial('voxelizerVis_Material_' + name);
+  InlineTransform vTfo = tfo.addChild(StaticInlineTransform('vXfo_' + name));
+  vMat.addInstance(SimpleInlineInstance('vInst_' + name, vTfo, shape));
+
+}
+
+
+function DrawVDBVoxels(
+  io DrawingHandle handle,
+  io Points points,
+  io Mat44 matIn,
+  io Mat44 boxCull,
+  in String name,
+  in PolygonMesh imesh,
+  io PolygonMesh omesh,
+  in Integer preview,
+  in Scalar inBand,
+  in Scalar extBand,
+  in Scalar minCutoff,
+  in Scalar maxCutoff,
+  in Scalar voxelSize,
+  in Boolean sampleGradient,
+  in Boolean cull,
+  out Vec3 dummyResult,
+) {
+
+  if(preview == -1){
+    omesh = PolygonMesh();
+    omesh.clear();
+    return;
+  }
+
+  if(voxelSize<0.03)return;
+
+  InlineShader vShader = null;
+  InlineMaterial vMat = null;
+
+  GeometryAttributes attributes = points.getAttributes();
+  Vec3Attribute positions = attributes.getOrCreateAttribute('positions', Vec3Attribute);
+  Vec3Attribute normals = attributes.getOrCreateAttribute('normals', Vec3Attribute);
+  ScalarAttribute samples = attributes.getOrCreateAttribute('samples', ScalarAttribute);
+
+  InlineTransform rootTfo = handle.getRootTransform();
+  if(handle.isEmpty()) {
+    KLOpenVDB openvdb();
+    report('initiated openvdb');
+    positions.resize(0);
+    handle.drawPolygonVoxelsInstances(name, rootTfo, points);
+      report('initiated drawing');
+  }
+
+  InlineTransform vTfo = rootTfo.getChild('vXfo_' + name);
+  InlineInstance vInstance = vTfo.getChild('vInst_' + name);
+
+  Xfo voxelXfo();
+  voxelXfo.sc = Vec3(voxelSize);
+  Xfo cullXfo(voxelXfo.inverse() * boxCull);
+  Vec3 minBBox = cullXfo.transformVector(Vec3(-0.5, -0.5, -0.5));
+  Vec3 maxBBox = cullXfo.transformVector(Vec3(0.5, 0.5, 0.5));
+
+  vShader = handle.getDrawing().getShader('voxelizerVis');
+  vMat = vShader.getOrCreateMaterial('voxelizerVis_Material_' + name);
+  vMat.setUniform(InlineUniform('u_voxelScaler',  voxelXfo.toMat44()));
+  vMat.setUniform(InlineUniform('u_maxSample', maxCutoff));
+  vMat.setUniform(InlineUniform('u_minSample', minCutoff));
+  vMat.setUniform(InlineUniform('u_sampleGradient', Integer(sampleGradient)));
+  vMat.setUniform(InlineUniform('u_cull', Integer(cull)));
+  vMat.setUniform(InlineUniform('u_minBBox', minBBox));
+  vMat.setUniform(InlineUniform('u_maxBBox', maxBBox));
+
+
+
+  UInt32 flags = 0;
+ 
+  PolygonMeshTo op;
+
+  op.flags = flags;
+  op.imesh = imesh;
+  op.minCutoff = minCutoff;
+  op.maxCutoff = maxCutoff;
+  op.minBBox = minBBox;
+  op.maxBBox = maxBBox;
+  op.voxelSize = voxelSize;
+  op.inBand = inBand;
+  op.extBand = extBand;
+  op.imat =  Xfo(matIn);
+  // points generation
+  op.sampleGradient = sampleGradient;
+  op.cull = cull;
+  op.points = points;
+  op.positions = positions;
+  op.normals = normals;
+  op.samples = samples;
+  // options
+
+  if(preview == 0){
+    if(vInstance.isActive())
+      vInstance.setActive(0);
+    omesh = PolygonMesh();
+    op.doit(omesh);
+  }
+  else if(preview == 1){
+    if(!vInstance.isActive())
+      vInstance.setActive(1);
+    op.doit();
+  }
+
+
+}
+
+
+

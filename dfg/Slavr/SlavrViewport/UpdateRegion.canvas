@@ -1,0 +1,22 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by SlavrViewport"
+    },
+  "title" : "UpdateRegion",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrViewport"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "3F7E4EBF3CC0A5DF6F8F519960700A45",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.updateRegion();\n}\n"
+  }

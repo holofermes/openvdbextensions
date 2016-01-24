@@ -1,0 +1,39 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "compute a ray into the scene based on a mouse coordinate\n\n Supported by InlineViewportVDB"
+    },
+  "title" : "GetRay",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "this",
+      "execPortType" : "In",
+      "typeSpec" : "InlineViewportVDB"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "pos",
+      "execPortType" : "In",
+      "typeSpec" : "Vec2"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "VdbRay"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "86746EEA887D9DCB4569FFA9D4A3076E",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.getRay(pos);\n}\n"
+  }

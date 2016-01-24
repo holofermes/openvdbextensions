@@ -1,0 +1,22 @@
+// Created by kl2dfg (processStructConstant)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiAlwaysShowDaisyChainPorts" : "true"
+    },
+  "title" : "SlavrVolumeMaterial_Data",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "value",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrVolumeMaterial_Data"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "49CB17236621631965FCC692F8B35711",
+  "code" : "dfgEntry {\n}\n"
+  }

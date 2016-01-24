@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by SlavrViewport"
+    },
+  "title" : "GetRegion",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "this",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrViewport"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "PixelRegion"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "AC39D4BA6E6F958A9EBF7F0E2B24A316",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.getRegion();\n}\n"
+  }

@@ -1,0 +1,198 @@
+require InlineDrawing;
+require FabricOGL;
+
+object SlavrMediumShader : OGLInlineShader{
+  String name;
+  OGLInlineShader shader;
+
+  SlavrMaterial materials[];
+  Size materialOffsets[String];
+  
+  /// \internal
+  SimpleLock lock;
+};
+
+// OGLInlineShader
+//
+/// default constructor
+function SlavrMediumShader(OGLInlineShader shader) {
+  this.init(this.type(), shader);
+}
+
+/// default constructor taking a name
+function SlavrMediumShader(String name, OGLInlineShader shader) {
+  this.init(name, shader);
+}
+
+function SlavrMediumShader.init!(String name, OGLInlineShader shader) {
+  this.lock = SimpleLock("SlavrMediumShader");
+  this.name = name;
+  this.shader = shader;
+}
+
+// OGLInlineShader
+//
+/// returns the name of this shader
+function String SlavrMediumShader.getName() {
+  return this.name + '_' + this.shader.getName();
+}
+
+/// called by the InlineDrawing, should not be called manually
+/// \internal
+function Boolean SlavrMediumShader.draw!(io DrawContext context) {
+  return this.shader.draw(context);
+}
+
+/// returns true if this shader has a material with a given name
+function Boolean SlavrMediumShader.hasSlavrMaterial(String name) {
+  AutoLock AL(this.lock);
+  return this.materialOffsets.has(name);
+}
+
+/// returns true if this shader has a material with a given name
+function Boolean SlavrMediumShader.hasMaterial(String name) {
+  return this.shader.hasMaterial(name);
+}
+
+/// returns (and eventually creates) a new matching material with a given name
+function InlineMaterial SlavrMediumShader.getOrCreateMaterial!(String name) {
+  // InlineMaterial material = this.shader.getOrCreateMaterial(name);
+  InlineMaterial material = null;
+
+  {
+    AutoLock AL(this.shader.simpleLock);
+
+    Size offset = this.shader.materialOffsets.get(name, this.shader.materials.size());
+    if(offset < this.shader.materials.size())
+      material = this.shader.materials[offset];
+
+    material = InlineMaterial(Object(this), name);
+    this.shader.materialOffsets[name] = offset;
+    this.shader.materials.push(material);
+  }
+
+  return material;
+}
+
+function InlineMaterial SlavrMediumShader.getOrCreateMaterial!(io SlavrMaterial slavrMaterial) {
+  InlineMaterial material = this.getOrCreateMaterial(slavrMaterial.name);
+
+  Size offset = this.materialOffsets.get(slavrMaterial.name, this.materials.size());
+  if(offset < this.materials.size()){
+    // slavrMaterial.material = material;
+    // this.materials[offset] = slavrMaterial;
+    return material;
+  }
+  this.materialOffsets[slavrMaterial.name] = offset;
+  this.materials.push(slavrMaterial);
+  return material;
+}
+
+
+/// returns (and eventually creates) a new matching material with a given name
+function SlavrMaterial SlavrMediumShader.getOrCreateSlavrMaterial!(String name) {
+  Size offset = this.materialOffsets.get(name, this.materials.size());
+  if(offset < this.materials.size())
+    return this.materials[offset];
+
+  InlineMaterial material =  this.getOrCreateMaterial(name);
+
+  SlavrMaterial slavrMaterial = SlavrMaterial(Object(material), name);
+  this.materialOffsets[name] = offset;
+  this.materials.push(slavrMaterial);
+  return slavrMaterial;
+
+}
+/// returns (and eventually creates) a new matching material with a given name
+function SlavrMaterial SlavrMediumShader.getOrCreateSlavrMaterial!(io SlavrMaterial slavrMaterial) {
+  Size offset = this.materialOffsets.get(slavrMaterial.name, this.materials.size());
+  if(offset < this.materials.size())
+    return this.materials[offset];
+
+  InlineMaterial material =  this.getOrCreateMaterial(slavrMaterial.name);
+
+  slavrMaterial.material = Object(material);
+  this.materialOffsets[slavrMaterial.name] = offset;
+  this.materials.push(slavrMaterial);
+  return slavrMaterial;
+
+}
+
+/// returns the number of materials in this shader
+function Size SlavrMediumShader.getMaterialCount() {
+  return this.shader.getMaterialCount();
+}
+
+/// returns an existing material by index
+function InlineMaterial SlavrMediumShader.getMaterial(Index index) {
+  return this.shader.getMaterial(index);
+}
+
+/// define a new uniform on the shader. the uniformType is
+/// auxiliary and can be used within the shader later if required.
+function SlavrMediumShader.defineUniform!(InlineUniform uniform) {
+  this.shader.defineUniform(uniform);
+}
+
+/// returns true if this shader has a uniform with a given name
+function Boolean SlavrMediumShader.hasUniform(String name) {
+  return this.shader.hasUniform(name);
+}
+
+/// sets the global value of a uniform
+/// this can be changed per material, per instance or even per transform
+function SlavrMediumShader.setUniform!(InlineUniform uniform) {
+  this.shader.setUniform(uniform);
+}
+
+/// draws a uniform for the shader, applies the value essentially.
+/// this particular method avoid the lookup of the location by name
+/// and draws the uniform directly
+function Boolean SlavrMediumShader.bindUniformToLocation!(io DrawContext context, InlineUniform uniform, Integer location) {
+  return this.shader.bindUniformToLocation(context, uniform, location);
+}
+
+/// \internal
+function Boolean SlavrMediumShader.bindTexture!(io DrawContext context, InlineUniform uniform, Integer location, Integer textureUnit, Integer textureSizeLocation) {
+  return this.shader.bindTexture(context, uniform, location, textureUnit, textureSizeLocation);
+}
+
+
+/// draws a uniform for the shader, applies the value essentially.
+/// this should be used from within the InlineMaterial's draw or
+/// the InlineInstance's draw.
+/// \internal
+function Boolean SlavrMediumShader.drawUniform!(io DrawContext context, InlineUniform uniform) {
+  return this.shader.drawUniform(context, uniform);
+}
+
+/// define a surface attribute with a given name and type
+function SlavrMediumShader.defineAttribute!(String name, String attributeType) {
+  this.shader.defineAttribute(name, attributeType);
+}
+
+/// returns the number of attributes
+function Size SlavrMediumShader.getAttributeCount() {
+  return this.shader.getAttributeCount();
+}
+
+/// returns the name of an attribute
+function String SlavrMediumShader.getAttributeName(Index index) {
+  return this.shader.getAttributeName(index);
+}
+
+/// returns the type of an attribute
+function String SlavrMediumShader.getAttributeType(Index index) {
+  return this.shader.getAttributeType(index);
+}
+
+/// returns true if this shader has an attribute with a given name
+function Integer SlavrMediumShader.getAttributeID(String name) {
+  return this.shader.getAttributeID(name);
+}
+
+/// returns the ID / location of a given attribute inside the shader.
+function Boolean SlavrMediumShader.hasAttribute(String name) {
+  return this.shader.hasAttribute(name);
+}
+

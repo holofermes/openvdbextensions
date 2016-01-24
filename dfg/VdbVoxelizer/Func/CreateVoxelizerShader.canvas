@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by OGLInlineShader"
+    },
+  "title" : "CreateVoxelizerShader",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "name",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "draw",
+      "execPortType" : "IO",
+      "typeSpec" : "InlineDrawing"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "OGLInlineShader"
+      }
+    ],
+  "extDeps" : {
+    "VdbVoxelizer" : "*"
+    },
+  "presetGUID" : "3B793A52ACF38AE792CBC537B26F8EF8",
+  "code" : "require VdbVoxelizer;\n\ndfgEntry {\n  result = createVoxelizerShader(name, draw);\n}\n"
+  }

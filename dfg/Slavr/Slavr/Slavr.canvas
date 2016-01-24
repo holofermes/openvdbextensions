@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by Slavr"
+    },
+  "title" : "Slavr",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "viewport",
+      "execPortType" : "In",
+      "typeSpec" : "InlineViewportVDB"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "Slavr"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "011DD6ED9A1021605FCE579CB2CACB64",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = Slavr(viewport);\n}\n"
+  }

@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "returns the number of materials in this shader\n\n Supported by SlavrMediumShader"
+    },
+  "title" : "GetMaterialCount",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "this",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrMediumShader"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "Size"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "955E92D8FF9B5FC16EDADDB7AD3F0CB6",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.getMaterialCount();\n}\n"
+  }

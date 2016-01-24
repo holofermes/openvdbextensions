@@ -1,0 +1,22 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by VolumeCache"
+    },
+  "title" : "VolumeCache_GetInstance",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "VolumeCache"
+      }
+    ],
+  "extDeps" : {
+    "VolumeCache" : "*"
+    },
+  "presetGUID" : "AC987AC96C547AC639C2CF9AAE1C7715",
+  "code" : "require VolumeCache;\n\ndfgEntry {\n  result = VolumeCache_GetInstance();\n}\n"
+  }

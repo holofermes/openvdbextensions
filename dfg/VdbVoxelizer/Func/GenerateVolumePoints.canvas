@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "title" : "GenerateVolumePoints",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "grid",
+      "execPortType" : "In",
+      "typeSpec" : "FloatGrid"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "IO",
+      "name" : "points",
+      "execPortType" : "IO",
+      "typeSpec" : "Vec3[]"
+      }
+    ],
+  "extDeps" : {
+    "VdbVoxelizer" : "*"
+    },
+  "presetGUID" : "1EA9E610EB9A6DAF2F2AD022771CB8A5",
+  "code" : "require VdbVoxelizer;\n\ndfgEntry {\n  Ref<FloatGrid> grid_ref = grid;\n  generateVolumePoints(grid_ref, points);\n}\n"
+  }

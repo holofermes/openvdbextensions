@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "define a new uniform on the shader. the uniformType is\nauxiliary and can be used within the shader later if required.\n\n Supported by SlavrMediumShader"
+    },
+  "title" : "DefineUniform",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrMediumShader"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "uniform",
+      "execPortType" : "In",
+      "typeSpec" : "InlineUniform"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "0F7EA2FAC3D9F7BD0E74039D04FF2925",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.defineUniform(uniform);\n}\n"
+  }

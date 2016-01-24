@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "adds a single instance to the InlineMaterial\n\n Supported by Slavr"
+    },
+  "title" : "AddGeometryInstance",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "Slavr"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "instance",
+      "execPortType" : "In",
+      "typeSpec" : "InlineInstance"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "C76EA08D6DD6356A60E23A83105FCF8A",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.addGeometryInstance(instance);\n}\n"
+  }

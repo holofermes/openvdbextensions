@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "returns the name of this shader\n\n Supported by SlavrMediumShader"
+    },
+  "title" : "GetName",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "this",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrMediumShader"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "String"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "A05A292EAB92FE5CBCFA5FFC57406FBF",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.getName();\n}\n"
+  }

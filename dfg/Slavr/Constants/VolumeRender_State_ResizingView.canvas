@@ -1,0 +1,19 @@
+// Created by kl2dfg (processConstant)
+{
+  "objectType" : "Func",
+  "title" : "VolumeRender_State_ResizingView",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "value",
+      "execPortType" : "Out",
+      "typeSpec" : "VolumeRender_State"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "3405B3E1160D8F66C96FACE613561204",
+  "code" : "require Slavr;\n\ndfgEntry {\n  value = VolumeRender_State_ResizingView;\n}\n"
+  }

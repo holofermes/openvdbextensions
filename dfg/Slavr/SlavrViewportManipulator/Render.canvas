@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "Virtual function overridden in manipulators inheriting from SurfacePaintManipulator\n\n Supported by SlavrViewportManipulator"
+    },
+  "title" : "Render",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrViewportManipulator"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "event",
+      "execPortType" : "IO",
+      "typeSpec" : "Event"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "689A1A6B7615994D2744557F9B904E08",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.render(event);\n}\n"
+  }

@@ -1,0 +1,25 @@
+struct IntegrationResult{
+  //! Ray's incoming radiance
+  Vec3_d luminance;
+  //! Ray's total transmittance
+  Vec3_d transmittance;
+  VdbRay state;
+  //! Luminance function defined by raymarch. May be NULL if not computed.
+  // Util::Vec3_dCurve::CPtr luminanceFunction;
+  //! Transmittance function defined by raymarch. May be NULL if not computed.
+  // Util::Vec3_dCurve::CPtr transmittanceFunction;
+};
+
+function IntegrationResult(){
+  this.luminance = Vec3_d(0.0);
+  this.transmittance = Vec3_d(1.0);
+}
+function IntegrationResult(Vec3_d L, Vec3_d T){
+  this.luminance = L;
+}
+
+function IntegrationResult(Vec3_d L, Vec3_d T, VdbRay state){
+  this.luminance = L;
+  this.transmittance = T;
+  this.state = state;
+}

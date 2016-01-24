@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by SlavrMaterialBase,SlavrMaterial,SlavrVolumeMaterial"
+    },
+  "title" : "CreateData",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "$TYPE$"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "instance",
+      "execPortType" : "In",
+      "typeSpec" : "InlineInstance"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "Boolean"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "448DF9903970C0BB9E92BBA64A1C2EE4",
+  "code" : "require Slavr;\n\ndfgEntry {\n  Ref<InlineInstance> instance_ref = instance;\n  result = this.createData(instance_ref);\n}\n"
+  }

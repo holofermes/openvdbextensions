@@ -1,0 +1,28 @@
+// Created by kl2dfg (processStructConstant)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiAlwaysShowDaisyChainPorts" : "true"
+    },
+  "title" : "RangeSize",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "RangeSize" : {
+          "mBegin" : 0,
+          "mEnd" : 0
+          }
+        },
+      "name" : "value",
+      "execPortType" : "In",
+      "typeSpec" : "RangeSize"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "49CB17236621631965FCC692F8B35711",
+  "code" : "dfgEntry {\n}\n"
+  }

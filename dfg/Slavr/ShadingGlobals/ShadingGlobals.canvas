@@ -1,0 +1,22 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by ShadingGlobals"
+    },
+  "title" : "ShadingGlobals",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "ShadingGlobals"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "DB13498184C3ED29A78A89DD3EB5738A",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = ShadingGlobals();\n}\n"
+  }

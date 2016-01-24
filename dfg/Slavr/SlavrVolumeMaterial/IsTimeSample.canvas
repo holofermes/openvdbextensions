@@ -1,0 +1,60 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by SlavrVolumeMaterial"
+    },
+  "title" : "IsTimeSample",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "this",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrVolumeMaterial"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "tid",
+      "execPortType" : "In",
+      "typeSpec" : "Size"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "pT",
+      "execPortType" : "In",
+      "typeSpec" : "Float64"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "IO",
+      "name" : "wsP",
+      "execPortType" : "IO",
+      "typeSpec" : "Vec3_d"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "rayType",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "Float32"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "F6498C5004372F22D5B359F0EA704E0C",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.isTimeSample(tid, pT, wsP, rayType);\n}\n"
+  }

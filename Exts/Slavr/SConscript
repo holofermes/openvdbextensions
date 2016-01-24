@@ -1,0 +1,21 @@
+import os
+
+Import('env')
+
+extEnv = env.Clone()
+
+fpmName = "Slavr.fpm.json"
+fpmfile = Glob(fpmName)
+
+targetInstall = os.path.join( extEnv['INSTALL_PATH'], "Exts", 'Slavr')
+targetInstallKl = os.path.join(targetInstall, 'kl')
+
+SlavrExtension = env.Install( targetInstall, Glob('*.kl') )
+import json
+fpmData = json.loads(open(fpmName).read())
+for klFile in fpmData['code']:
+  SlavrExtension += env.Install( os.path.join(targetInstall, os.path.dirname(klFile)), klFile )
+
+SlavrExtension += env.Install( targetInstall, fpmfile )
+
+Return('SlavrExtension')

@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "returns an existing material by index\n\n Supported by SlavrMediumShader"
+    },
+  "title" : "GetMaterial",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "this",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrMediumShader"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "index",
+      "execPortType" : "In",
+      "typeSpec" : "Index"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "InlineMaterial"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "E12EE082AF5409D68C5163194C674121",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.getMaterial(index);\n}\n"
+  }

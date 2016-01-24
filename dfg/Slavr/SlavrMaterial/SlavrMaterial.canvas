@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "default constructor using a name for the material\n\n Supported by SlavrMaterial"
+    },
+  "title" : "SlavrMaterial",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "material",
+      "execPortType" : "In",
+      "typeSpec" : "Object"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "name",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "SlavrMaterial"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "2E928D07A31F9109B537512C025232AC",
+  "code" : "require Slavr;\n\ndfgEntry {\n  Ref<Object> material_ref = material;\n  result = SlavrMaterial(material_ref, name);\n}\n"
+  }

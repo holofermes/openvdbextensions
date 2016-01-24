@@ -1,0 +1,64 @@
+// Created by kl2dfg (processDecomposeFunction)
+{
+  "objectType" : "Func",
+  "title" : "InlineViewportVDB ->",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "value",
+      "execPortType" : "In",
+      "typeSpec" : "InlineViewportVDB"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "viewport",
+      "execPortType" : "Out",
+      "typeSpec" : "Ref<InlineViewport>"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "ray",
+      "execPortType" : "Out",
+      "typeSpec" : "VdbRay"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "region",
+      "execPortType" : "Out",
+      "typeSpec" : "PixelRegion"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "chunks",
+      "execPortType" : "Out",
+      "typeSpec" : "Size"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "offset",
+      "execPortType" : "Out",
+      "typeSpec" : "Size"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 0,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "In",
+      "name" : "pixels",
+      "execPortType" : "Out",
+      "typeSpec" : "Color<>"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "8867556252AD4110AE1475D2E9B31483",
+  "code" : "require Slavr;\n\ndfgEntry {\n  viewport = value.viewport;\n  ray = value.ray;\n  region = value.region;\n  chunks = value.chunks;\n  offset = value.offset;\n  pixels = value.pixels;\n}\n"
+  }

@@ -1,0 +1,83 @@
+// Created by kl2dfg (processComposeFunction)
+{
+  "objectType" : "Func",
+  "title" : "-> IntegrationResult",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "Vec3_d" : {
+          "x" : 0,
+          "y" : 0,
+          "z" : 0
+          }
+        },
+      "name" : "luminance",
+      "execPortType" : "In",
+      "typeSpec" : "Vec3_d"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "Vec3_d" : {
+          "x" : 1,
+          "y" : 1,
+          "z" : 1
+          }
+        },
+      "name" : "transmittance",
+      "execPortType" : "In",
+      "typeSpec" : "Vec3_d"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "VdbRay" : {
+          "mEye" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+            },
+          "mDir" : {
+            "x" : 1,
+            "y" : 0,
+            "z" : 0
+            },
+          "mInvDir" : {
+            "x" : 1,
+            "y" : null,
+            "z" : null
+            },
+          "mTimeSpan" : {
+            "t0" : 1e-09,
+            "t1" : 1.79769e+308
+            }
+          }
+        },
+      "name" : "state",
+      "execPortType" : "In",
+      "typeSpec" : "VdbRay"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "IntegrationResult"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "ED0AA50CE031E30228BE862C4F9681D3",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result.luminance = luminance;\n  result.transmittance = transmittance;\n  result.state = state;\n}\n"
+  }

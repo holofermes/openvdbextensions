@@ -1,0 +1,32 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by RTCRay"
+    },
+  "title" : "SecondaryFromEye",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "RTCRay"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "eye",
+      "execPortType" : "In",
+      "typeSpec" : "Vec3"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "1801DF84CA639F566887D48D023BB83B",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.secondaryFromEye(eye);\n}\n"
+  }

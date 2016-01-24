@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by SlavrVolumeMaterial_Data"
+    },
+  "title" : "SlavrVolumeMaterial_Data",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "grid",
+      "execPortType" : "In",
+      "typeSpec" : "FloatGrid"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "transform",
+      "execPortType" : "IO",
+      "typeSpec" : "Transform"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "SlavrVolumeMaterial_Data"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "3A41CFF3437DF618D17E2AB7A7B3F0AC",
+  "code" : "require Slavr;\n\ndfgEntry {\n  Ref<FloatGrid> grid_ref = grid;\n  result = SlavrVolumeMaterial_Data(grid_ref, transform);\n}\n"
+  }

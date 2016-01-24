@@ -1,0 +1,100 @@
+interface SlavrMaterialBase {
+  // preprocess!(VdbRay state);
+  // IntegrationResult evaluate?(io VdbRay state, Vec3 wi, Vec3 wc);
+  Vec3_d accumulateTransmittance?(Size tid, Vec3 wsP, Vec3 wi);
+  Boolean evaluate?(Size tid,
+                    ShadingGlobals sg,
+                    Vec3 wsP,
+                    Vec3 wo,
+                    io Vec3_d luminance,
+                    io Vec3_d transmittance);
+  Boolean createData!(Ref<InlineInstance> instance);
+  Boolean createData!(Xfo xfo);
+  Boolean updateData!(Xfo xfo);
+  // updateData!(io Transform transform);
+  Object dupe!();
+};
+
+object SlavrMaterial : SlavrMaterialBase{
+  String name;
+  Ref<Object> material;
+  Ref<Object> geo;
+  InlineUniform uniforms[];
+};
+
+/// default constructor using a name for the material
+function SlavrMaterial(Ref<Object> material, String name) {
+  this.material = material;
+  this.init(name);
+}
+
+/// default constructor using a name
+function SlavrMaterial(String name) {
+  this.init(name);
+}
+
+/// default constructor
+function SlavrMaterial() {
+  this.init("SlavrMaterial");
+}
+
+/// default constructor using a name
+function SlavrMaterial.init!(String name) {
+  this.name = name;
+}
+
+
+// SlavrMaterialBase
+//
+
+// function SlavrMaterial.preprocess!(VdbRay state){
+//   Ref<SlavrMaterialBase> material = this;
+//   material.preprocess(state);
+// }
+
+
+
+function Boolean SlavrMaterial.evaluate?(Size tid,
+                                         ShadingGlobals sg,
+                                         Vec3 wsP,
+                                         Vec3 wo,
+                                         io Vec3_d luminance,
+                                         io Vec3_d transmittance) 
+{
+  Ref<SlavrMaterialBase> material = this;
+  return material.evaluate(tid, sg, wsP, wo, luminance, transmittance);
+}
+
+
+function Vec3_d SlavrMaterial.accumulateTransmittance?(Size tid,
+                                                       Vec3 wsP,
+                                                       Vec3 wi)
+{
+  Ref<SlavrMaterialBase> material = this;
+  return material.accumulateTransmittance(tid, wsP, wi);
+}
+
+
+function Boolean SlavrMaterial.createData!(Ref<InlineInstance> instance){
+  Ref<InlineVDBVolumesShape> vs = instance.shape;
+  this.geo = vs.volumes;
+  Ref<InlineTransform> vltx = instance.transform;
+  Ref<SlavrMaterialBase> material = this;
+  return material.createData(vltx.getGlobalXfo(0));
+}
+
+function Boolean SlavrMaterial.createData!(Xfo xfo){
+  setError("SlavrMaterial.createData!(Xfo xfo): use base class!");
+  return false;
+}
+
+
+function Boolean SlavrMaterial.updateData!(Xfo xfo){
+  Ref<SlavrMaterialBase> material = this;
+  return material.updateData(xfo);
+}
+
+function Object SlavrMaterial.dupe!(){
+  throw("call from Ref<SlavrMaterialBase>");
+}
+

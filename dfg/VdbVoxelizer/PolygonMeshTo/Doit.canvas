@@ -1,0 +1,32 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by PolygonMeshTo"
+    },
+  "title" : "Doit",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "PolygonMeshTo"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
+        },
+      "nodePortType" : "IO",
+      "name" : "omesh",
+      "execPortType" : "IO",
+      "typeSpec" : "PolygonMesh"
+      }
+    ],
+  "extDeps" : {
+    "VdbVoxelizer" : "*"
+    },
+  "presetGUID" : "7BEB3634CE57A702D36B9C80C7C78F1A",
+  "code" : "require VdbVoxelizer;\n\ndfgEntry {\n  this.doit(omesh);\n}\n"
+  }

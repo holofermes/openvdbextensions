@@ -1,0 +1,59 @@
+object OGLSlaverViewport: OGLInlineShader {};
+
+function OGLSlaverViewport() {
+  // Avoid calling the init method if this default constructor is being invoked
+  // during the construction of a derived object.
+  if(this.type() == OGLSlaverViewport)
+    this.init(String(this.type()));
+}
+
+function OGLSlaverViewport(String name) {
+  this.init(name);
+}
+
+function OGLSlaverViewport.init!(String name) {
+  this.name = name;
+  this.setVertexCode("
+      #version 120 // We require OpenGL 2.1 for InlineDrawing, which supports GLSL 1.2
+
+      uniform mat4 u_modelMatrix;
+
+      attribute vec4 positions;
+      attribute vec2 uvs0;
+
+      varying vec2 v_uv0;
+
+
+
+      void main(){
+        gl_Position = u_modelMatrix * positions;
+        v_uv0 = uvs0;
+      }
+    ");
+  this.setFragmentCode("
+      #version 120 // We require OpenGL 2.1 for InlineDrawing, which supports GLSL 1.2
+
+
+      uniform sampler2D u_texture;
+      uniform int u_discardAlpha;
+
+      varying vec2 v_uv0;
+      void main(){
+        vec4 texture_color = texture2D( u_texture, v_uv0 );
+        if(u_discardAlpha != 0)
+        {
+          if(texture_color.a < 0.0001)
+            discard;
+        }
+        gl_FragColor = texture_color;
+      }
+
+    ");
+  this.defineUniform(InlineUniform("u_modelMatrix", Mat44()));
+  this.defineUniform(InlineUniform('u_texture', null));
+  this.defineUniform(InlineUniform('u_discardAlpha', 0));
+
+  this.defineAttribute('positions', "Vec3");
+  this.defineAttribute('uvs0', "Vec2");
+}
+

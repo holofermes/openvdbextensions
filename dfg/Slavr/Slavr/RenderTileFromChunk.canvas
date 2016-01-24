@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by Slavr"
+    },
+  "title" : "RenderTileFromChunk",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "this",
+      "execPortType" : "In",
+      "typeSpec" : "Slavr"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "chunk",
+      "execPortType" : "In",
+      "typeSpec" : "Size"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "15C4EB18B6E6F8A50CA030CBC2ABD490",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.renderTileFromChunk(chunk);\n}\n"
+  }

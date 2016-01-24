@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by SlavrViewportManipulatorBase,SlavrViewportManipulator,SlavrViewport"
+    },
+  "title" : "Render",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "$TYPE$"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "event",
+      "execPortType" : "IO",
+      "typeSpec" : "Event"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "BE844A0F4D7E217ABD39178D2E27BB0B",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.render(event);\n}\n"
+  }

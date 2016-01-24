@@ -1,0 +1,38 @@
+// Created by kl2dfg (processStructConstant)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiAlwaysShowDaisyChainPorts" : "true"
+    },
+  "title" : "PixelRegion",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "PixelRegion" : {
+          "top" : {
+            "x" : 0,
+            "y" : 0
+            },
+          "bottom" : {
+            "x" : 0,
+            "y" : 0
+            },
+          "size" : {
+            "x" : 0,
+            "y" : 0
+            }
+          }
+        },
+      "name" : "value",
+      "execPortType" : "In",
+      "typeSpec" : "PixelRegion"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "49CB17236621631965FCC692F8B35711",
+  "code" : "dfgEntry {\n}\n"
+  }

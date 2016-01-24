@@ -1,0 +1,37 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/Manipulation/ManipHandle.html",
+    "uiTooltip" : "Registers a surface sculpt manipulator\n\n Supported by ManipHandle"
+    },
+  "title" : "AddSlavrManipInstance",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "ManipHandle"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "handle",
+      "execPortType" : "IO",
+      "typeSpec" : "DrawingHandle"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "instance",
+      "execPortType" : "IO",
+      "typeSpec" : "InlineInstance"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "C4EE3F34793DBAF2C9073CADC56E8F3E",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.addSlavrManipInstance(handle, instance);\n}\n"
+  }

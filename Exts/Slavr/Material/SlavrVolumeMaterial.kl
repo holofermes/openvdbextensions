@@ -1,0 +1,466 @@
+require OpenVDBGeometry;
+
+struct SlavrVolumeMaterial_Data{
+  FloatConstAccessor accessor[];
+  FloatGridSamplerNative sampler[];
+  VolumeRayIntersector primary[];
+  VolumeRayIntersector shadow[];
+  Transform transform;
+};
+
+function SlavrVolumeMaterial_Data(Ref<FloatGrid> grid, io Transform transform){
+  this.transform = transform;
+  this.init(grid);
+}
+
+private function SlavrVolumeMaterial_Data.init!(Ref<FloatGrid> grid){
+  Size count = getCoreCount();
+  this.reset();
+  this.primary.resize(count);
+  this.shadow.resize(count);
+  for (Size i = 0; i < count; i++) {
+    // grid.tree.evalActiveBoundingBox(bbox, /*visit individual voxels*/false);
+    this.primary[i].__construct(grid, 0);
+    this.shadow[i].__construct(this.primary[i]);
+    this.accessor.push(grid.getConstAccessor());
+    this.sampler.push(FloatGridSamplerNative(this.accessor[i], grid.transform));
+  };
+}
+
+function SlavrVolumeMaterial_Data.reset!(){
+  this.primary.resize(0);
+  this.shadow.resize(0);
+  this.accessor.resize(0);
+  this.sampler.resize(0);
+}
+
+function Boolean SlavrVolumeMaterial_Data.intersect?(Size tid,
+                                                     Vec3 wsP,
+                                                     Vec3 dir,
+                                                     String rayType){
+  VdbRay isState(this.transform.worldToIndex(Vec3_d(wsP.x, wsP.y, wsP.z)),
+                 Vec3_d(dir.x, dir.y, dir.z));
+  if(rayType == "FullRaymarch")
+    return this.primary[tid].setIndexRay(isState);
+  return this.shadow[tid].setIndexRay(isState);
+  
+}
+
+function Boolean SlavrVolumeMaterial_Data.hits?(Size tid,
+                                                Vec3 wsP,
+                                                Vec3 dir,
+                                                String rayType,
+                                                io TimeSpan ts[]){
+  if(!this.intersect(tid, wsP, dir, rayType))return false;
+  if(rayType == "FullRaymarch"){
+    this.primary[tid].hits(ts);
+  }
+  else if(rayType == "Transmittance"){
+    this.shadow[tid].hits(ts);
+  }
+  return true;
+}
+
+
+function Boolean SlavrVolumeMaterial_Data.march?(Size tid,
+                                                 Vec3 wsP,
+                                                 Vec3 dir,
+                                                 String rayType,
+                                                 io Float64 tMin,
+                                                 io Float64 tMax)
+{
+  if(!this.intersect(tid, wsP, dir, rayType))return false;
+  Boolean marching;
+  if(rayType == "FullRaymarch"){
+    marching = this.primary[tid].march(tMin, tMax);
+  }
+  else if(rayType == "Transmittance"){
+    marching = this.shadow[tid].march(tMin, tMax);
+  }
+  return marching;
+}
+
+object SlavrVolumeMaterial : SlavrMaterial{
+  Float64 primaryStep, shadowStep, cutoff, lightGain;
+  Vec3_d  absorption, scattering;
+  SlavrVolumeMaterial_Data data;
+  String name;
+  // this data needs to be preprocessed before its valid
+  Vec3_d extinction, albedo;
+};
+
+function SlavrVolumeMaterial(String name){
+  this.name = name;
+  this.parent.init(name);
+  this.setDefaults();
+}
+
+function Boolean SlavrVolumeMaterial.createData!(Ref<InlineInstance> instance){
+  return this.parent.createData(instance);
+}
+// internal
+function Boolean SlavrVolumeMaterial.createData!(Xfo xfo){
+  Ref<VDBVolumes> geoVolume = this.parent.geo;
+  Ref<FloatGrid> grid = geoVolume.getFloatGrid(0);
+  if(!grid)throw "Can't create material's data. grid is null/";
+  Transform tx = grid.transform.copy();
+  if(!transformByXfo(tx, xfo))return false;
+  this.data = SlavrVolumeMaterial_Data(grid, tx);
+  return true;
+}
+
+function Boolean SlavrVolumeMaterial.updateData!(Xfo xfo){
+  Ref<VDBVolumes> geoVolume = this.parent.geo;
+  Ref<FloatGrid> grid = geoVolume.getFloatGrid(0);
+  if(!grid)setError( "null grid");
+  Transform transform = grid.transform.copy();
+  if(!transformByXfo(transform, xfo))return false;
+  this.data.transform = transform;
+  return true;
+}
+
+// internal
+function SlavrVolumeMaterial.createData!(io Transform transform){
+  Ref<VDBVolumes> geoVolume = this.parent.geo;
+  Ref<FloatGrid> grid = geoVolume.getFloatGrid(0);
+  if(!grid)setError( "Can't create material's data. grid is null/");
+  this.data = SlavrVolumeMaterial_Data(grid, transform);
+}
+
+function SlavrVolumeMaterial.load!(){
+   this.extinction = -this.scattering-this.absorption;
+   this.albedo = this.scattering/(this.scattering+this.absorption);//single scattering
+}
+
+function SlavrVolumeMaterial.setDefaults!(){
+  this.primaryStep = 1.0;
+  this.shadowStep = 3.0;
+  this.cutoff = 0.005;
+  this.absorption = Vec3_d(0.1);
+  this.scattering = Vec3_d(1.5);
+  this.lightGain = 0.2;
+}
+
+/// thread-safe clone
+function Object SlavrVolumeMaterial.dupe!(){
+    SlavrVolumeMaterial out();
+    Ref<SlavrMaterial> material = out;
+    material.geo = this.parent.geo;
+
+    out.name = this.name;
+    out.primaryStep = this.primaryStep;
+    out.shadowStep = this.shadowStep;
+    out.cutoff = this.cutoff;
+    out.absorption = this.absorption;
+    out.scattering = this.scattering;
+    out.lightGain = this.lightGain;
+
+    out.createData(this.data.transform);
+
+    Object oout = out;
+
+    return oout;
+}
+
+function Float32 SlavrVolumeMaterial.isSample?(Size tid, Vec3_d isP){
+  return this.data.sampler[tid].isSample(isP);
+}
+
+function Float32 SlavrVolumeMaterial.isTimeSample?(Size tid,
+                                                   Float64 pT,
+                                                   String rayType)
+{
+  if(rayType == "FullRaymarch")return this.isSample(tid, this.data.primary[tid].getIndexPos(pT));
+  return this.isSample(tid, this.data.shadow[tid].getIndexPos(pT));
+}
+
+function Float32 SlavrVolumeMaterial.isTimeSample?(Size tid,
+                                                   Float64 pT,
+                                                   io Vec3_d wsP,
+                                                   String rayType)
+{
+  Vec3_d isP = this.getIndexPos(tid, pT, rayType);
+  wsP = this.data.transform.indexToWorld(isP);
+  return this.isSample(tid, isP);
+}
+
+function Float32 SlavrVolumeMaterial.sample?(Size tid,
+                                             Float64 pT,
+                                             io Vec3_d wsP,
+                                             String rayType)
+{
+  return this.isTimeSample(tid, pT, wsP, rayType);
+}
+
+function Float32 SlavrVolumeMaterial.sample?(Size tid,
+                                     Float64 pT,
+                                     String rayType)
+{
+  return this.isTimeSample(tid, pT, rayType);
+}
+
+function Vec3_d SlavrVolumeMaterial.getIndexPos?(Size tid,
+                                                 Float64 pT,
+                                                 String rayType)
+{
+  if(rayType == "FullRaymarch")return this.data.primary[tid].getIndexPos(pT);
+  return this.data.shadow[tid].getIndexPos(pT);
+}
+
+function Float64 SlavrVolumeMaterial.getWorldTime?(Size tid,
+                                                   Float64 pT,
+                                                   String rayType)
+{
+  if(rayType == "FullRaymarch")return this.data.primary[tid].getWorldTime(pT);
+  return this.data.shadow[tid].getWorldTime(pT);
+}
+
+function Vec3_d SlavrVolumeMaterial.getWorldPos?(Size tid,
+                                                 Float64 pT,
+                                                 String rayType)
+{
+  if(rayType == "FullRaymarch")return this.data.primary[tid].getWorldPos(pT);
+  return this.data.shadow[tid].getWorldPos(pT);
+}
+
+
+inline Vec3_d SlavrVolumeMaterial.accumulateTransmittance?(Size tid, Vec3 wsP, Vec3 wi)
+{
+  TimeSpan intersectionsS[];
+  if(!this.data.hits(tid, wsP, wi, "Transmittance", intersectionsS))return Vec3_d(0);
+  // this.load();
+  Vec3_d extinction = -this.scattering-this.absorption;
+  Float64 sStep = this.shadowStep;
+  Float64 sGain = this.lightGain;
+
+  Vec3_d sTrans(1.0);
+  for (Size l=0; l<intersectionsS.size(); ++l) {
+    Float64 sT1 = intersectionsS[l].t1;
+    Float64 sT = sStep*ceil(intersectionsS[l].t0/sStep);
+    for (; sT <= sT1; sT+= sStep) {
+      Float32 d = this.sample(tid, sT, "Transmittance");
+      if (d < this.cutoff)continue;
+      sTrans *= expd(extinction * d * (sStep/(1.0+(sT*sGain))));
+      if (sTrans.lengthSquared() < this.cutoff)return sTrans;// goto Luminance;// Terminate shadow ray
+    }//Integration over shadow segment
+  }// Shadow ray march
+
+  return sTrans;
+}
+
+function Boolean SlavrVolumeMaterial.evaluate?(Size tid,
+                                               ShadingGlobals sg,
+                                               Vec3 wsP,
+                                               Vec3 wo,
+                                               io Vec3_d luminance,
+                                               io Vec3_d transmittance) 
+{
+  TimeSpan intersectionsP[];
+  if(!this.data.hits(tid, wsP, wo, "FullRaymarch", intersectionsP)) return false;
+  // this.load();
+  Float64 pSteps = this.primaryStep;
+  Float64 sSteps = this.shadowStep;
+  Vec3_d extinction = -this.scattering-this.absorption;
+  Vec3_d albedo = this.scattering/(this.scattering+this.absorption);//single scattering
+  
+  // SlavrLight lights<> = sg.lights;
+
+  Vec3_d One(1.0);
+  Boolean earlyExit = false;
+  for (Size k=0; !earlyExit && k<intersectionsP.size(); ++k) {
+    Float64 pT = pSteps*ceil(intersectionsP[k].t0/pSteps), pT1=intersectionsP[k].t1;
+    for (; !earlyExit && pT <= pT1; pT += pSteps) {
+      Vec3_d _wsP;
+      Float32 d = this.sample(tid, pT, _wsP, "FullRaymarch");
+      if (d < this.cutoff)continue;
+      Vec3_d dT = expd(extinction * d * pSteps);
+      Vec3_d sTrans(1.0);
+      RTCRay shadowRayNext(Vec3(Float32(_wsP.x), Float32(_wsP.y), Float32(_wsP.z)),
+                           sg.light.direction());
+      while(true){
+        rtcOccluded(sg.scene, shadowRayNext);
+        if(false/*|| isHoldOut(shadowRayNext.geomID)*/)break;
+        if(shadowRayNext.geomID == RTC_INVALID_GEOMETRY_ID )break;
+        if(shadowRayNext.geomID == sg.geo){
+        // if (material === this){
+          sTrans *= this.accumulateTransmittance(tid,
+                                                 shadowRayNext.org,
+                                                 shadowRayNext.dir);
+        }
+        else{
+          Ref<SlavrMaterialBase> material = sg.getMaterial(shadowRayNext.geomID);
+          sTrans *= material.accumulateTransmittance(tid,
+                                                     shadowRayNext.Ng,
+                                                     shadowRayNext.dir);
+        }
+        shadowRayNext.secondaryFromEye(shadowRayNext.Ng);
+      }
+      // Luminance:
+      Vec3_d lColor(sg.light.irradiance().x,
+                    sg.light.irradiance().y,
+                    sg.light.irradiance().z);
+      luminance += (lColor*/*single scattering*/albedo) * sTrans * transmittance * (One-dT);
+      transmittance *= dT;
+      if (transmittance.lengthSquared()<this.cutoff)return true;//goto Pixel;//    Terminate Ray
+    // }
+    }//Integration over primary segment
+  }// Primary ray march
+
+  return true;
+}
+
+// function IntegrationResult SlavrVolumeMaterial.evaluate?(io VdbRay state, Vec3 wi, Vec3 wc)
+// {
+//   Size tid = getThreadIndex()-1;
+//   // FloatGridSamplerNative sampler(this.data.accessor, this.data.grid.transform);
+
+//   Vec3_d extinction = -this.scattering-this.absorption;
+//   Vec3_d albedo = this.scattering/(this.scattering+this.absorption);//single scattering
+//   Vec3_d One(1.0);
+//   Float64 sGain = this.lightGain;//in-scattering along shadow ray
+//   Float64 pStep = this.primaryStep;//Integration step along primary ray in voxel units
+//   Float64 sStep = this.shadowStep;//Integration step along shadow ray in voxel units
+//   Float64 cutoff = this.cutoff;//Cutoff for density and transmittance
+
+//   // Vec3 lights<> = this.parent.lights;
+//   // Vec3 lightsColor<> = this.parent.lightsColor;
+
+//   TimeSpan pTS[];
+//   TimeSpan sTS[];
+//   Vec3_d pTrans(1.0), pLumi(0.0);
+//   VdbRay sRay, wssRay;
+
+//   VdbRay tstate = state;
+//   Ref<Transform> tx = this.data.transform;
+//   tstate.setEye(tx.worldToIndex(state.mEye));
+//   // Ref<Slavr> slavr = Slavr_GetInstance();
+//   // Ref<Slavr> slavr = Singleton_get("Slavr");
+
+//   if( !this.data.primary[tid].setIndexRay(tstate) )
+//     return IntegrationResult(pLumi, pTrans, state);
+
+//   this.data.primary[tid].hits(pTS);
+//   for (Size k=0;k<pTS.size(); ++k) {
+//     Float64 pT = pStep*ceil(pTS[k].t0/pStep), pT1=pTS[k].t1;
+//     for (; pT <= pT1; pT += pStep) {
+//       Vec3_d iPos = this.data.primary[tid].getIndexPos(pT);
+//       Float32 density = this.data.sampler[tid].isSample(iPos);
+//       if (density < cutoff) continue;
+//       Vec3_d dT = expd(extinction * density * pStep);
+//       // if(embreeRay.rayType == RayState::FullRaymarch){
+//       Vec3_d sTrans(1.0);
+//       sRay.setEye(iPos);
+//       wssRay.setEye(tx.indexToWorld(iPos));
+//       // for (Size light = 0; light < lights.size(); light++){
+//       // sRay.setDir(Vec3_d(lights[light].x, lights[light].y, lights[light].z).unit());
+//       Boolean doSha=true;
+//       sRay.setDir(Vec3_d(wi.x, wi.y, wi.z).unit());
+//       wssRay.setDir(sRay.mDir);
+//       if( !this.data.shadow[tid].setIndexRay(sRay)) continue;
+//       this.data.shadow[tid].hits(sTS);
+//       // look at the and of filesazz////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//       for (Size l=0; doSha && l<sTS.size(); ++l) {
+//         Float64 sT1=sTS[l].t1;
+//         // if (isObjectInside && sT1 > maxSelfTime)break;// goto Luminance;// Terminate sRay // past an holdout geo
+//         Float64 sT = sStep*ceil(sTS[l].t0/sStep);
+//         for (; doSha && sT <= sT1; sT+= sStep) {
+//           Float32 d = this.data.sampler[tid].isSample(this.data.shadow[tid].getIndexPos(sT));
+//           if (d < cutoff) continue;
+//           sTrans *= expd(extinction * d * (sStep/(1.0+(sT*sGain))));
+//           if (sTrans.lengthSquared()<cutoff)doSha = false;// goto Luminance;// Terminate sRay
+//         }//Integration over shadow segment
+//       }// Shadow ray march
+//       // Luminance:
+//       Vec3_d lColor(wc.x, wc.y, wc.z);
+//       pLumi += (lColor*albedo) * sTrans * pTrans * (One-dT);
+//       // }
+//       pTrans *= dT;
+//       if (pTrans.lengthSquared()<cutoff)return IntegrationResult(pLumi, pTrans, state);//goto Pixel;// Terminate Ray
+//       // }//end light loop
+//     }//Integration over primary segment
+//   }// Primary ray march
+//   return IntegrationResult(pLumi, pTrans, state);
+// }
+
+
+  /// @brief Set the integration step-size in voxel units for the primay ray.
+function SlavrVolumeMaterial.setPrimaryStep!(Float64 primaryStep) { this.primaryStep = primaryStep; }
+function SlavrVolumeMaterial.setPrimaryStep!(Float32 primaryStep) { this.primaryStep = Float64(primaryStep); }
+
+  /// @brief Set the integration step-size in voxel units for the primay ray.
+function SlavrVolumeMaterial.setShadowStep!(Float64 shadowStep) { this.shadowStep  = shadowStep; }
+function SlavrVolumeMaterial.setShadowStep!(Float32 shadowStep) { this.shadowStep  = Float64(shadowStep); }
+
+  /// @brief Set Scattering coefficients.
+function SlavrVolumeMaterial.setScattering!(Float64 x, Float64 y, Float64 z) { this.scattering = Vec3_d(x,y,z); }
+function SlavrVolumeMaterial.setScattering!(Float32 x, Float32 y, Float32 z) { this.scattering = Vec3_d(Float64(x),Float64(y),Float64(z)); }
+function SlavrVolumeMaterial.setScattering!(Color color) { this.scattering = Vec3_d(Float64(color.r),Float64(color.g),Float64(color.b)); }
+
+  /// @brief Set absorption coefficients.
+function SlavrVolumeMaterial.setAbsorption!(Float64 x, Float64 y, Float64 z) { this.absorption = Vec3_d(x,y,z); }
+function SlavrVolumeMaterial.setAbsorption!(Float32 x, Float32 y, Float32 z) { this.absorption = Vec3_d(Float64(x),Float64(y),Float64(z)); }
+function SlavrVolumeMaterial.setAbsorption!(Color color) { this.absorption = Vec3_d(Float64(color.r),Float64(color.g),Float64(color.b)); }
+
+  /// @brief Set parameter that imitates multi-scattering. A value
+  /// of zero implies no multi-scattering.
+function SlavrVolumeMaterial.setLightGain!(Float64 gain) { this.lightGain = gain; }
+function SlavrVolumeMaterial.setLightGain!(Float32 gain) { this.lightGain = Float64(gain); }
+
+  /// @brief Set the cut-off value for density and transmittance.
+function SlavrVolumeMaterial.setCutOff!(Float64 cutoff) { this.cutoff = cutoff; }
+function SlavrVolumeMaterial.setCutOff!(Float32 cutoff) { this.cutoff = Float64(cutoff); }
+
+
+
+
+
+
+      // Boolean isObjectInside = false;
+      // RTCRay embreeRay(wssRay);
+      // Float64 maxSelfTime;
+      // IntegrationResult tresult();
+      // // Float32 weight = 1;
+      // // while (true)
+      // // {
+      // if(slavr){
+      //   report("about to occludsez!");
+      //   if(slavr.scene.scene)
+      //     rtcOccluded(slavr.scene.scene, embreeRay);
+      //   report("occluded with id as : "+embreeRay.geomID);
+      // }
+      // if (embreeRay.geomID != RTC_INVALID_GEOMETRY_ID){
+      //   // break;
+      //   // there is a geometry between here and the light #shadow ray
+      //   // if (sTS.size()==0)break;
+      //     // we have hit active voxels along the shadow ray
+      //   Vec3 dgP  = embreeRay.org+embreeRay.tfar*embreeRay.dir;
+      //   // if(!isObjectInside){
+      //     Vec3_d lastTime = tx.indexToWorld(this.data.shadow[tid].getIndexPos(sTS[sTS.size()-1].t1));
+      //     Vec3 lastTimef(Float32(lastTime.x), Float32(lastTime.y), Float32(lastTime.z));
+      //     Float32 geoTime = (dgP - embreeRay.org).lengthSquared();
+      //     Float32 selfTime = (lastTimef - embreeRay.org).lengthSquared();
+      //     if (geoTime < selfTime){
+      //       // the geometry is inside the active voxel timespan
+      //       // if it's a holdout we should stop self sampling along the shadow up until the hit time of the holdout
+      //       // if it's another volume, then it's ok, we'll sample again.
+      //       isObjectInside = true;
+      //       maxSelfTime = this.data.shadow[tid].getIndexPos(tx.worldToIndex(lastTime));
+      //     }
+      //   // }
+
+      //   wssRay.setEye(Vec3_d(dgP.x, dgP.y, dgP.z));
+      //   tresult = slavr.evaluateMaterial(embreeRay.geomID, wssRay);
+      //   // pLumi += weight*tresult.luminance;
+      //   pTrans *= tresult.transmittance;
+
+      //   // weight *= tresult.transmittance.sum()/3.0f;
+      //   if (pTrans.lengthSquared()<cutoff)return IntegrationResult(pLumi, pTrans, state);//goto Pixel;// Terminate Ray
+
+      //   embreeRay.tnear = embreeRay.tfar;
+      //   embreeRay.tfar = 1000.0f;
+
+      //   embreeRay.geomID = RTC_INVALID_GEOMETRY_ID;
+      //   embreeRay.primID = RTC_INVALID_GEOMETRY_ID;
+      // }
+      // // }
+  

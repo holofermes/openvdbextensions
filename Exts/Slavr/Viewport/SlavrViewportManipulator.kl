@@ -1,0 +1,274 @@
+require InlineDrawing;
+require Manipulation;
+
+
+alias UInt32 VolumeRender_State;
+const VolumeRender_State VolumeRender_State_Active =  0;
+const VolumeRender_State VolumeRender_State_Dragging = 1;
+const VolumeRender_State VolumeRender_State_Suspended = 2;
+const VolumeRender_State VolumeRender_State_ResizingView = 3;
+const VolumeRender_State VolumeRender_State_Rendering = 5;
+const VolumeRender_State VolumeRender_State_Camering = 7;
+
+
+object SlavrViewportManipulator : Manipulator, SlavrViewportManipulatorBase {
+  VolumeRender_State state;
+  Vec2 regionSize;
+
+  Vec2 mouseDownScreenPos;
+
+  InlineMaterial viewportMaterial;
+  InlineInstance viewport;
+  DrawingHandle handle;
+  Vec2 viewportDim;
+};
+
+
+function SlavrViewportManipulator.init!(io DrawingHandle handle) {
+  this.handle = handle;
+
+  this.regionSize = Vec2(0.100, 0.100);
+
+  InlineDrawing drawing = OGLInlineDrawing_GetInstance();
+  InlineShader viewportShader = drawing.registerShader(OGLSlaverViewport("OGLSlaverViewport"));
+
+  this.viewportMaterial = viewportShader.getOrCreateMaterial("VolumeRender_Viewport");
+  PolygonMesh plane();
+  plane.addPlane(Xfo(Quat(Vec3(1,0,0), HALF_PI)), 1, 1, 1, 1, true, true);
+  InlineShape shape = InlineMeshShape('VolumeRender_Viewport', plane);
+  drawing.registerShape(shape);
+
+  InlineProceduralTexture texture = drawing.registerTexture(InlineProceduralTexture('viewport_vdb_texture'));
+  this.viewportMaterial.setUniform('u_texture', texture);
+  this.handle.setMetaData('SlavrViewport', texture);
+
+
+  InlineTransform transform = StaticInlineTransform('viewport_vdb_transform', Xfo());
+  drawing.getRoot().addChild(transform);
+  this.viewport = InlineInstance('VolumeRender', transform, shape);
+
+  this.viewportMaterial.addInstance(this.viewport);
+
+}
+
+function SlavrViewportManipulator.refreshTransform!(){
+  String path[];
+  path.push('viewport_vdb_transform');
+
+  InlineDrawing drawing = OGLInlineDrawing_GetInstance();
+  StaticInlineTransform sliderHandleTransform = drawing.getRoot().getChildByPath(path);
+  if(sliderHandleTransform){
+    sliderHandleTransform.setLocalXfo(0, this.viewport.getTransform().getLocalXfo(0));
+  }
+  this.viewport.getTransform().getLocalXfo(0);
+}
+function SlavrViewportManipulator.refreshView!(){
+  this.refreshTransform();
+}
+/// The callback fired when the SlavrViewportManipulator is enabled
+function SlavrViewportManipulator.onEnable!(){
+  if(!this.viewport.hasMaterial(this.viewportMaterial))
+    this.viewport.addMaterial(this.viewportMaterial);
+}
+
+/// The callback fired when the SlavrViewportManipulator is disabled
+function SlavrViewportManipulator.onDisable!(){
+  if(this.viewport.hasMaterial(this.viewportMaterial))
+    this.viewport.removeMaterial(this.viewportMaterial);
+}
+
+/// Follow the square along with the cursor
+function SlavrViewportManipulator.updateView!(io Event event, Vec2 mousePos){
+  this.viewportDim = event.getViewport().getDimensions();
+  Scalar viewportAspectRatio = this.viewportDim.x / this.viewportDim.y;
+  Xfo brushXfo(
+    Vec3(
+    ((mousePos.x / this.viewportDim.x) - 0.5) * 2.0,
+    ((mousePos.y / this.viewportDim.y) - 0.5) * -2.0,
+    0),
+    Quat(),
+    Vec3(0.1 / viewportAspectRatio, 0.1, 1.0)
+  );
+  this.viewport.getTransform().setLocalXfo(0, brushXfo);
+
+}
+
+
+/// Resize the render view while dragging
+function SlavrViewportManipulator.resizeView!(io Event event, Vec2 mousePos){
+  this.viewportDim = event.getViewport().getDimensions();
+  Scalar viewportAspectRatio = this.viewportDim.x / this.viewportDim.y;
+
+  Scalar nx = Math_clamp(mousePos.x, 0.0, this.viewportDim.x);
+  Scalar ny = Math_clamp(mousePos.y, 0.0, this.viewportDim.y);
+
+  Scalar deltax = this.mouseDownScreenPos.x - nx;
+  Scalar deltay = this.mouseDownScreenPos.y - ny;
+
+  this.regionSize.x = deltax;
+  this.regionSize.y = deltay;
+
+  Scalar halfx = this.mouseDownScreenPos.x - (deltax*0.5);
+  Scalar halfy = this.mouseDownScreenPos.y - (deltay*0.5);
+
+  Scalar sx = abs(deltax)*0.001;
+  Scalar sy = abs(deltay)*0.001;
+
+  Xfo brushXfo(
+    Vec3(
+    ((halfx / this.viewportDim.x ) - 0.5 ) * 2.0,
+    ((halfy / this.viewportDim.y ) - 0.5 ) * -2.0,
+    0),
+    Quat(),
+    Vec3(sx / viewportAspectRatio,
+         sy,
+         0.0)
+  );
+
+  this.viewport.getTransform().setLocalXfo(0, brushXfo);
+}
+
+/// \internal
+function SlavrViewportManipulator.infoView!(io Event event, Vec2 mousePos){
+  Vec2 viewportDim = event.getViewport().getDimensions();
+  Scalar viewportAspectRatio = viewportDim.x / viewportDim.y;
+
+  Scalar nx = mousePos.x;
+  Scalar ny = mousePos.y;
+
+  Scalar deltax = this.mouseDownScreenPos.x - nx;
+  Scalar deltay = this.mouseDownScreenPos.y - ny;
+
+  Scalar halfx = this.mouseDownScreenPos.x - (deltax*0.5);
+  Scalar halfy = this.mouseDownScreenPos.y - (deltay*0.5);
+
+  Scalar sx = abs(deltax)*0.001;
+  Scalar sy = abs(deltay)*0.001;
+
+  // report("nx: "+nx+" ny: "+ny);
+  // report("deltax: "+deltax+" deltay: "+deltay);
+  // report("halfx: "+halfx+" halfy: "+halfy);
+  // report("sx: "+sx+" sy: "+sy);
+  // report("this.mouseDownScreenPos.x: "+this.mouseDownScreenPos.x+" this.mouseDownScreenPos.y: "+this.mouseDownScreenPos.y);
+  // report("mousePos.x: "+mousePos.x+" mousePos.y: "+mousePos.y);
+  // report("viewportDim.x: "+viewportDim.x+" viewportDim.y: "+viewportDim.y);
+  // report("camera: "+event.getViewport().getCamera());
+}
+
+/// \internal
+function SlavrViewportManipulator.setState!(VolumeRender_State state){
+  report("setting state to: " + state);
+  this.state = state;
+}
+
+/// The event handler function for the VolumeRender
+/// \param event The event propagated from the host DCC application
+function SlavrViewportManipulator.onEvent!(io Event event){
+  Ref<SlavrViewportManipulatorBase> ipainter = this;
+
+  if(event.eventType() == Event_MouseButtonPress){
+    MouseEvent mouseEvent = event;
+
+    switch(this.state){
+    case VolumeRender_State_Active:
+      // Avoid disabling camera manipulation in Maya
+      // Note: testing the host name is casing a crash that doesn't make sense.
+      if((mouseEvent.host.hostName == "Maya" || mouseEvent.host.hostName == "Canvas" ) && (mouseEvent.modifiers & ModiferKey_Alt) != 0){
+        // While the camera manipulation is occuring, hide the
+        // render view and do not accept the events.
+        this.setState(VolumeRender_State_Suspended);
+        this.onDisable();
+        // event.accept();
+      }
+      else if(mouseEvent.host.hostName == "Softimage" || mouseEvent.host.hostName == "Canvas"  && (mouseEvent.modifiers & ModiferKey_Ctrl) != 0){
+        // While the camera manipulation is occuring, resize the render view
+        this.setState(VolumeRender_State_ResizingView);
+        this.mouseDownScreenPos = mouseEvent.pos;
+        event.accept();
+      }
+      else{
+        this.setState(VolumeRender_State_Dragging);
+        event.getHost().requestRedraw();
+        event.accept();
+      }
+      break;
+    case VolumeRender_State_Rendering:
+      if(mouseEvent.host.hostName == "Softimage" || mouseEvent.host.hostName == "Canvas" && (mouseEvent.modifiers & ModiferKey_Ctrl) != 0){
+
+        this.setState(VolumeRender_State_ResizingView);
+        this.mouseDownScreenPos = mouseEvent.pos;
+        ipainter.clear();
+        event.accept();
+      }
+      else{
+        this.setState(VolumeRender_State_Camering);
+        event.accept();
+      }
+      break;
+    }
+  }
+  else if(event.eventType() == Event_MouseMove){
+    // suspend event handling while manipulating the camera.
+    MouseEvent mouseEvent = event;
+    switch(this.state){
+      case VolumeRender_State_Suspended: return;
+      case VolumeRender_State_Active:
+        this.updateView(event, mouseEvent.pos);
+        event.getHost().requestRedraw();
+        event.accept();
+        break;
+      case VolumeRender_State_Dragging:
+        this.updateView(event, mouseEvent.pos);
+        event.getHost().requestRedraw();
+        event.accept();
+        break;
+      case VolumeRender_State_ResizingView:
+        this.resizeView(event, mouseEvent.pos);
+        event.getHost().requestRedraw();
+        event.accept();
+        break;
+    }
+  }
+  else if(event.eventType() == Event_MouseButtonRelease){
+    MouseEvent mouseEvent = event;
+    switch(this.state){
+    case VolumeRender_State_Suspended:
+      // reenable event handling now that camera manipulation is over.
+      this.setState(VolumeRender_State_Active);
+      this.onEnable();
+      event.getHost().requestRedraw();
+      break;
+    case VolumeRender_State_Active:
+      event.accept();
+      break;
+    case VolumeRender_State_Dragging:
+      // On release, end the stroke(which should cause an undo to be generated in the callback)
+      this.setState(VolumeRender_State_Active);
+      event.getHost().requestRedraw();
+      event.accept();
+      break;
+    case VolumeRender_State_Camering:
+    case VolumeRender_State_ResizingView:
+      this.infoView(event, mouseEvent.pos);
+      this.setState(VolumeRender_State_Rendering);
+      ipainter.render(event);
+      event.getHost().requestRedraw();
+      event.accept();
+      break;
+    }
+  }
+}
+
+
+/// Virtual function overridden in manipulators inheriting from SurfacePaintManipulator
+function SlavrViewportManipulator.render!(io Event event){
+  setError("Should be defined in an object inheriting from SlavrViewportManipulatorBase");
+}
+
+function SlavrViewportManipulator.render!(){
+  setError("Should be defined in an object inheriting from SlavrViewportManipulatorBase");
+}
+
+function SlavrViewportManipulator.clear!(){
+  setError("Should be defined in an object inheriting from SlavrViewportManipulatorBase");
+}

@@ -1,0 +1,39 @@
+// Created by kl2dfg (processDecomposeFunction)
+{
+  "objectType" : "Func",
+  "title" : "RangeSize ->",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "RangeSize" : {
+          "mBegin" : 0,
+          "mEnd" : 0
+          }
+        },
+      "name" : "value",
+      "execPortType" : "In",
+      "typeSpec" : "RangeSize"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "mBegin",
+      "execPortType" : "Out",
+      "typeSpec" : "Size"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "mEnd",
+      "execPortType" : "Out",
+      "typeSpec" : "Size"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "8867556252AD4110AE1475D2E9B31483",
+  "code" : "require Slavr;\n\ndfgEntry {\n  mBegin = value.mBegin;\n  mEnd = value.mEnd;\n}\n"
+  }

@@ -1,0 +1,19 @@
+// Created by kl2dfg (processConstant)
+{
+  "objectType" : "Func",
+  "title" : "VolumeRender_State_Dragging",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "value",
+      "execPortType" : "Out",
+      "typeSpec" : "VolumeRender_State"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "5A17D116E17A210F49383B2A696C2A9B",
+  "code" : "require Slavr;\n\ndfgEntry {\n  value = VolumeRender_State_Dragging;\n}\n"
+  }

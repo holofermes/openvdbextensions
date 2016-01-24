@@ -1,0 +1,65 @@
+// Created by kl2dfg (processDecomposeFunction)
+{
+  "objectType" : "Func",
+  "title" : "PixelRegion ->",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "PixelRegion" : {
+          "top" : {
+            "x" : 0,
+            "y" : 0
+            },
+          "bottom" : {
+            "x" : 0,
+            "y" : 0
+            },
+          "size" : {
+            "x" : 0,
+            "y" : 0
+            }
+          }
+        },
+      "name" : "value",
+      "execPortType" : "In",
+      "typeSpec" : "PixelRegion"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "In",
+      "name" : "top",
+      "execPortType" : "Out",
+      "typeSpec" : "Vec2"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "In",
+      "name" : "bottom",
+      "execPortType" : "Out",
+      "typeSpec" : "Vec2"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "In",
+      "name" : "size",
+      "execPortType" : "Out",
+      "typeSpec" : "Vec2"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "8867556252AD4110AE1475D2E9B31483",
+  "code" : "require Slavr;\n\ndfgEntry {\n  top = value.top;\n  bottom = value.bottom;\n  size = value.size;\n}\n"
+  }

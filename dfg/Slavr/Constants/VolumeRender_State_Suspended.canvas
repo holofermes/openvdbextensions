@@ -1,0 +1,19 @@
+// Created by kl2dfg (processConstant)
+{
+  "objectType" : "Func",
+  "title" : "VolumeRender_State_Suspended",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "value",
+      "execPortType" : "Out",
+      "typeSpec" : "VolumeRender_State"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "78C2618CC9FAFBD02B25AB8CB9F7C15D",
+  "code" : "require Slavr;\n\ndfgEntry {\n  value = VolumeRender_State_Suspended;\n}\n"
+  }

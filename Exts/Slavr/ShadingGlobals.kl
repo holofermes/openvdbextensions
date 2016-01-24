@@ -1,0 +1,99 @@
+require embree;
+
+object SlavrMaterial;
+
+alias UInt32 SlavrGeo;
+
+struct ShadingGlobals{
+  Ref<RTCScene> scene;
+  Ref<SlavrLight> light;
+  SlavrMaterial materials<>;
+  Vec2 pixel;
+  SlavrGeo geo;// last-visited-geo
+};
+
+function ShadingGlobals(){
+  this.geo = RTC_INVALID_GEOMETRY_ID;
+}
+
+inline SlavrMaterial ShadingGlobals.getMaterial?(SlavrGeo geomID){
+  return this.materials[geomID];
+}
+
+inline SlavrMaterial ShadingGlobals.getLastMaterial?(){
+  if(this.geo == RTC_INVALID_GEOMETRY_ID)throw("invalid material");
+  return this.materials[this.geo];
+}
+
+
+function RTCRay(VdbRay ray){
+  this.org.x = Float32(ray.mEye.x);
+  this.org.y = Float32(ray.mEye.y);
+  this.org.z = Float32(ray.mEye.z);
+  this.dir.x = Float32(ray.mDir.x);
+  this.dir.y = Float32(ray.mDir.y);
+  this.dir.z = Float32(ray.mDir.z);
+  this.tnear = Float32(ray.mTimeSpan.t0);
+  this.tfar = Float32(ray.mTimeSpan.t1);
+  this.geomID = RTC_INVALID_GEOMETRY_ID;
+  this.primID = RTC_INVALID_GEOMETRY_ID;
+  this.mask = -1;
+  this.time = 0;
+}
+function RTCRay(Vec3 eye, Vec3 dir, Float32 tnear, Float32 tfar){
+  this.org = eye;
+  this.dir = dir;
+  this.tnear = tnear;
+  this.tfar = tfar;
+  this.geomID = RTC_INVALID_GEOMETRY_ID;
+  this.primID = RTC_INVALID_GEOMETRY_ID;
+  this.mask = -1;
+  this.time = 0;
+}
+function RTCRay(Vec3 eye, Vec3 dir){
+  this.org = eye;
+  this.dir = dir;
+  this.tnear = 0.001f;
+  this.tfar = 1000.0f;
+  this.geomID = RTC_INVALID_GEOMETRY_ID;
+  this.primID = RTC_INVALID_GEOMETRY_ID;
+  this.mask = -1;
+  this.time = 0;
+}
+
+function RTCRay(Vec3_d eye, Vec3_d dir, Float32 tnear, Float32 tfar){
+  this.org = Vec3(Float32(eye.x), Float32(eye.y), Float32(eye.z));
+  this.dir = Vec3(Float32(dir.x), Float32(dir.y), Float32(dir.z));
+  this.tnear = tnear;
+  this.tfar = tfar;
+  this.geomID = RTC_INVALID_GEOMETRY_ID;
+  this.primID = RTC_INVALID_GEOMETRY_ID;
+  this.mask = -1;
+  this.time = 0;
+}
+
+function RTCRay(Vec3_d eye, Vec3_d dir){
+  this.org = Vec3(Float32(eye.x), Float32(eye.y), Float32(eye.z));
+  this.dir = Vec3(Float32(dir.x), Float32(dir.y), Float32(dir.z));
+  this.tnear = 0.001f;
+  this.tfar = 1000.0f;
+  this.geomID = RTC_INVALID_GEOMETRY_ID;
+  this.primID = RTC_INVALID_GEOMETRY_ID;
+  this.mask = -1;
+  this.time = 0;
+}
+
+inline RTCRay.secondaryFromEye!(Vec3 eye){
+  this.org =  eye;
+  this.tnear = 0.001f;
+  this.tfar = 1000.0f;
+  this.geomID = RTC_INVALID_GEOMETRY_ID;
+  this.primID = RTC_INVALID_GEOMETRY_ID;
+}
+
+inline RTCRay.secondaryFromNear!(Float32 near){
+  this.tnear = near;
+  this.tfar = 1000.0f;
+  this.geomID = RTC_INVALID_GEOMETRY_ID;
+  this.primID = RTC_INVALID_GEOMETRY_ID;
+}

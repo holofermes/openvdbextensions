@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by Scene"
+    },
+  "title" : "AddGeometry",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "Scene"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "instance",
+      "execPortType" : "In",
+      "typeSpec" : "InlineInstance"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "SlavrGeo"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "37DB98111ECFE9F7B53460BA564FAEAE",
+  "code" : "require Slavr;\n\ndfgEntry {\n  Ref<InlineInstance> instance_ref = instance;\n  result = this.addGeometry(instance_ref);\n}\n"
+  }

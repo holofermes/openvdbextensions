@@ -1,0 +1,54 @@
+// Created by kl2dfg (processDecomposeFunction)
+{
+  "objectType" : "Func",
+  "title" : "SlavrVolumeMaterial_Data ->",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "value",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrVolumeMaterial_Data"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "accessor",
+      "execPortType" : "Out",
+      "typeSpec" : "FloatConstAccessor[]"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "sampler",
+      "execPortType" : "Out",
+      "typeSpec" : "FloatGridSamplerNative[]"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "primary",
+      "execPortType" : "Out",
+      "typeSpec" : "VolumeRayIntersector[]"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "shadow",
+      "execPortType" : "Out",
+      "typeSpec" : "VolumeRayIntersector[]"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "transform",
+      "execPortType" : "Out",
+      "typeSpec" : "Transform"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "8867556252AD4110AE1475D2E9B31483",
+  "code" : "require Slavr;\n\ndfgEntry {\n  accessor = value.accessor;\n  sampler = value.sampler;\n  primary = value.primary;\n  shadow = value.shadow;\n  transform = value.transform;\n}\n"
+  }

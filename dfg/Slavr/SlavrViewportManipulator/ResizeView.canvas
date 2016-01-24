@@ -1,0 +1,39 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "Resize the render view while dragging\n\n Supported by SlavrViewportManipulator"
+    },
+  "title" : "ResizeView",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrViewportManipulator"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "event",
+      "execPortType" : "IO",
+      "typeSpec" : "Event"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "mousePos",
+      "execPortType" : "In",
+      "typeSpec" : "Vec2"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "E41D56F9E31BEA313A7C7FF952E8DA2C",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.resizeView(event, mousePos);\n}\n"
+  }

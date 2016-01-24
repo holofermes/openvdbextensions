@@ -1,0 +1,50 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "draws a uniform for the shader, applies the value essentially.\nthis particular method avoid the lookup of the location by name\nand draws the uniform directly\n\n Supported by SlavrMediumShader"
+    },
+  "title" : "BindUniformToLocation",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrMediumShader"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "context",
+      "execPortType" : "IO",
+      "typeSpec" : "DrawContext"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "uniform",
+      "execPortType" : "In",
+      "typeSpec" : "InlineUniform"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "location",
+      "execPortType" : "In",
+      "typeSpec" : "Integer"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "Boolean"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "E28AB5B56561F4007E1463BB664D0B0A",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.bindUniformToLocation(context, uniform, location);\n}\n"
+  }

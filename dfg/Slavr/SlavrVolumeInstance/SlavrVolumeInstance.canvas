@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by SlavrVolumeInstance"
+    },
+  "title" : "SlavrVolumeInstance",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "lut",
+      "execPortType" : "In",
+      "typeSpec" : "BBoxInstance<>"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "SlavrVolumeInstance"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "48C57A271700C1E4EBD8934D316671D2",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = SlavrVolumeInstance(lut);\n}\n"
+  }

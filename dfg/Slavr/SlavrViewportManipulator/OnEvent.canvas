@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "The event handler function for the VolumeRender\n\n Supported by SlavrViewportManipulator"
+    },
+  "title" : "OnEvent",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrViewportManipulator"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "event",
+      "execPortType" : "IO",
+      "typeSpec" : "Event"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "17565C164E27163791BED422307E5404",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.onEvent(event);\n}\n"
+  }

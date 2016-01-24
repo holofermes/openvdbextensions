@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by Slavr"
+    },
+  "title" : "AddMaterial",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "Slavr"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "material",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrMaterial"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "geomID",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrGeo"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "C72AE3C0D70527A3CB28DD8B5CEF6C91",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.addMaterial(material, geomID);\n}\n"
+  }

@@ -1,0 +1,104 @@
+require OpenVDBInlineDrawing;
+require OpenVDBWrapper;
+
+
+struct BBoxInstance{
+  BBox_d world[];
+  Boolean static;
+  UInt32 version;
+  Ref<InlineInstance> instance;
+};
+
+function BBoxInstance(BBox_d bbox[]){
+  this.world = bbox;
+  this.static = true;
+  this.version = -1;
+}
+
+function BBoxInstance(Ref<InlineInstance> instance, UInt32 version, Size items){
+  this.world.resize(items);
+  this.instance = instance;
+  this.version = version;
+  this.static = false;
+}
+
+
+
+object SlavrVolumeInstance: SlavrInstance{
+  // Ref<InlineInstance> instance;
+  BBoxInstance lut<>;
+  SlavrGeo geomID;
+};
+
+function SlavrVolumeInstance(BBoxInstance lut<>){
+  this.lut = lut;
+  this.geomID = RTC_INVALID_GEOMETRY_ID;
+}
+
+inline Size SlavrVolumeInstance.itemCount?(){
+  if(this.geomID == RTC_INVALID_GEOMETRY_ID || this.lut.size()-1 < this.geomID)return -1;
+  return this.lut[this.geomID].world.size();
+}
+
+inline SlavrVolumeInstance.boundsFunc?(Size item, io RTCBounds bounds_o){
+  BBoxInstance bbox = this.lut[this.geomID];
+  if(!bbox.static){
+    Ref<InlineInstance> instance = bbox.instance;
+    Ref<InlineTransform> vltx = instance.transform;
+
+    Ref<InlineVDBVolumesShape> vlms = instance.shape;
+    Ref<VDBVolumes> vdbv = vlms.volumes;
+    Ref<FloatGrid> grid = vdbv.getFloatGrid(0);
+
+    Transform tx = grid.transform.copy();
+    transformByXfo(tx, vltx.getLocalXfo(item));
+    bbox.world[item] = worldSpaceBBox(grid, tx);
+  }
+
+  bounds_o.lower_x = Float32(bbox.world[item].min.x);
+  bounds_o.lower_y = Float32(bbox.world[item].min.y);
+  bounds_o.lower_z = Float32(bbox.world[item].min.z);
+  bounds_o.upper_x = Float32(bbox.world[item].max.x);
+  bounds_o.upper_y = Float32(bbox.world[item].max.y);
+  bounds_o.upper_z = Float32(bbox.world[item].max.z);
+}
+
+inline SlavrVolumeInstance.intersectFunc?(Size item, io RTCRay ray_o){
+  BBoxInstance bbox = this.lut[this.geomID];
+  Float32 dirfrac_x = 1.0f / ray_o.dir.x;
+  Float32 dirfrac_y = 1.0f / ray_o.dir.y;
+  Float32 dirfrac_z = 1.0f / ray_o.dir.z;
+  Float32 t11 = Float32((bbox.world[item].min.x - ray_o.org.x)*dirfrac_x);
+  Float32 t2 = Float32((bbox.world[item].max.x - ray_o.org.x)*dirfrac_x);
+  Float32 t3 = Float32((bbox.world[item].min.y - ray_o.org.y)*dirfrac_y);
+  Float32 t4 = Float32((bbox.world[item].max.y - ray_o.org.y)*dirfrac_y);
+  Float32 t5 = Float32((bbox.world[item].min.z - ray_o.org.z)*dirfrac_z);
+  Float32 t6 = Float32((bbox.world[item].max.z - ray_o.org.z)*dirfrac_z);
+
+  Float32 t0 = Math_max(Math_max(Math_min(t11, t2), Math_min(t3, t4)), Math_min(t5, t6));
+  Float32 t1 = Math_min(Math_min(Math_max(t11, t2), Math_max(t3, t4)), Math_max(t5, t6));
+
+  if (t0 > t1){
+    return;
+  }
+
+  if ((ray_o.tnear < t0) & (t0 < ray_o.tfar)) {
+    ray_o.tfar = t0;
+    ray_o.geomID = this.geomID;
+    ray_o.primID = item;
+    ray_o.Ng = ray_o.org+t0*ray_o.dir;
+    // ray_o.uniforms = this.getPrimUniforms(item);
+  }
+
+  if ((ray_o.tnear < t1) & (t1 < ray_o.tfar)) {
+    ray_o.tfar = t1;
+    ray_o.geomID = this.geomID;
+    ray_o.primID = item;
+    ray_o.Ng = ray_o.org+t1*ray_o.dir;
+    // ray_o.uniforms = this.getPrimUniforms(item);
+  }
+}
+
+inline SlavrVolumeInstance.occludedFunc?(Size item, io RTCRay ray_o){
+  this.intersectFunc(item, ray_o);
+}

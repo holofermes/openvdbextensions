@@ -1,0 +1,22 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by Scene"
+    },
+  "title" : "Scene_GetInstance",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "Scene"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "E82A352133EA4BC30CCB6C82588AAA4E",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = Scene_GetInstance();\n}\n"
+  }

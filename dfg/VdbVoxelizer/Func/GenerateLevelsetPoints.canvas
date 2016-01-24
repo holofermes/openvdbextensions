@@ -1,0 +1,60 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "title" : "GenerateLevelsetPoints",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "inMesh",
+      "execPortType" : "In",
+      "typeSpec" : "PolygonMesh"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "voxelSize",
+      "execPortType" : "In",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "inBand",
+      "execPortType" : "In",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "exBand",
+      "execPortType" : "In",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "conversionFlags",
+      "execPortType" : "In",
+      "typeSpec" : "UInt32"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "IO",
+      "name" : "points",
+      "execPortType" : "IO",
+      "typeSpec" : "Vec3[]"
+      }
+    ],
+  "extDeps" : {
+    "VdbVoxelizer" : "*"
+    },
+  "presetGUID" : "CEA5123A7ED3C3FDD94AACC7D3BF038F",
+  "code" : "require VdbVoxelizer;\n\ndfgEntry {\n  Ref<PolygonMesh> inMesh_ref = inMesh;\n  generateLevelsetPoints(inMesh_ref, voxelSize, inBand, exBand, conversionFlags, points);\n}\n"
+  }

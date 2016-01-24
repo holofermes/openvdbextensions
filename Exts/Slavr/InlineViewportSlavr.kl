@@ -1,0 +1,175 @@
+require OpenVDB;
+require InlineDrawing;
+
+
+inline Vec2 Math_min(Vec2 a, Vec2 b){
+  return Vec2(Math_min(a.x, b.x), Math_min(a.y, b.y));
+}
+
+inline Vec2 Math_max(Vec2 a, Vec2 b){
+  return Vec2(Math_max(a.x, b.x), Math_max(a.y, b.y));
+}
+
+struct PixelRegion{
+  Vec2 top;
+  Vec2 bottom;
+  Vec2 size;
+};
+
+function PixelRegion(Vec2 a, Vec2 b){
+  this.top = Math_min(a,b);
+  this.bottom = Math_max(a,b);
+  this.size = this.bottom - this.top;
+}
+
+function PixelRegion(Vec2 bottom){
+  this.top = Vec2(0);
+  this.bottom = bottom;
+  this.size = this.bottom - this.top;
+}
+
+struct InlineViewportVDB{
+  Ref<InlineViewport> viewport;
+  VdbRay ray;
+
+  // PerspectiveCamera perspCamera;
+  PixelRegion region;
+  Size chunks;//chunks in pixels when doing pex. split pex calls along the height
+  Size offset;//offset in pixels when doing pex. each pex call does the 1 row of pixels along width
+  Color pixels<>;
+};
+
+function InlineViewportVDB(Ref<InlineViewport> viewport, PixelRegion region){
+  this.setViewport(viewport);
+  this.setRegion(region);
+}
+
+function InlineViewportVDB(Ref<InlineViewport> viewport){
+  this.setViewport(viewport);
+  this.setRegion();
+}
+
+inline InlineViewportVDB.setRegion!(){
+  this.region = PixelRegion(this.getDimensions());
+  this.offset = 1;
+  this.chunks = this.region.size.y/this.offset;
+}
+function InlineViewportVDB.setRegion!(PixelRegion region){
+  this.region = region;
+  this.offset = 1;
+  this.chunks = region.size.y/this.offset;
+}
+
+/*function InlineViewportVDB.setViewport!(Ref<InlineViewport> viewport){
+  this.viewport = viewport;
+  this.initRay();
+}*/
+function InlineViewportVDB.setViewport!(InlineViewport other){
+  this.viewport = other;
+  this.initRay();
+}
+function Vec2 InlineViewportVDB.getDimensions?(){
+  return Vec2(this.viewport.dimensions.x, this.viewport.dimensions.y);
+}
+
+function InlineViewportVDB.initRay!(){
+
+  Vec2 dim = this.getDimensions();
+  Scalar sx = (dim.x*0.5) / Scalar(dim.x);
+  Scalar sy = (dim.y*0.5) / Scalar(dim.y);
+
+  sx = (sx * 2.0) - 1.0;
+  sy = (sy * 2.0) - 1.0;
+
+  // Transform the origin from camera local to world space
+  Mat44 cameraMat = this.viewport.camera.getMat44();
+  Scalar aspectRatio = dim.x / dim.y;
+  Scalar frustumH = this.viewport.camera.orthographicFrustumH;
+  Scalar frustumW = this.viewport.camera.orthographicFrustumH * aspectRatio;
+  Vec3 rayStart = cameraMat * Vec3(frustumW * sx, frustumH * sy, 0.0);
+  Vec3 rayDirection = Vec3(-cameraMat.row2.x, -cameraMat.row2.y, -cameraMat.row2.z).unit();
+
+  this.ray.setTimes(this.viewport.camera.nearDistance, this.viewport.camera.farDistance);
+  this.ray.setEye(Vec3_d(rayStart.x, rayStart.y, rayStart.z));
+  this.ray.setDir(Vec3_d(rayDirection.x, rayDirection.y, rayDirection.z));
+
+}
+
+/// compute a ray into the scene based on a mouse coordinate
+inline VdbRay InlineViewportVDB.getRay(Vec2 pos){
+
+  VdbRay ray(this.ray);
+  Vec2 dim = this.getDimensions();
+  // if (dim.x == 0 || dim.y == 0){
+  //   setError("Error in calcRayFromScreenPos. Invalid InlineViewportVDB dimensions:" + dim);
+  //   return ray;
+  // }
+
+  // Convert the raster coordinates to screen space ([0,{w|h}] -> [-1,1]
+  // - Note: The raster vertical is inverted wrt OGL screenspace Y
+  Scalar sx = pos.x / Scalar(dim.x);
+  Scalar sy = pos.y / Scalar(dim.y);
+
+  sx = (sx * 2.0) - 1.0;
+  sy = (sy * 2.0) - 1.0;
+
+  // Transform the origin from camera local to world space
+  Mat44 cameraMat = this.viewport.camera.getMat44();
+
+  if(!this.viewport.camera.isOrthographic){
+    // Vec3 rayStart = cameraMat * Vec3(0.0, 0.0, 0.0);
+
+    // Get the projected window coordinate on the near plane
+    // See http://www.songho.ca/opengl/gl_projectionmatrix.html
+    // for details.
+    Mat44 projInv = this.viewport.getProjectionMat().inverse();
+    Vec3 rayDirection = projInv * Vec3(sx, -sy, -1.0);
+
+    // And from projection space to camera local.
+    // - We nuke the translation part since we're transforming a vector.
+    cameraMat.zeroTranslation();
+    rayDirection = cameraMat * rayDirection;
+    // rayDirection.normalize();
+  /*
+    IT THROWS!!!
+    Float64 deltaTimes = 1.0/rayDirection.dot(ray.dir());
+    ray.scaleTimes(deltaTimes);
+    IT THROWS!!!
+  */
+    ray.setDir(Vec3_d(rayDirection.x, rayDirection.y, rayDirection.z).unit());
+    // ray.setEye(Vec3_d(rayStart.x, rayStart.y, rayStart.z));
+  }
+  else{
+    Scalar aspectRatio = dim.x / dim.y;
+    Scalar frustumH = this.viewport.camera.orthographicFrustumH;
+    Scalar frustumW = this.viewport.camera.orthographicFrustumH * aspectRatio;
+    Vec3 rayStart = cameraMat * Vec3(frustumW * sx, frustumH * sy, 0.0);
+    Vec3 rayDirection = Vec3(-cameraMat.row2.x, -cameraMat.row2.y, -cameraMat.row2.z);
+    rayDirection.normalize();
+
+    ray.setEye(Vec3_d(rayStart.x, rayStart.y, rayStart.z));
+    ray.setDir(Vec3_d(rayDirection.x, rayDirection.y, rayDirection.z));
+  }
+    return ray;
+}
+
+
+/////////////////////////////// UTILITIES ///////////////////////////////////////
+
+struct RangeSize{
+  Size mBegin;
+  Size mEnd;
+};
+
+function RangeSize(Size begin, Size end){ this.mBegin = begin;  this.mEnd = end; }
+
+inline Size RangeSize.begin?(){ return this.mBegin; }
+
+inline Size RangeSize.end?(){ return this.mEnd; }
+
+
+
+inline Vec3_d expd(Vec3_d e){ return Vec3_d(exp(e.x), exp(e.y), exp(e.z)); }
+
+inline Float64 Vec3_d.sum() { return (this.x+this.y+this.z); }
+

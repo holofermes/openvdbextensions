@@ -1,0 +1,67 @@
+// Created by kl2dfg (processComposeFunction)
+{
+  "objectType" : "Func",
+  "title" : "-> PixelRegion",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "Vec2" : {
+          "x" : 0,
+          "y" : 0
+          }
+        },
+      "name" : "top",
+      "execPortType" : "In",
+      "typeSpec" : "Vec2"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "Vec2" : {
+          "x" : 0,
+          "y" : 0
+          }
+        },
+      "name" : "bottom",
+      "execPortType" : "In",
+      "typeSpec" : "Vec2"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "Vec2" : {
+          "x" : 0,
+          "y" : 0
+          }
+        },
+      "name" : "size",
+      "execPortType" : "In",
+      "typeSpec" : "Vec2"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "PixelRegion"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "ED0AA50CE031E30228BE862C4F9681D3",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result.top = top;\n  result.bottom = bottom;\n  result.size = size;\n}\n"
+  }

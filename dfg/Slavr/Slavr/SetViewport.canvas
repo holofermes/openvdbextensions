@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by Slavr"
+    },
+  "title" : "SetViewport",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "Slavr"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "viewport",
+      "execPortType" : "In",
+      "typeSpec" : "InlineViewport"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "region",
+      "execPortType" : "In",
+      "typeSpec" : "PixelRegion"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "45327FDBCAD51882AB77CBE4A12859E6",
+  "code" : "require Slavr;\n\ndfgEntry {\n  Ref<InlineViewport> viewport_ref = viewport;\n  this.setViewport(viewport_ref, region);\n}\n"
+  }

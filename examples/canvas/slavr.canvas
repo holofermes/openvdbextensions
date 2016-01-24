@@ -1,0 +1,580 @@
+{
+  "objectType" : "Graph",
+  "metadata" : {
+    "camera_mat44" : "{\n  \"row0\" : {\n    \"x\" : 0.9196829795837402,\n    \"y\" : 0.01550160627812147,\n    \"z\" : 0.3923451602458954,\n    \"t\" : 174.1590423583984\n    },\n  \"row1\" : {\n    \"x\" : -1.302449049944698e-06,\n    \"y\" : 0.999213457107544,\n    \"z\" : -0.03947631269693375,\n    \"t\" : 86.62525177001953\n    },\n  \"row2\" : {\n    \"x\" : -0.3926507830619812,\n    \"y\" : 0.03630519285798073,\n    \"z\" : 0.9189672470092773,\n    \"t\" : 383.3882446289063\n    },\n  \"row3\" : {\n    \"x\" : 0,\n    \"y\" : 0,\n    \"z\" : 0,\n    \"t\" : 1\n    }\n  }",
+    "timeline_start" : "1",
+    "timeline_loopMode" : "1",
+    "uiGraphZoom" : "{\n  \"value\" : 0.8305839896202087\n  }",
+    "timeline_simMode" : "0",
+    "camera_focalDistance" : "465.520751953125",
+    "timeline_current" : "1",
+    "timeline_end" : "50",
+    "uiGraphPan" : "{\n  \"x\" : 180.7142791748047,\n  \"y\" : 168.6941680908203\n  }"
+    },
+  "title" : "",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiPersistValue" : "true"
+        },
+      "nodePortType" : "Out",
+      "name" : "path",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiPersistValue" : "true"
+        },
+      "nodePortType" : "Out",
+      "name" : "field",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "handle",
+      "execPortType" : "Out",
+      "typeSpec" : "DrawingHandle"
+      }
+    ],
+  "extDeps" : {},
+  "nodes" : [
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":737.3705444335938,\"y\":-42.10467529296875}"
+        },
+      "name" : "EmptyManipHandle",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "value"
+          }
+        ],
+      "executable" : "Fabric.Exts.Manipulation.ManipHandle.EmptyManipHandle",
+      "presetGUID" : "55DA0D5962E79ACD27363B59D84F94C0"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":738.3794555664063,\"y\":44.91515350341797}"
+        },
+      "name" : "EmptyVDBVolume",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "volume"
+          }
+        ],
+      "executable" : "OpenVDBWrapper.EmptyVDBVolume",
+      "presetGUID" : "EE821C8FD27CAC712CED6FF60E9C597F"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":1095.958862304688,\"y\":99.09391784667969}"
+        },
+      "name" : "slavrVolume",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "manipulator"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "volume"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "path"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "field"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "handle"
+          }
+        ],
+      "executable" : "Slavr.slavrVolume"
+      }
+    ],
+  "connections" : {
+    "path" : [
+      "slavrVolume.path"
+      ],
+    "field" : [
+      "slavrVolume.field"
+      ],
+    "EmptyManipHandle.value" : [
+      "slavrVolume.manipulator"
+      ],
+    "EmptyVDBVolume.volume" : [
+      "slavrVolume.volume"
+      ],
+    "slavrVolume.handle" : [
+      "handle"
+      ]
+    },
+  "requiredPresets" : {
+    "Fabric.Exts.Manipulation.ManipHandle.EmptyManipHandle" : {
+      "objectType" : "Graph",
+      "title" : "Empty ManipHandle",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "In",
+          "name" : "value",
+          "execPortType" : "Out"
+          }
+        ],
+      "extDeps" : {},
+      "presetGUID" : "55DA0D5962E79ACD27363B59D84F94C0",
+      "nodes" : [
+        {
+          "objectType" : "Inst",
+          "name" : "ManipHandle",
+          "ports" : [
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "In",
+              "name" : "name"
+              },
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "Out",
+              "name" : "result"
+              }
+            ],
+          "executable" : "Fabric.Exts.Manipulation.ManipHandle.ManipHandle",
+          "presetGUID" : "1CEFFB4634DAD0A4AAFA9AB4BAEA908C"
+          },
+        {
+          "objectType" : "Var",
+          "name" : "handle",
+          "ports" : [
+            {
+              "objectType" : "VarPort",
+              "nodePortType" : "IO",
+              "name" : "value"
+              }
+            ],
+          "dataType" : "ManipHandle",
+          "extDep" : "Manipulation:*"
+          },
+        {
+          "objectType" : "Inst",
+          "metadata" : {
+            "uiGraphPos" : "{\"x\": 657, \"y\": 180}"
+            },
+          "name" : "Clear",
+          "ports" : [
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "IO",
+              "name" : "this"
+              }
+            ],
+          "executable" : "Fabric.Exts.Manipulation.ManipHandle.Clear",
+          "presetGUID" : "AE7BCC3342A7E192E9C40F7E9D086652"
+          }
+        ],
+      "connections" : {
+        "ManipHandle.result" : [
+          "handle.value"
+          ],
+        "handle.value" : [
+          "Clear.this"
+          ],
+        "Clear.this" : [
+          "value"
+          ]
+        }
+      },
+    "Fabric.Exts.Manipulation.ManipHandle.ManipHandle" : {
+      "objectType" : "Func",
+      "metadata" : {
+        "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/Manipulation/ManipHandle.html",
+        "uiTooltip" : "constructor taking a name\n\n Supported by ManipHandle"
+        },
+      "title" : "ManipHandle",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "defaultValues" : {
+            "String" : "Manipulation"
+            },
+          "name" : "name",
+          "execPortType" : "In",
+          "typeSpec" : "String"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "In",
+          "name" : "result",
+          "execPortType" : "Out",
+          "typeSpec" : "ManipHandle"
+          }
+        ],
+      "extDeps" : {
+        "Manipulation" : "*"
+        },
+      "presetGUID" : "1CEFFB4634DAD0A4AAFA9AB4BAEA908C",
+      "code" : "require Manipulation;\n\ndfgEntry {\n  result = ManipHandle(name);\n}\n"
+      },
+    "Fabric.Exts.Manipulation.ManipHandle.Clear" : {
+      "objectType" : "Func",
+      "metadata" : {
+        "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/Manipulation/ManipHandle.html",
+        "uiTooltip" : "clears the content of the ManipHandle\n\n Supported by ManipHandle"
+        },
+      "title" : "Clear",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "IO",
+          "name" : "this",
+          "execPortType" : "IO",
+          "typeSpec" : "ManipHandle"
+          }
+        ],
+      "extDeps" : {
+        "Manipulation" : "*"
+        },
+      "presetGUID" : "AE7BCC3342A7E192E9C40F7E9D086652",
+      "code" : "require Manipulation;\n\ndfgEntry {\n  this.clear();\n}\n"
+      },
+    "OpenVDBWrapper.EmptyVDBVolume" : {
+      "objectType" : "Func",
+      "title" : "EmptyVDBVolume",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "In",
+          "name" : "volume",
+          "execPortType" : "Out",
+          "typeSpec" : "VDBVolumes"
+          }
+        ],
+      "extDeps" : {
+        "OpenVDBWrapper" : "*"
+        },
+      "presetGUID" : "EE821C8FD27CAC712CED6FF60E9C597F",
+      "code" : "dfgEntry {\n  //result = lhs + rhs;\n  volume = VDBVolumes();\n}\n"
+      },
+    "Slavr.slavrVolume" : {
+      "objectType" : "Graph",
+      "metadata" : {
+        "uiGraphPan" : "{\n  \"x\" : -17.0,\n  \"y\" : 120.0\n  }"
+        },
+      "title" : "slavrVolume",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "manipulator",
+          "execPortType" : "In"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "volume",
+          "execPortType" : "In"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "path",
+          "execPortType" : "In"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "field",
+          "execPortType" : "In"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "In",
+          "name" : "handle",
+          "execPortType" : "Out",
+          "typeSpec" : "DrawingHandle"
+          }
+        ],
+      "extDeps" : {},
+      "origPresetGUID" : "D34EB04F5FEC2F61E9B566023E569DEA",
+      "nodes" : [
+        {
+          "objectType" : "Inst",
+          "metadata" : {
+            "uiGraphPos" : "{\"x\":864.0,\"y\":44.0}"
+            },
+          "name" : "DrawSlavrVDBVolumes",
+          "ports" : [
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "Out",
+              "name" : "volumeInstance"
+              },
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "IO",
+              "name" : "result"
+              },
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "IO",
+              "name" : "handle"
+              },
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "IO",
+              "name" : "volume"
+              },
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "In",
+              "name" : "path"
+              },
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "In",
+              "name" : "field"
+              }
+            ],
+          "executable" : "Slavr.Func.DrawSlavrVDBVolumes",
+          "presetGUID" : "D3AF63512E2BDD19241914AB1A284828"
+          },
+        {
+          "objectType" : "Inst",
+          "metadata" : {
+            "uiGraphPos" : "{\"x\":1189.0,\"y\":-57.0}"
+            },
+          "name" : "AddSlavrManipInstance",
+          "ports" : [
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "IO",
+              "name" : "this"
+              },
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "IO",
+              "name" : "handle"
+              },
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "IO",
+              "name" : "instance"
+              }
+            ],
+          "executable" : "Slavr.ManipHandle.AddSlavrManipInstance",
+          "presetGUID" : "C4EE3F34793DBAF2C9073CADC56E8F3E"
+          },
+        {
+          "objectType" : "Inst",
+          "metadata" : {
+            "uiGraphPos" : "{\"x\":341.0,\"y\":174.0}"
+            },
+          "name" : "GetDrawingHandle",
+          "ports" : [
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "In",
+              "name" : "this"
+              },
+            {
+              "objectType" : "InstPort",
+              "nodePortType" : "Out",
+              "name" : "result"
+              }
+            ],
+          "executable" : "Fabric.Exts.Manipulation.ManipHandle.GetDrawingHandle",
+          "presetGUID" : "3F478E2AA194A2018BF32A17B9AF28B9"
+          }
+        ],
+      "connections" : {
+        "manipulator" : [
+          "AddSlavrManipInstance.this",
+          "GetDrawingHandle.this"
+          ],
+        "volume" : [
+          "DrawSlavrVDBVolumes.volume"
+          ],
+        "path" : [
+          "DrawSlavrVDBVolumes.path"
+          ],
+        "field" : [
+          "DrawSlavrVDBVolumes.field"
+          ],
+        "DrawSlavrVDBVolumes.volumeInstance" : [
+          "AddSlavrManipInstance.instance"
+          ],
+        "DrawSlavrVDBVolumes.handle" : [
+          "AddSlavrManipInstance.handle"
+          ],
+        "AddSlavrManipInstance.handle" : [
+          "handle"
+          ],
+        "GetDrawingHandle.result" : [
+          "DrawSlavrVDBVolumes.handle"
+          ]
+        }
+      },
+    "Slavr.Func.DrawSlavrVDBVolumes" : {
+      "objectType" : "Func",
+      "title" : "DrawSlavrVDBVolumes",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "In",
+          "name" : "volumeInstance",
+          "execPortType" : "Out",
+          "typeSpec" : "InlineInstance"
+          },
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+            },
+          "nodePortType" : "IO",
+          "name" : "result",
+          "execPortType" : "IO",
+          "typeSpec" : "Vec3"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "IO",
+          "name" : "handle",
+          "execPortType" : "IO",
+          "typeSpec" : "DrawingHandle"
+          },
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
+            },
+          "nodePortType" : "IO",
+          "name" : "volume",
+          "execPortType" : "IO",
+          "typeSpec" : "VDBVolumes"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "path",
+          "execPortType" : "In",
+          "typeSpec" : "String"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "defaultValues" : {
+            "String" : "density"
+            },
+          "name" : "field",
+          "execPortType" : "In",
+          "typeSpec" : "String"
+          }
+        ],
+      "extDeps" : {
+        "Slavr" : "*"
+        },
+      "presetGUID" : "D3AF63512E2BDD19241914AB1A284828",
+      "code" : "require Slavr;\n\ndfgEntry {\n  drawSlavrVDBVolumes(volumeInstance, result, handle, volume, path, field);\n}\n"
+      },
+    "Slavr.ManipHandle.AddSlavrManipInstance" : {
+      "objectType" : "Func",
+      "metadata" : {
+        "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/Manipulation/ManipHandle.html",
+        "uiTooltip" : "Registers a surface sculpt manipulator\n\n Supported by ManipHandle"
+        },
+      "title" : "AddSlavrManipInstance",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "IO",
+          "name" : "this",
+          "execPortType" : "IO",
+          "typeSpec" : "ManipHandle"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "IO",
+          "name" : "handle",
+          "execPortType" : "IO",
+          "typeSpec" : "DrawingHandle"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "IO",
+          "name" : "instance",
+          "execPortType" : "IO",
+          "typeSpec" : "InlineInstance"
+          }
+        ],
+      "extDeps" : {
+        "Slavr" : "*"
+        },
+      "presetGUID" : "C4EE3F34793DBAF2C9073CADC56E8F3E",
+      "code" : "require Slavr;\n\ndfgEntry {\n  this.addSlavrManipInstance(handle, instance);\n}\n"
+      },
+    "Fabric.Exts.Manipulation.ManipHandle.GetDrawingHandle" : {
+      "objectType" : "Func",
+      "metadata" : {
+        "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/Manipulation/ManipHandle.html",
+        "uiTooltip" : "returns the DrawingHandle of this ManipHandle\n\n Supported by ManipHandle"
+        },
+      "title" : "GetDrawingHandle",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "this",
+          "execPortType" : "In",
+          "typeSpec" : "ManipHandle"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "In",
+          "name" : "result",
+          "execPortType" : "Out",
+          "typeSpec" : "DrawingHandle"
+          }
+        ],
+      "extDeps" : {
+        "Manipulation" : "*"
+        },
+      "presetGUID" : "3F478E2AA194A2018BF32A17B9AF28B9",
+      "code" : "require Manipulation;\n\ndfgEntry {\n  result = this.getDrawingHandle();\n}\n"
+      }
+    },
+  "args" : [
+    {
+      "type" : "String",
+      "value" : ""
+      },
+    {
+      "type" : "String",
+      "value" : ""
+      },
+    {
+      "type" : "DrawingHandle",
+      "value" : null,
+      "ext" : "InlineDrawing"
+      }
+    ]
+  }

@@ -1,0 +1,43 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by VolumeCache"
+    },
+  "title" : "SetGet",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "VolumeCache"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "filename",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "field",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "FloatGrid"
+      }
+    ],
+  "extDeps" : {
+    "VolumeCache" : "*"
+    },
+  "presetGUID" : "249A0846B4DA89F8EE599D5C6F7318D0",
+  "code" : "require VolumeCache;\n\ndfgEntry {\n  Ref<FloatGrid> result_ref = this.setGet(filename, field);\n  result = result_ref;\n}\n"
+  }

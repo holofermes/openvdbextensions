@@ -1,0 +1,22 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "The callback fired when the SlavrViewportManipulator is disabled\n\n Supported by SlavrViewportManipulator"
+    },
+  "title" : "OnDisable",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrViewportManipulator"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "0BB302F2EC61F5E3B1FBFACA43175854",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.onDisable();\n}\n"
+  }

@@ -1,0 +1,39 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "Follow the square along with the cursor\n\n Supported by SlavrViewportManipulator"
+    },
+  "title" : "UpdateView",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrViewportManipulator"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "event",
+      "execPortType" : "IO",
+      "typeSpec" : "Event"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "mousePos",
+      "execPortType" : "In",
+      "typeSpec" : "Vec2"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "B5A9BB5B184098519A99E0DA88C35F2D",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.updateView(event, mousePos);\n}\n"
+  }

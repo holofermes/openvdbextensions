@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "sets the global value of a uniform\nthis can be changed per material, per instance or even per transform\n\n Supported by SlavrMediumShader"
+    },
+  "title" : "SetUniform",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrMediumShader"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "uniform",
+      "execPortType" : "In",
+      "typeSpec" : "InlineUniform"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "393A630ADAF414B875A88B724B87466A",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.setUniform(uniform);\n}\n"
+  }

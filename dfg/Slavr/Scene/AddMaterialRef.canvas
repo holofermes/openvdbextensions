@@ -1,0 +1,36 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by Scene"
+    },
+  "title" : "AddMaterialRef",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "Scene"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "material",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrMaterial"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "geomID",
+      "execPortType" : "In",
+      "typeSpec" : "SlavrGeo"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "43B88499D0545D42E6997FCD51387255",
+  "code" : "require Slavr;\n\ndfgEntry {\n  Ref<SlavrMaterial> material_ref = material;\n  this.addMaterialRef(material_ref, geomID);\n}\n"
+  }

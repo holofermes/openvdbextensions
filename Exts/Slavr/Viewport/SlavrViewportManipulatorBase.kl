@@ -1,0 +1,6 @@
+interface SlavrViewportManipulatorBase {
+  render!(io Event event);
+  render!();
+  clear!();
+};
+

@@ -1,0 +1,57 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "title" : "GeneratePointsAndValuesFromLevelSet",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "grid",
+      "execPortType" : "In",
+      "typeSpec" : "FloatGrid"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "sampleGradient",
+      "execPortType" : "In",
+      "typeSpec" : "Boolean"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
+        },
+      "nodePortType" : "IO",
+      "name" : "pointsGeo",
+      "execPortType" : "IO",
+      "typeSpec" : "Points"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "points",
+      "execPortType" : "IO",
+      "typeSpec" : "Vec3Attribute"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "normals",
+      "execPortType" : "IO",
+      "typeSpec" : "Vec3Attribute"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "samples",
+      "execPortType" : "IO",
+      "typeSpec" : "ScalarAttribute"
+      }
+    ],
+  "extDeps" : {
+    "VdbVoxelizer" : "*"
+    },
+  "presetGUID" : "9E38A0526226F64373B0FAB342D566E6",
+  "code" : "require VdbVoxelizer;\n\ndfgEntry {\n  Ref<FloatGrid> grid_ref = grid;\n  generatePointsAndValuesFromLevelSet(grid_ref, sampleGradient, pointsGeo, points, normals, samples);\n}\n"
+  }
