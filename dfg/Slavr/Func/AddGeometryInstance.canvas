@@ -2,7 +2,7 @@
 {
   "objectType" : "Func",
   "metadata" : {
-    "uiTooltip" : "adds a single instance to the InlineMaterial\n\n Supported by Slavr"
+    "uiTooltip" : "adds a single instance to the InlineMaterial\n\n Supported by Slavr,SlavrViewport"
     },
   "title" : "AddGeometryInstance",
   "ports" : [
@@ -11,7 +11,7 @@
       "nodePortType" : "IO",
       "name" : "this",
       "execPortType" : "IO",
-      "typeSpec" : "Slavr"
+      "typeSpec" : "$TYPE$"
       },
     {
       "objectType" : "Port",

@@ -39,6 +39,16 @@
       },
     {
       "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 249,\n  \"g\" : 157,\n  \"b\" : 28\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "xfo",
+      "execPortType" : "In",
+      "typeSpec" : "Xfo"
+      },
+    {
+      "objectType" : "Port",
       "nodePortType" : "Out",
       "name" : "path",
       "execPortType" : "In",
@@ -58,6 +68,6 @@
   "extDeps" : {
     "Slavr" : "*"
     },
-  "presetGUID" : "D3AF63512E2BDD19241914AB1A284828",
-  "code" : "require Slavr;\n\ndfgEntry {\n  drawSlavrVDBVolumes(volumeInstance, result, handle, volume, path, field);\n}\n"
+  "presetGUID" : "26F424CAA26C06CA52DC8E964E782C6C",
+  "code" : "require Slavr;\n\ndfgEntry {\n  drawSlavrVDBVolumes(volumeInstance, result, handle, volume, xfo, path, field);\n}\n"
   }

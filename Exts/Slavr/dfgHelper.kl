@@ -1,60 +1,75 @@
 require Math;
 require Slavr;
 
-function String statistics(Ref<Slavr> slavr)
-{
-String sout = '\nSlavr has\n';
-sout += 'Preloaded: ' + slavr.preloadInstances.size() +'\n';
-sout += 'Instances: ' + slavr.scene.instances.size() +'\n';
-sout += 'Materials: ' + slavr.scene.materials.size() +'\n';
-sout += 'Lights: ' + slavr.scene.lights.size() +'\n';
-return sout;
+function String statistics(Ref<Slavr> slavr) {
+  String sout = '\nSlavr has\n';
+  sout += 'Preloaded: ' + slavr.preloadInstances.size() + '\n';
+  sout += 'Instances: ' + slavr.scene.instances.size() + '\n';
+  sout += 'Materials: ' + slavr.scene.materials.size() + '\n';
+  sout += 'Lights: ' + slavr.scene.lights.size() + '\n';
+  return sout;
 }
 
-
 /// Registers a surface sculpt manipulator
-function ManipHandle.addSlavrManipInstance!(io DrawingHandle handle, io InlineInstance instance) {
-  if(instance == null)
+function ManipHandle.addSlavrManipInstance !(io DrawingHandle handle,
+                                             io InlineInstance instance) {
+  if (instance == null)
     return;
 
   InlineVDBVolumesShape shape = instance.getShape();
-  if(!shape)
-  {
-    report('ManipHandle.addSurfaceSculptManip: Instance passed in is not using an InlineVDBVolumesShape.');
+  if (!shape) {
+    report(
+        'ManipHandle.addSurfaceSculptManip: Instance passed in is not using an InlineVDBVolumesShape.');
     return;
   }
 
   String uniqueName = 'SlavrViewport' + this.uid();
-  if(!this.manipulators.has(uniqueName))
-  {
+  if (!this.manipulators.has(uniqueName)) {
     SlavrViewport viewport = SlavrViewport(handle);
-    viewport.slavr.initSlavr();
+    if (handle.isEmpty()) {
+      viewport.slavr.initSlavr();
+    }
+    this.registerManipulator(uniqueName, viewport);
 
+    // for (Size ic; ic < viewport.slavr.preloadInstances.size(); ic++) {
+    //   Ref<InlineInstance> slInstance = viewport.slavr.preloadInstances[ic];
+    //   if (!slInstance)
+    //     continue;
+    //   if (slInstance == = instance) {
+    //     report('Instance ' + shape.name + 'already exists.');
+    //     return;
+    //   }
+    // }
     viewport.slavr.addLight(SlavrDirectionalLight(Vec3(-0.3), Vec3(0.8)));
     viewport.slavr.bbox = false;
-    viewport.slavr.addGeometryInstance(instance);
-    this.registerManipulator(uniqueName, viewport);
-    report(  statistics(viewport.slavr) );
+    // viewport.slavr.addGeometryInstance(instance);
+    report(statistics(viewport.slavr));
   }
 }
 
-
 /// \dfgPresetDefault field "density"
-function drawSlavrVDBVolumes(out InlineInstance volumeInstance, io Vec3 result, io DrawingHandle handle, io VDBVolumes volume, String path, String field) {
-
-  if(handle.isEmpty())
-  {
-    KLOpenVDB openvdb();
+function drawSlavrVDBVolumes(out InlineInstance volumeInstance,
+                             io Vec3 result,
+                             io DrawingHandle handle,
+                             io VDBVolumes volume,
+                             Xfo xfo,
+                             String path,
+                             String field) {
+  if (handle.isEmpty()) {
+    // KLOpenVDB openvdb();
     InlineDrawing draw = handle.getDrawing();
     draw.registerShapeAdaptor(OGLVDBVolumesShapeAdaptor());
 
     Boolean levelset = false;
-    volume.addFromFileField(path, field, levelset);
-    draw.registerShape(InlineVDBVolumesShape('volume', volume));
+    InlineVDBVolumesShape volumeShape('volume', volume);
 
-    SlavrMediumShader volumeShader = draw.registerShader(SlavrMediumShader('volume', OGLFloatGridVertexSS()));
-    
-    SlavrVolumeMaterial volumeMaterialSlavr = volumeShader.getOrCreateSlavrMaterial(SlavrVolumeMaterial('volume'));
+    draw.registerShape(volumeShape);
+
+    SlavrMediumShader volumeShader = draw.registerShader(
+        SlavrMediumShader('volume', OGLFloatGridVertexSS()));
+
+    SlavrVolumeMaterial volumeMaterialSlavr =
+        volumeShader.getOrCreateSlavrMaterial(SlavrVolumeMaterial('volume'));
     volumeMaterialSlavr.setScattering(Color(0.6, 0.9, 0.9));
     volumeMaterialSlavr.setAbsorption(Color(0.7, 0.7, 0.7));
     volumeMaterialSlavr.setPrimaryStep(1.0);
@@ -71,30 +86,30 @@ function drawSlavrVDBVolumes(out InlineInstance volumeInstance, io Vec3 result, 
     // volumeMaterial.setUniform('u_maxValue', minMax.y);
 
     InlineTransform rootTfo = handle.getRootTransform();
-    InlineTransform cubeTfo = rootTfo.addChild(StaticInlineTransform('volumesXfo'));
+    InlineTransform cubeTfo =
+        rootTfo.addChild(StaticInlineTransform('volumesXfo'));
+    Size count = 1;
+    cubeTfo.setLocalCount(count);
 
-    volumeInstance = volumeMaterial.addInstance(SimpleInlineInstance('volumeInst', cubeTfo, draw.getShape('volume')));
-
+    volumeInstance = volumeMaterial.addInstance(
+        SimpleInlineInstance('volumeInst', cubeTfo, volumeShape));
   }
 
   InlineTransform rootTfo = handle.getRootTransform();
   InlineTransform cubeTfo = rootTfo.getChild('volumesXfo');
 
   volumeInstance = cubeTfo.getChild('volumeInst');
- 
+
+  // Mat44 colorMap(Vec4(0.3, 0.9, 0.3, 1.0), Vec4(0.9, 0.3, 0.3, 1.0),
+                 // Vec4(0.9, 0.9, 0.3, 1.0), Vec4(0.3, 0.3, 0.9, 1.0));
   Size count = 1;
   cubeTfo.setLocalCount(count);
-  Mat44 colorMap(Vec4(0.3, 0.9, 0.3, 1.0),
-                 Vec4(0.9, 0.3, 0.3, 1.0),
-                 Vec4(0.9, 0.9, 0.3, 1.0),
-                 Vec4(0.3, 0.3, 0.9, 1.0));
+  for (Size i = 0; i < count; i++) {
+    cubeTfo.setLocalXfo(i, xfo);
 
-  for(Size i=0;i<count;i++) {
-    cubeTfo.setLocalXfo(i, Xfo(Vec3(0, i * 6.5f, 0)));
-    
-    Color color1;
-    color1.r = mathRandomScalar(17, i * 2) * 0.75 + 0.25;
-    color1.g = mathRandomScalar(18, i * 3) * 0.75 + 0.25;
-    color1.b = mathRandomScalar(19, i * 4) * 0.75 + 0.25;
+    // Color color1;
+    // color1.r = mathRandomScalar(17, i * 2) * 0.75 + 0.25;
+    // color1.g = mathRandomScalar(18, i * 3) * 0.75 + 0.25;
+    // color1.b = mathRandomScalar(19, i * 4) * 0.75 + 0.25;
   }
 }

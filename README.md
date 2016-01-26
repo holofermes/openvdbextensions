@@ -14,7 +14,7 @@ There are three extensions: `Slavr`, `VdbVoxelizer`, and `VolumeCache`.
 
 ##### Requires: 
  - OpenVDB, embree (https://bitbucket.org/holofermes/kl-externals).
- - OpenVDBWrapper, OpenVDBGeometry, OpenVDBInlineDrawing (https://bitbucket.org/holofermes/OpenVDBWrapper).
+ - OpenVDBWrapper, OpenVDBGeometry, OpenVDBInlineDrawing (https://bitbucket.org/holofermes/openvdbwrapper).
  - VolumeCache
 
 ##### Example:
@@ -35,7 +35,7 @@ VdbVoxelizer provides a geometry shader which draws boxes given from point posit
 
 ##### Requires: 
  - OpenVDB (https://bitbucket.org/holofermes/kl-externals).
- - OpenVDBWrapper, OpenVDBGeometry, OpenVDBInlineDrawing (https://bitbucket.org/holofermes/OpenVDBWrapper).
+ - OpenVDBWrapper, OpenVDBGeometry, OpenVDBInlineDrawing (https://bitbucket.org/holofermes/openvdbwrapper).
 
 ##### Example:
 From a bash shell, load the FE environment, cd into the root of this repo, and run:

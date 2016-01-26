@@ -25,6 +25,7 @@ object SlavrViewportManipulator : Manipulator, SlavrViewportManipulatorBase {
 
 
 function SlavrViewportManipulator.init!(io DrawingHandle handle) {
+  report("Initializing SlavrViewportManipulator");
   this.handle = handle;
 
   this.regionSize = Vec2(0.100, 0.100);

@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by SlavrViewport"
+    },
+  "title" : "AddGeometryInstance",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrViewport"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "instance",
+      "execPortType" : "IO",
+      "typeSpec" : "Ref<InlineInstance>"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "23FD1E342D72EF770DE7256AF10B3AB9",
+  "code" : "require Slavr;\n\ndfgEntry {\n  Ref<InlineInstance> instance_ref = instance;\n  this.addGeometryInstance(instance_ref);\n}\n"
+  }

@@ -2,54 +2,55 @@ require Manipulation;
 require VolumeCache;
 require OpenVDBGeometry;
 
-object Slavr{
+object Slavr {
   Ref<Scene> scene;
-  InlineViewportVDB  mViewport;
-  SimpleLock         lock;
-  Boolean            bbox;
-  UInt32             seed;
+  InlineViewportVDB mViewport;
+  SimpleLock lock;
+  Boolean bbox;
+  UInt32 seed;
   Ref<Object> preloadInstances[];
 };
 
-function Slavr(InlineViewportVDB  viewport){
+function Slavr(InlineViewportVDB viewport) {
   this.scene = Scene_GetInstance();
   this.init();
   this.setViewport(viewport);
   this.lock = SimpleLock("Slavr");
 }
 
-function Slavr(){
+function Slavr() {
   this.scene = Scene_GetInstance();
   this.init();
   this.lock = SimpleLock("Slavr");
 }
 
-function Slavr Slavr.getInstance(InlineViewportVDB  viewport) {
+function Slavr Slavr.getInstance(InlineViewportVDB viewport) {
   return Slavr_GetInstance(viewport);
 }
 
-function Slavr.init!() {
+function Slavr.init !() {
   this.bbox = false;
   this.seed = 4868;
 }
 
-function Slavr.initSlavr!() {
+function Slavr.initSlavr !() {
   this.initScene();
   this.scene.reset();
 }
 
-function Slavr.initScene!() {
+function Slavr.initScene !() {
+  this.preloadInstances.resize(0);
   this.scene.initScene();
 }
 
-function Slavr Slavr_GetInstance(InlineViewportVDB  viewport) {
+function Slavr Slavr_GetInstance(InlineViewportVDB viewport) {
   SimpleLock lock = SimpleLock("Slavr_Instance_Lock");
   AutoLock AL(lock);
 
   Object slavr = Singleton_get("Slavr");
 
   // Initialize the cache
-  if(slavr == null) {
+  if (slavr == null) {
     slavr = Slavr(viewport);
     Singleton_set("Slavr", slavr);
   }
@@ -65,16 +66,15 @@ function Slavr Slavr_GetInstance() {
   Object slavr = Singleton_get("Slavr");
 
   // Initialize the cache
-  if(slavr == null) {
+  if (slavr == null) {
     slavr = Slavr();
     Singleton_set("Slavr", slavr);
   }
   return slavr;
 }
 
-
-function GridBase Slavr.getGridFromFile?(String filename, String field){
-  if (filename != ""){
+function GridBase Slavr.getGridFromFile ? (String filename, String field) {
+  if (filename != "") {
     VolumeCache vc = VolumeCache_GetInstance();
     return GridBase(vc.getSet(filename, field));
   }
@@ -82,8 +82,8 @@ function GridBase Slavr.getGridFromFile?(String filename, String field){
   return null;
 }
 
-function Ref<FloatGrid> Slavr.setGridFromFile!(String filename, String field){
-  if (filename != ""){
+function Ref<FloatGrid> Slavr.setGridFromFile !(String filename, String field) {
+  if (filename != "") {
     VolumeCache vc = VolumeCache_GetInstance();
     Ref<FloatGrid> grid = vc.setGet(filename, field);
     return grid;
@@ -95,68 +95,82 @@ function Ref<FloatGrid> Slavr.setGridFromFile!(String filename, String field){
 //  Non-Ref
 //
 
-function Slavr.addMaterial!(io SlavrMaterial material, SlavrGeo geomID){
+function Slavr.addMaterial !(io SlavrMaterial material, SlavrGeo geomID) {
   this.scene.addMaterial(material, geomID);
 }
 
-function Slavr.addMaterial!(io SlavrMaterial material){
+function Slavr.addMaterial !(io SlavrMaterial material) {
   this.addMaterial(material, 0);
 }
 
 //  Ref
 //
-function Slavr.addGeometryInstance!(io Ref<InlineInstance> instance){
+function Slavr.addGeometryInstance !(io Ref<InlineInstance> instance) {
   AutoLock AL(this.lock);
+
   Ref<Object> obj = instance;
+  for (Size ic; ic < this.preloadInstances.size(); ic++) {
+    Ref<Object> slInstance = this.preloadInstances[ic];
+    if (!slInstance)
+      continue;
+    if (slInstance == obj) {
+      report('Instance already exists.');
+      return;
+    }
+  }
+
   this.preloadInstances.push(obj);
 }
 
-
 /// adds a single instance to the InlineMaterial
-inline Slavr.addGeometryInstance!(InlineInstance instance) {
+inline Slavr.addGeometryInstance !(InlineInstance instance) {
   Ref<InlineInstance> ref = instance;
   this.addGeometryInstance(ref);
 }
 
-function Boolean Slavr.needsNewScene?(){
-  if(this.scene.instances.size() != this.preloadInstances.size())return true;
+function Boolean Slavr.needsNewScene ? () {
+  if (this.scene.instances.size() != this.preloadInstances.size())
+    return true;
   return false;
 }
 
-function Boolean Slavr.updateScene!(){
-  if(this.needsNewScene()){
+function Boolean Slavr.updateScene !() {
+  if (this.needsNewScene()) {
     Size expectedSize = this.preloadInstances.size();
 
     if (expectedSize != this.scene.materials.size())
       this.scene.materials.resize(expectedSize);
 
-    for (Size ic; ic < this.preloadInstances.size(); ic++){
+    for (Size ic; ic < this.preloadInstances.size(); ic++) {
       Ref<InlineInstance> instance = this.preloadInstances[ic];
-      if(!instance)throw('instance is no good');
+      if (!instance)
+        throw('instance is no good');
       SlavrGeo geomID = this.addInstanceRef(instance);
       Ref<SlavrMaterial> material = this.scene.materialsRef[geomID];
       this.scene.materials[geomID] = material;
       // if(material.updateData(vltx.getGlobalXfo(0))){
       // this.materials[geomID] = material.dupe();
-        // rtcUpdate(this.scene, geomID);
-        // dirty = true;
+      // rtcUpdate(this.scene, geomID);
+      // dirty = true;
     }
     return true;
-  }
-  else{
+  } else {
     return this.scene.updateScene();
   }
 }
 
-function SlavrGeo Slavr.addInstanceRef!(Ref<InlineInstance> instance){
+function SlavrGeo Slavr.addInstanceRef !(Ref<InlineInstance> instance) {
   SlavrGeo geomID = this.scene.addGeometry(instance);
   for (Size m = 0; m < instance.materials.size(); m++) {
     Ref<InlineMaterial> inlineMaterial = instance.materials[m];
-    if(!inlineMaterial)continue;
+    if (!inlineMaterial)
+      continue;
     Ref<SlavrMediumShader> shader = inlineMaterial.shader;
-    if(!shader)continue;
-    Ref<SlavrMaterial> material = shader.getOrCreateSlavrMaterial(inlineMaterial.name);
-    if(material){
+    if (!shader)
+      continue;
+    Ref<SlavrMaterial> material =
+        shader.getOrCreateSlavrMaterial(inlineMaterial.name);
+    if (material) {
       material.createData(instance);
       this.scene.addMaterialRef(material, geomID);
     }
@@ -164,119 +178,111 @@ function SlavrGeo Slavr.addInstanceRef!(Ref<InlineInstance> instance){
   return geomID;
 }
 
-function Slavr.addMaterialRef!(io Ref<SlavrMaterial> material, SlavrGeo geomID){
+function Slavr.addMaterialRef !(io Ref<SlavrMaterial> material,
+                                SlavrGeo geomID) {
   this.scene.addMaterialRef(material, geomID);
 }
 
-
-function Slavr.clearLights!(){
+function Slavr.clearLights !() {
   this.scene.clearLights();
 }
 
-function Slavr.occlude?(io RTCRay ray){
+function Slavr.occlude ? (io RTCRay ray) {
   rtcOccluded(this.scene.scene, ray);
 }
 
-function Slavr.intersect?(io RTCRay ray){
+function Slavr.intersect ? (io RTCRay ray) {
   rtcIntersect(this.scene.scene, ray);
 }
 
-
-function Slavr.addLight!(io SlavrLight light){
+function Slavr.addLight !(io SlavrLight light) {
   this.scene.addLight(light);
 }
 
-
-function Slavr.setViewport!(InlineViewportVDB viewport) {\
+function Slavr.setViewport !(InlineViewportVDB viewport) {
   this.mViewport = viewport;
 }
 
-function Slavr.setViewport!(Ref<InlineViewport> viewport, PixelRegion region) {
+function Slavr.setViewport !(Ref<InlineViewport> viewport, PixelRegion region) {
   this.mViewport = InlineViewportVDB(viewport, region);
 }
 
-inline Boolean transformByXfo(io Transform tx, Xfo xfo){
+inline Boolean transformByXfo(io Transform tx, Xfo xfo) {
   tx.postTranslate(Vec3_d(xfo.tr.x, xfo.tr.y, xfo.tr.z));
   Float64 avg((xfo.sc.x + xfo.sc.y + xfo.sc.z) * (1.0f / 3.0f));
-  if(avg!=0.0f)
+  if (avg != 0.0f)
     tx.preScale(avg);
   return true;
 }
 
-inline SlavrMaterial Slavr.getMaterial?(SlavrGeo geomID){
+inline SlavrMaterial Slavr.getMaterial ? (SlavrGeo geomID) {
   return this.scene.materials[geomID];
 }
 
-inline Vec3_d Slavr.accumulateTransmittance?(Size tid, SlavrGeo geomID, Vec3 wsP, Vec3 wi){
-  if (geomID == RTC_INVALID_GEOMETRY_ID) return Vec3_d(1);
+inline Vec3_d Slavr.accumulateTransmittance
+    ? (Size tid, SlavrGeo geomID, Vec3 wsP, Vec3 wi) {
+  if (geomID == RTC_INVALID_GEOMETRY_ID)
+    return Vec3_d(1);
   Ref<SlavrMaterial> mediumMaterial = this.getMaterial(geomID);
   return mediumMaterial.accumulateTransmittance(tid, wsP, wi);
 }
 
-inline Boolean Slavr.evalMedium?(Size tid,
-                                 ShadingGlobals sg,
-                                 Vec3 wsP,
-                                 Vec3 wo,
-                                 io Vec3_d luminance,
-                                 io Vec3_d transmittance) 
-{
+inline Boolean Slavr.evalMedium ? (Size tid,
+                                   ShadingGlobals sg,
+                                   Vec3 wsP,
+                                   Vec3 wo,
+                                   io Vec3_d luminance,
+                                   io Vec3_d transmittance) {
   Ref<SlavrMaterial> mediumMaterial = sg.getLastMaterial();
 
-  return mediumMaterial.evaluate(tid,
-                                 sg,
-                                 wsP,
-                                 wo,
-                                 luminance,
-                                 transmittance);
+  return mediumMaterial.evaluate(tid, sg, wsP, wo, luminance, transmittance);
 }
 
-inline ShadingGlobals Slavr.getSG?() {
+inline ShadingGlobals Slavr.getSG ? () {
   ShadingGlobals sg;
   sg.scene = this.scene.scene;
   sg.materials = this.scene.materials;
   return sg;
 }
 
-inline IntegrationResult Slavr.integrateRay?(io ShadingGlobals sg) {
+inline IntegrationResult Slavr.integrateRay ? (io ShadingGlobals sg) {
   RTCRay embreeRay(this.mViewport.getRay(sg.pixel));
   Size tid = getThreadIndex();
 
   Float64 weight = 1.0f;
   IntegrationResult result();
-  while (true)
-  {
+  while (true) {
     rtcIntersect(this.scene.scene, embreeRay);
     Vec3 wo = embreeRay.dir.negate();
     // last-visited-geo
     sg.geo = embreeRay.geomID;
-    if (sg.geo == RTC_INVALID_GEOMETRY_ID)break;
-    if (this.bbox){
+    if (sg.geo == RTC_INVALID_GEOMETRY_ID)
+      break;
+    if (this.bbox) {
       Color rc(randomColor(this.seed, sg.geo, 0.0 /*gammaAdjustment*/));
-      result = IntegrationResult(Vec3_d(Float32(rc.r), Float32(rc.g), Float32(rc.b)), Vec3_d(1.0));
+      result = IntegrationResult(
+          Vec3_d(Float32(rc.r), Float32(rc.g), Float32(rc.b)), Vec3_d(1.0));
       break;
     }
-    if(false/*isHoldOut(embreeRay.geomID*/)break;
+    if (false /*isHoldOut(embreeRay.geomID*/)
+      break;
     Vec3_d pTrans(1.0), pLumi(0.0);
-    if(true/*isMedium(embreeRay.geomID)*/){
-      for (Size light = 0; light < this.scene.lights.size(); light++){
-      //pick-a-light
-      sg.light = this.scene.lights[light];
-      Boolean hasIntegrationHappened = this.evalMedium(tid,
-                                                       sg,
-                                                       embreeRay.Ng,
-                                                       wo,
-                                                       pLumi,
-                                                       pTrans);
+    if (true /*isMedium(embreeRay.geomID)*/) {
+      for (Size light = 0; light < this.scene.lights.size(); light++) {
+        // pick-a-light
+        sg.light = this.scene.lights[light];
+        Boolean hasIntegrationHappened =
+            this.evalMedium(tid, sg, embreeRay.Ng, wo, pLumi, pTrans);
       }
     }
     // else if(isSurface(embreeRay.geomID)) {
     // }
 
     // Pixel
-    result.luminance += weight*pLumi;
+    result.luminance += weight * pLumi;
     result.transmittance *= pTrans;
 
-    weight *= pTrans.sum()/3.0;
+    weight *= pTrans.sum() / 3.0;
     if (weight <= 0.0)
       break;
 
@@ -286,29 +292,27 @@ inline IntegrationResult Slavr.integrateRay?(io ShadingGlobals sg) {
   return result;
 }
 
-
-inline Slavr.probeRays?(Vec2 xy, io VdbRay rays[]) {
+inline Slavr.probeRays ? (Vec2 xy, io VdbRay rays[]) {
   VdbRay state = this.mViewport.getRay(xy);
   RTCRay embreeRay(state);
   IntegrationResult result();
   IntegrationResult tresult();
 
   Float32 weight = 1;
-  while (true)
-  {
+  while (true) {
     rtcIntersect(this.scene.scene, embreeRay);
     if (embreeRay.geomID == RTC_INVALID_GEOMETRY_ID)
       return;
 
-    Vec3 dgP = embreeRay.org+embreeRay.tfar*embreeRay.dir;
+    Vec3 dgP = embreeRay.org + embreeRay.tfar * embreeRay.dir;
 
     state.setEye(Vec3_d(dgP.x, dgP.y, dgP.z));
 
     rays.push(state);
     rays.push(state);
-    result.luminance += weight*tresult.luminance;
+    result.luminance += weight * tresult.luminance;
     result.transmittance *= tresult.transmittance;
-    weight *= tresult.transmittance.sum()/3.0;
+    weight *= tresult.transmittance.sum() / 3.0;
     if (weight <= 0.0f)
       return;
 
@@ -320,15 +324,13 @@ inline Slavr.probeRays?(Vec2 xy, io VdbRay rays[]) {
   }
 }
 
-
-inline RangeSize Slavr.getRangeFromChunk(Size chunk){
-  Size start = this.mViewport.region.top.y+chunk*this.mViewport.offset;
-  Size end = start+this.mViewport.offset;
+inline RangeSize Slavr.getRangeFromChunk(Size chunk) {
+  Size start = this.mViewport.region.top.y + chunk * this.mViewport.offset;
+  Size end = start + this.mViewport.offset;
   return RangeSize(start, end);
 }
 
-inline Slavr.renderTileFromChunk?(Size chunk){
-
+inline Slavr.renderTileFromChunk ? (Size chunk) {
   RangeSize range = this.getRangeFromChunk(chunk);
 
   Size ystart = range.begin();
@@ -342,32 +344,32 @@ inline Slavr.renderTileFromChunk?(Size chunk){
   VdbRay rays[];
   ShadingGlobals sg = this.getSG();
   Color pixels<> = this.mViewport.pixels;
-  for (Size j=ystart, je = yend; j<je; ++j) {
-    for (Size i=x, ie = width; i<ie; ++i) {
-      Size index = (i-xoffset) + ((j-yoffset)) * (width-xoffset);
+  for (Size j = ystart, je = yend; j < je; ++j) {
+    for (Size i = x, ie = width; i < ie; ++i) {
+      Size index = (i - xoffset) + ((j - yoffset)) * (width - xoffset);
       // Set up the next sample
       // Float32 xSample, ySample;
       // PTime pTime(0.0);
       // setupSample(i.rsX(), i.rsY(), iX, iY, xSample, ySample, pTime);
       // Render pixel
       // IntegrationResult result = this.integrateRay(xSample, ySample, pTime);
-      //pick-a-pixel
-      sg.pixel = Vec2(i,j);
+      // pick-a-pixel
+      sg.pixel = Vec2(i, j);
       IntegrationResult result = this.integrateRay(sg);
       pixels[index].r = Float32(result.luminance.x);
       pixels[index].g = Float32(result.luminance.y);
       pixels[index].b = Float32(result.luminance.z);
-      pixels[index].a = Float32(1.0f - result.transmittance.sum()/3.0f);
-    }//Horizontal pixel scan
-  }//Vertical pixel scan
+      pixels[index].a = Float32(1.0f - result.transmittance.sum() / 3.0f);
+    }  // Horizontal pixel scan
+  }  // Vertical pixel scan
   end = getCurrentTicks();
 
-
-  // report("completed chunk["+String(this.mViewport.chunks-1)+"]x["+abs(ystart-yend)*(x-width)+"]pixels in ["+Float32(getSecondsBetweenTicks(start, end))+"] seconds");
+  // report("completed
+  // chunk["+String(this.mViewport.chunks-1)+"]x["+abs(ystart-yend)*(x-width)+"]pixels
+  // in ["+Float32(getSecondsBetweenTicks(start, end))+"] seconds");
 }
 
-
-function Slavr.renderRaysFromChunk?(Size chunk, io VdbRay rays[][]){
+function Slavr.renderRaysFromChunk ? (Size chunk, io VdbRay rays[][]) {
   RangeSize range = this.getRangeFromChunk(chunk);
 
   Size ystart = range.begin();
@@ -378,91 +380,90 @@ function Slavr.renderRaysFromChunk?(Size chunk, io VdbRay rays[][]){
   Size yoffset = this.mViewport.region.top.y;
 
   Color pixels<> = this.mViewport.pixels;
-  for (Size j=ystart, je = yend; j<je; ++j) {
-    for (Size i=x, ie = width; i<ie; ++i) {
-      Size index = (i-xoffset) + ((j-yoffset)) * (width-xoffset);
-      this.probeRays(Vec2(i,j), rays[index]);
-    }//Horizontal pixel scan
-  }//Vertical pixel scan
+  for (Size j = ystart, je = yend; j < je; ++j) {
+    for (Size i = x, ie = width; i < ie; ++i) {
+      Size index = (i - xoffset) + ((j - yoffset)) * (width - xoffset);
+      this.probeRays(Vec2(i, j), rays[index]);
+    }  // Horizontal pixel scan
+  }  // Vertical pixel scan
 
-  // report("completed chunk["+String(this.mViewport.chunks-1)+"]x["+abs(ystart-yend)*(x-width)+"]pixels in ["+Float32(getSecondsBetweenTicks(start, end))+"] seconds");
+  // report("completed
+  // chunk["+String(this.mViewport.chunks-1)+"]x["+abs(ystart-yend)*(x-width)+"]pixels
+  // in ["+Float32(getSecondsBetweenTicks(start, end))+"] seconds");
 }
 
-
-operator integrateKL<<<chunk>>>(Slavr renderer){
+operator integrateKL<<<chunk>>>(Slavr renderer) {
   // report("integrateKL: "+chunk);
   // report(Boolean(renderer));
   renderer.renderTileFromChunk(chunk);
 }
 
-operator testKL<<<chunk>>>(Slavr renderer, io VdbRay rays[][]){
+operator testKL<<<chunk>>>(Slavr renderer, io VdbRay rays[][]) {
   renderer.renderRaysFromChunk(chunk, rays);
 }
 
-function Slavr.commitScene?() {
+function Slavr.commitScene ? () {
   this.scene.commitScene();
 }
 
-function Slavr.render?() {
+function Slavr.render ? () {
   if (!this.scene.instances.size())
     return;
   UInt64 start, end;
-  report("about to run integrateKL this many times: "+this.mViewport.chunks);
+  report("about to run integrateKL this many times: " + this.mViewport.chunks);
 
   start = getCurrentTicks();
   integrateKL<<<this.mViewport.chunks>>>(this);
   end = getCurrentTicks();
-  report("finished running this many times: "+this.mViewport.chunks);
-  report("integrateKL run in: " + Float32(getSecondsBetweenTicks(start, end)) + " seconds, at ["+this.mViewport.region.size+"]");
+  report("finished running this many times: " + this.mViewport.chunks);
+  report("integrateKL run in: " + Float32(getSecondsBetweenTicks(start, end)) +
+         " seconds, at [" + this.mViewport.region.size + "]");
 }
 
-function Slavr.testRays?(io VdbRay rays[][]) {
+function Slavr.testRays ? (io VdbRay rays[][]) {
   if (!this.scene.instances.size())
     return;
   UInt64 start, end;
-  report("about to run testRays this many times: "+this.mViewport.chunks);
+  report("about to run testRays this many times: " + this.mViewport.chunks);
 
   start = getCurrentTicks();
   VdbRay out[];
 
-  rays.resize(this.mViewport.region.size.x*this.mViewport.region.size.y);
+  rays.resize(this.mViewport.region.size.x * this.mViewport.region.size.y);
   testKL<<<this.mViewport.chunks>>>(this, rays);
   end = getCurrentTicks();
-  report("finished running testRays this many times: "+this.mViewport.chunks);
-  report("testRays run in: " + Float32(getSecondsBetweenTicks(start, end)) + " seconds, at ["+this.mViewport.region.size+"]");
+  report("finished running testRays this many times: " + this.mViewport.chunks);
+  report("testRays run in: " + Float32(getSecondsBetweenTicks(start, end)) +
+         " seconds, at [" + this.mViewport.region.size + "]");
 }
 
-function Slavr.render?(io InlineProceduralTexture texture, io Event event){
+function Slavr.render ? (io InlineProceduralTexture texture, io Event event) {
   if (!this.scene.instances.size())
     return;
   UInt64 start, end;
-  report("about to run renderPexGL this many times: "+this.mViewport.chunks);
+  report("about to run renderPexGL this many times: " + this.mViewport.chunks);
 
   start = getCurrentTicks();
   renderPexGL<<<this.mViewport.chunks>>>(this, texture, event);
   end = getCurrentTicks();
-  report("finished running this many times: "+this.mViewport.chunks);
-  report("renderPexGL run in: " + Float32(getSecondsBetweenTicks(start, end)) + " seconds, at ["+this.mViewport.region.size+"]");
+  report("finished running this many times: " + this.mViewport.chunks);
+  report("renderPexGL run in: " + Float32(getSecondsBetweenTicks(start, end)) +
+         " seconds, at [" + this.mViewport.region.size + "]");
 }
 
-inline RangeSize Slavr.getRange?(Size chunk, Size offset){
-  Size start = this.mViewport.region.top.y+chunk*offset;
-  Size end = start+offset;
+inline RangeSize Slavr.getRange ? (Size chunk, Size offset) {
+  Size start = this.mViewport.region.top.y + chunk * offset;
+  Size end = start + offset;
   return RangeSize(start, end);
 }
 
-
-operator renderPexGL<<<chunk>>>(
-                               Slavr renderer,
-                               io InlineProceduralTexture texture,
-                               io Event event){
-
+operator renderPexGL<<<chunk>>>(Slavr renderer,
+                                io InlineProceduralTexture texture,
+                                io Event event) {
   renderer.renderTileFromChunk(chunk);
   texture.version++;
   event.getHost().requestRedraw();
 }
-
-
 
 function String Slavr.getDesc(String indent) {
   String desc;
@@ -475,4 +476,3 @@ function String Slavr.getDesc(String indent) {
 function String Slavr.getDesc() {
   return this.getDesc("");
 }
-

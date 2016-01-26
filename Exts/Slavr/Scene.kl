@@ -3,7 +3,6 @@ require Singletons;
 
 require embree;
 
-
 const String SCENE_LOCK = "Slavr.Scene";
 
 object Scene {
@@ -34,17 +33,20 @@ function ~Scene() {
   rtcExit();
 }
 
-function Scene.initScene!() {
+function Scene.initScene !() {
   report("initializing scene");
   AutoLock AL(this.lock);
-  RTCSceneFlags flags = RTC_SCENE_DYNAMIC | RTC_SCENE_HIGH_QUALITY/*| RTC_SCENE_COMPACT, RTC_SCENE_COHERENT, RTC_SCENE_ROBUST*/;
+  RTCSceneFlags flags =
+      RTC_SCENE_DYNAMIC |
+      RTC_SCENE_HIGH_QUALITY /*| RTC_SCENE_COMPACT, RTC_SCENE_COHERENT, RTC_SCENE_ROBUST*/;
   RTCAlgorithmFlags aflags = RTC_INTERSECT1;
-  if(this.scene != null)rtcDeleteScene(this.scene);
-  this.scene = rtcNewScene(flags,aflags);
+  if (this.scene != null)
+    rtcDeleteScene(this.scene);
+  this.scene = rtcNewScene(flags, aflags);
   report("end initializing the scene");
 }
 
-function Scene.reset!() {
+function Scene.reset !() {
   this.lights.resize(0);
   this.materials.resize(0);
   this.bboxs.resize(0);
@@ -59,7 +61,7 @@ function Scene Scene_GetInstance() {
   Object _scene = Singleton_get(SCENE_LOCK);
 
   // Initialize the cache
-  if(_scene == null) {
+  if (_scene == null) {
     _scene = Scene();
     Singleton_set(SCENE_LOCK, _scene);
   }
@@ -67,16 +69,15 @@ function Scene Scene_GetInstance() {
   return _scene;
 }
 
-
-function SlavrGeo Scene.addGeometry!(Ref<InlineInstance> instance){
+function SlavrGeo Scene.addGeometry !(Ref<InlineInstance> instance) {
   AutoLock AL(this.lock);
 
   Ref<InlineTransformBase> tx = instance.transform;
   BBoxInstance bbox(instance, tx.version, tx.getLocalCount());
 
   SlavrGeo geomID = rtcNewUserGeometry(this.scene, tx.getLocalCount());
-  this.bboxs.resize(geomID+1);
-  this.versions.resize(geomID+1);
+  this.bboxs.resize(geomID + 1);
+  this.versions.resize(geomID + 1);
 
   this.bboxs[geomID] = bbox;
   this.versions[geomID] = bbox.version;
@@ -93,33 +94,31 @@ function SlavrGeo Scene.addGeometry!(Ref<InlineInstance> instance){
   return geomID;
 }
 
-function Scene.addMaterial!(io SlavrMaterial material, SlavrGeo geomID){
+function Scene.addMaterial !(io SlavrMaterial material, SlavrGeo geomID) {
   AutoLock AL(this.lock);
   this.materials.push(material.dupe());
 }
 
-function Scene.addLight!(io SlavrLight light){
+function Scene.addLight !(io SlavrLight light) {
   AutoLock AL(this.lock);
   this.lights.push(light);
 }
 
-function Scene.clearLights!(){
+function Scene.clearLights !() {
   AutoLock AL(this.lock);
   this.lights.resize(0);
 }
 
-function Scene.addMaterialRef!(Ref<SlavrMaterial> material, SlavrGeo geomID){
+function Scene.addMaterialRef !(Ref<SlavrMaterial> material, SlavrGeo geomID) {
   AutoLock AL(this.lock);
   this.materialsRef[geomID] = material;
 }
 
-operator parallelCommit<<<threadIndex>>>(RTCScene scene){
+operator parallelCommit<<<threadIndex>>>(RTCScene scene) {
   rtcCommitThread(scene, threadIndex, getCoreCount());
 }
 
-
-function Scene.commitScene?(){
-
+function Scene.commitScene ? () {
   UInt64 start, end;
   report("about to commit scene to accelerators.");
 
@@ -128,12 +127,11 @@ function Scene.commitScene?(){
   start = getCurrentTicks();
   parallelCommit<<<getCoreCount()>>>(this.scene);
   end = getCurrentTicks();
-  report("finished committing scene in: " + Float32(getSecondsBetweenTicks(start, end)));
-
+  report("finished committing scene in: " +
+         Float32(getSecondsBetweenTicks(start, end)));
 }
 
-
-function Boolean Scene.needsUpdate!(){
+function Boolean Scene.needsUpdate !() {
   AutoLock AL(this.lock);
 
   Boolean dirty = false;
@@ -144,7 +142,7 @@ function Boolean Scene.needsUpdate!(){
   return dirty;
 }
 
-function Boolean Scene.updateScene!(){
+function Boolean Scene.updateScene !() {
   AutoLock AL(this.lock);
 
   Boolean dirty = false;
@@ -153,17 +151,17 @@ function Boolean Scene.updateScene!(){
   if (expectedSize != this.materials.size())
     this.materials.resize(expectedSize);
 
-  for ( geomID in this.instances ){
+  for (geomID in this.instances) {
     Ref<InlineInstance> instance = this.bboxs[geomID].instance;
     Ref<InlineTransformBase> vltx = instance.transform;
-    if(!vltx){
+    if (!vltx) {
       report('WARNING: instance does not have a valid transform');
       continue;
     }
-    if (vltx.version != this.versions[geomID]){
+    if (vltx.version != this.versions[geomID]) {
       this.versions[geomID] = vltx.version;
       Ref<SlavrMaterial> material = this.materialsRef[geomID];
-      if(material.updateData(vltx.getGlobalXfo(0))){
+      if (material.updateData(vltx.getGlobalXfo(0))) {
         this.materials[geomID] = material.dupe();
         rtcUpdate(this.scene, geomID);
         dirty = true;

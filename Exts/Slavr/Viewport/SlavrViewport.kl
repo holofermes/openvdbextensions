@@ -1,48 +1,43 @@
 object SlavrViewport : SlavrViewportManipulator {
   InlineProceduralTexture texture;
-  PixelRegion  region;
+  PixelRegion region;
   Ref<Slavr> slavr;
 };
 
+function SlavrViewport() {}
 
-
-function SlavrViewport(){}
-
-function SlavrViewport(io DrawingHandle handle){
+function SlavrViewport(io DrawingHandle handle) {
   this.init(handle);
   this.texture = this.handle.getMetaData('SlavrViewport');
   this.slavr = Slavr_GetInstance();
 }
 
-function SlavrViewport.clear!(){
+function SlavrViewport.clear !() {
   Color pixels[];
   pixels.resize(1 * 1);
   pixels.push(Color());
   this.texture.update(1, 1, pixels);
 }
 
-function PixelRegion SlavrViewport.getRegion?(){
+function PixelRegion SlavrViewport.getRegion ? () {
   return PixelRegion(this.mouseDownScreenPos,
                      this.mouseDownScreenPos - this.regionSize);
 }
 
-function SlavrViewport.setRegion!(PixelRegion region){
+function SlavrViewport.setRegion !(PixelRegion region) {
   this.region = region;
 }
 
-function SlavrViewport.setViewport!(Ref<InlineViewport> viewport){
+function SlavrViewport.setViewport !(Ref<InlineViewport> viewport) {
   this.slavr.setViewport(viewport, this.region);
 }
 
-
-function SlavrViewport.updateRegion!(){
+function SlavrViewport.updateRegion !() {
   this.region = this.getRegion();
 }
 
-
-function SlavrViewport.initTexture!(){
-
-  report("setting pixels to :"+Size(this.region.size.x * this.region.size.y));
+function SlavrViewport.initTexture !() {
+  report("setting pixels to :" + Size(this.region.size.x * this.region.size.y));
 
   this.texture.width = this.region.size.x;
   this.texture.height = this.region.size.y;
@@ -51,26 +46,35 @@ function SlavrViewport.initTexture!(){
   this.slavr.mViewport.pixels = this.texture.colorPixels;
 }
 
+function SlavrViewport.addGeometryInstance !(io Ref<InlineInstance> instance) {
+  this.slavr.addGeometryInstance(instance);
+}
 
-function Boolean SlavrViewport.updateScene!(){
+inline SlavrViewport.addGeometryInstance !(InlineInstance instance) {
+  report("adding instance");
+  report(statistics(this.slavr));
+  this.slavr.addGeometryInstance(instance);
+}
+
+function Boolean SlavrViewport.updateScene !() {
   report("updateScene");
   return this.slavr.updateScene();
 }
 
-function SlavrViewport.commitScene!(){
+function SlavrViewport.commitScene !() {
   report("commitScene");
   this.slavr.commitScene();
 }
-function SlavrViewport.render!(){
+function SlavrViewport.render !() {
   this.slavr.render();
   this.texture.version++;
 }
 
-function SlavrViewport.testRays?(io VdbRay rays[][]) {
+function SlavrViewport.testRays ? (io VdbRay rays[][]) {
   this.slavr.testRays(rays);
 }
 
-function SlavrViewport.render!(io Event event){
+function SlavrViewport.render !(io Event event) {
   this.updateRegion();
   this.clear();
   this.setViewport(event.getViewport());
@@ -79,7 +83,12 @@ function SlavrViewport.render!(io Event event){
     this.commitScene();
   this.render();
   report("DETAILS::::::::::::::::::");
-  report("out of an WxH ["+ this.slavr.mViewport.getDimensions().x +"x"+ this.slavr.mViewport.getDimensions().y + "] ");
-  report("i will render a portion of WxH ["+ this.slavr.mViewport.region.size.x +"x"+ this.slavr.mViewport.region.size.y+ "]");
-  report("starting from the top left corner of ["+ this.slavr.mViewport.region.top.x +"x"+ this.slavr.mViewport.region.top.y + "]");
+  report("out of an WxH [" + this.slavr.mViewport.getDimensions().x + "x" +
+         this.slavr.mViewport.getDimensions().y + "] ");
+  report("i will render a portion of WxH [" +
+         this.slavr.mViewport.region.size.x + "x" +
+         this.slavr.mViewport.region.size.y + "]");
+  report("starting from the top left corner of [" +
+         this.slavr.mViewport.region.top.x + "x" +
+         this.slavr.mViewport.region.top.y + "]");
 }
