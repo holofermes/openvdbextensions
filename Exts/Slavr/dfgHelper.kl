@@ -7,109 +7,103 @@ function String statistics(Ref<Slavr> slavr) {
   sout += 'Instances: ' + slavr.scene.instances.size() + '\n';
   sout += 'Materials: ' + slavr.scene.materials.size() + '\n';
   sout += 'Lights: ' + slavr.scene.lights.size() + '\n';
+  sout += 'Scene has: ';
+  sout += 'MaterialsRef: ' + slavr.scene.materialsRef.size() + '\n';
+  sout += 'Lut: ' + slavr.scene.lut.size() + '\n';
+  sout += 'Bboxs: ' + slavr.scene.bboxs.size() + '\n';
+  sout += 'Versions: ' + slavr.scene.versions.size() + '\n';
+  sout += 'Dirty: ' + slavr.scene.dirty + '\n';
+  sout += 'Lock: ' + slavr.scene.lock + '\n';
   return sout;
+
 }
 
-/// Registers a surface sculpt manipulator
-function ManipHandle.addSlavrManipInstance !(io DrawingHandle handle,
-                                             io InlineInstance instance) {
-  if (instance == null)
-    return;
+/// helper function to draw a VDBVolume
+/// \dfgPresetCreate
+/// \dfgPresetDefault scattering {"r": 0.6, "g": 0.9, "b": 0.9, "a": 1.0}
+/// \dfgPresetDefault absorption {"r": 0.7, "g": 0.7, "b": 0.7, "a": 1.0}
+/// \dfgPresetDefault primaryStep 1.0
+/// \dfgPresetDefault secondaryStep 3.0
+function DrawingHandle.drawVolumeVDB!(io SlavrViewport sViewport, String name, Color scattering, Color absorption, Float32 primaryStep, Float32 secondaryStep, Xfo transforms[], VDBVolumes volume, Boolean active, Boolean doubleSided, out Vec3 dummyResult, out InlineInstance instance)
+{
+  String uidName = this.uid() + '_' + name;
+  report("drawVolumeVDB start: "+uidName);
 
-  InlineVDBVolumesShape shape = instance.getShape();
-  if (!shape) {
-    report(
-        'ManipHandle.addSurfaceSculptManip: Instance passed in is not using an InlineVDBVolumesShape.');
-    return;
+
+  InlineDrawing draw = this.getDrawing();
+  if(draw.getShapeAdaptorIndex("InlineVDBVolumesShape") == -1)draw.registerShapeAdaptor(OGLVDBVolumesShapeAdaptor());
+  SlavrMediumShader volumeShader = draw.registerShader(SlavrMediumShader(uidName,OGLFloatGridVertexSS()));
+  InlineVDBVolumesShape volumeShape = draw.getShape(uidName);
+  if(volumeShape == null){
+    report("drawVolumeVDB registering new shape");
+    volumeShape = draw.registerShape(InlineVDBVolumesShape(uidName, volume));
   }
 
-  String uniqueName = 'SlavrViewport' + this.uid();
-  if (!this.manipulators.has(uniqueName)) {
-    SlavrViewport viewport = SlavrViewport(handle);
-    if (handle.isEmpty()) {
-      viewport.slavr.initSlavr();
-    }
-    this.registerManipulator(uniqueName, viewport);
+  // if(volumeShape != null)
+  //   volumeShape.setMesh(mesh);
 
-    // for (Size ic; ic < viewport.slavr.preloadInstances.size(); ic++) {
-    //   Ref<InlineInstance> slInstance = viewport.slavr.preloadInstances[ic];
-    //   if (!slInstance)
-    //     continue;
-    //   if (slInstance == = instance) {
-    //     report('Instance ' + shape.name + 'already exists.');
-    //     return;
-    //   }
-    // }
-    viewport.slavr.addLight(SlavrDirectionalLight(Vec3(-0.3), Vec3(0.8)));
-    viewport.slavr.bbox = false;
-    // viewport.slavr.addGeometryInstance(instance);
-    report(statistics(viewport.slavr));
-  }
-}
 
-/// \dfgPresetDefault field "density"
-function drawSlavrVDBVolumes(out InlineInstance volumeInstance,
-                             io Vec3 result,
-                             io DrawingHandle handle,
-                             io VDBVolumes volume,
-                             Xfo xfo,
-                             String path,
-                             String field) {
-  if (handle.isEmpty()) {
-    // KLOpenVDB openvdb();
-    InlineDrawing draw = handle.getDrawing();
-    draw.registerShapeAdaptor(OGLVDBVolumesShapeAdaptor());
+  // SlavrVolumeMaterial volumeMaterialSlavr =
+  //     volumeShader.getOrCreateSlavrMaterial(SlavrVolumeMaterial());
+  // volumeMaterialSlavr.setScattering(scattering);
+  // volumeMaterialSlavr.setAbsorption(absorption);
+  // volumeMaterialSlavr.setPrimaryStep(primaryStep);
+  // volumeMaterialSlavr.setShadowStep(secondaryStep);
 
-    Boolean levelset = false;
-    InlineVDBVolumesShape volumeShape('volume', volume);
 
-    draw.registerShape(volumeShape);
 
-    SlavrMediumShader volumeShader = draw.registerShader(
-        SlavrMediumShader('volume', OGLFloatGridVertexSS()));
+  // InlineShader shader = volumeShader;
+  // InlineMaterial volumeMaterial = this.drawShapeInstances(name, volumeShader, transforms, volumeShape, dummyResult, instance);
 
-    SlavrVolumeMaterial volumeMaterialSlavr =
-        volumeShader.getOrCreateSlavrMaterial(SlavrVolumeMaterial('volume'));
-    volumeMaterialSlavr.setScattering(Color(0.6, 0.9, 0.9));
-    volumeMaterialSlavr.setAbsorption(Color(0.7, 0.7, 0.7));
-    volumeMaterialSlavr.setPrimaryStep(1.0);
-    volumeMaterialSlavr.setShadowStep(1.0);
 
+
+  // InlineMaterial volumeMaterial = shader.getOrCreateMaterial(uidName);
+  SlavrVolumeMaterial volumeMaterialSlavr = volumeShader.getOrCreateSlavrMaterial(SlavrVolumeMaterial(uidName));
+  volumeMaterialSlavr.setScattering(scattering);
+  volumeMaterialSlavr.setAbsorption(absorption);
+  volumeMaterialSlavr.setPrimaryStep(primaryStep);
+  volumeMaterialSlavr.setShadowStep(secondaryStep);
+  // volumeMaterialSlavr.material.setActive(active);
+
+  StaticInlineTransform xform = this.rootTransform.getChild(uidName);
+  if(xform == null)
+  {
+    // report("drawVolumeVDB: "+"creating new volume instance from dfgHelper");
+    xform = StaticInlineTransform(uidName);
+    this.rootTransform.addChild(xform);
     InlineMaterial volumeMaterial = volumeMaterialSlavr.material;
-
+    instance = SimpleInlineInstance(uidName, xform, volumeShape, volumeMaterial);
+    Ref<InlineInstance> instance_ref = instance;
+    sViewport.addGeometryInstance(instance_ref);
     volumeMaterial.setUniform('u_screenWidth', 12.5f);
     volumeMaterial.setUniform('u_vertexMult', 3.0f);
-    volumeMaterial.setUniform('u_levelSet', Integer(levelset));
+    volumeMaterial.setUniform('u_levelSet', Integer(false));
     volumeMaterial.setUniform('u_mapMinMax', 0);
-    // Vec2 minMax = volume.minMax('density');
-    // volumeMaterial.setUniform('u_minValue', minMax.x);
-    // volumeMaterial.setUniform('u_maxValue', minMax.y);
-
-    InlineTransform rootTfo = handle.getRootTransform();
-    InlineTransform cubeTfo =
-        rootTfo.addChild(StaticInlineTransform('volumesXfo'));
-    Size count = 1;
-    cubeTfo.setLocalCount(count);
-
-    volumeInstance = volumeMaterial.addInstance(
-        SimpleInlineInstance('volumeInst', cubeTfo, volumeShape));
   }
 
-  InlineTransform rootTfo = handle.getRootTransform();
-  InlineTransform cubeTfo = rootTfo.getChild('volumesXfo');
-
-  volumeInstance = cubeTfo.getChild('volumeInst');
-
-  // Mat44 colorMap(Vec4(0.3, 0.9, 0.3, 1.0), Vec4(0.9, 0.3, 0.3, 1.0),
-                 // Vec4(0.9, 0.9, 0.3, 1.0), Vec4(0.3, 0.3, 0.9, 1.0));
-  Size count = 1;
-  cubeTfo.setLocalCount(count);
-  for (Size i = 0; i < count; i++) {
-    cubeTfo.setLocalXfo(i, xfo);
-
-    // Color color1;
-    // color1.r = mathRandomScalar(17, i * 2) * 0.75 + 0.25;
-    // color1.g = mathRandomScalar(18, i * 3) * 0.75 + 0.25;
-    // color1.b = mathRandomScalar(19, i * 4) * 0.75 + 0.25;
+  if(xform)
+  {
+    // report("drawVolumeVDB: "+"modifying transforms instance from dfgHelper");
+    xform.setLocalCount(transforms.size());
+    for(Size i=0;i<transforms.size();i++)
+      xform.setLocalXfo(i, transforms[i]);
   }
+
+  // report("drawVolumeVDB end: "+uidName);
 }
+
+/// helper function to draw a VDBVolume
+/// \dfgPresetCreate
+/// \dfgPresetDefault scattering {"r": 0.6, "g": 0.9, "b": 0.9, "a": 1.0}
+/// \dfgPresetDefault absorption {"r": 0.7, "g": 0.7, "b": 0.7, "a": 1.0}
+/// \dfgPresetDefault primaryStep 1.0
+/// \dfgPresetDefault secondaryStep 3.0
+function DrawingHandle.drawVolumeVDB!(io SlavrViewport sViewport, String name, Color scattering, Color absorption, Float32 primaryStep, Float32 secondaryStep, Xfo transform, VDBVolumes volume, Boolean active, Boolean doubleSided, out Vec3 dummyResult, out InlineInstance instance)
+{
+  Xfo transforms[];
+  transforms.push(transform);
+  this.drawVolumeVDB(sViewport, name, scattering, absorption, primaryStep, secondaryStep, transforms, volume, active, doubleSided, dummyResult, instance);
+}
+
+
+

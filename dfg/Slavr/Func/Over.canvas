@@ -1,0 +1,43 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "\n\n Supported by Float32"
+    },
+  "title" : "Over",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "a",
+      "execPortType" : "In",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "b",
+      "execPortType" : "In",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "alpha",
+      "execPortType" : "In",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "Float32"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "18930B0DAD43280F70A9D667C331884C",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = over(a, b, alpha);\n}\n"
+  }

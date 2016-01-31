@@ -10,13 +10,14 @@ function SlavrViewport(io DrawingHandle handle) {
   this.init(handle);
   this.texture = this.handle.getMetaData('SlavrViewport');
   this.slavr = Slavr_GetInstance();
+  this.slavr.initSlavr();
 }
 
 function SlavrViewport.clear !() {
   Color pixels[];
-  pixels.resize(1 * 1);
-  pixels.push(Color());
-  this.texture.update(1, 1, pixels);
+  pixels.resize(this.slavr.mViewport.region.size.x * this.slavr.mViewport.region.size.y);
+  pixels.push(Color(this.slavr.bgColor));
+  this.texture.update(this.slavr.mViewport.region.size.x, this.slavr.mViewport.region.size.y, pixels);
 }
 
 function PixelRegion SlavrViewport.getRegion ? () {
@@ -31,6 +32,12 @@ function SlavrViewport.setRegion !(PixelRegion region) {
 function SlavrViewport.setViewport !(Ref<InlineViewport> viewport) {
   this.slavr.setViewport(viewport, this.region);
 }
+
+/// get Slavr 
+function Slavr SlavrViewport.getSlavr!() {
+  return this.slavr;
+}
+
 
 function SlavrViewport.updateRegion !() {
   this.region = this.getRegion();
@@ -51,13 +58,13 @@ function SlavrViewport.addGeometryInstance !(io Ref<InlineInstance> instance) {
 }
 
 inline SlavrViewport.addGeometryInstance !(InlineInstance instance) {
-  report("adding instance");
-  report(statistics(this.slavr));
+  report("adding instance: " + instance.name);
   this.slavr.addGeometryInstance(instance);
 }
 
 function Boolean SlavrViewport.updateScene !() {
   report("updateScene");
+  // report(statistics(this.slavr));
   return this.slavr.updateScene();
 }
 
@@ -81,6 +88,7 @@ function SlavrViewport.render !(io Event event) {
   this.initTexture();
   if (this.updateScene())
     this.commitScene();
+  report(statistics(this.slavr));
   this.render();
   report("DETAILS::::::::::::::::::");
   report("out of an WxH [" + this.slavr.mViewport.getDimensions().x + "x" +
@@ -91,4 +99,5 @@ function SlavrViewport.render !(io Event event) {
   report("starting from the top left corner of [" +
          this.slavr.mViewport.region.top.x + "x" +
          this.slavr.mViewport.region.top.y + "]");
+  // report(statistics(this.slavr));
 }

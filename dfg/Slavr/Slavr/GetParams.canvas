@@ -1,0 +1,29 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiTooltip" : "get Slavr parameters\n\n Supported by Slavr"
+    },
+  "title" : "GetParams",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "Slavr"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "result",
+      "execPortType" : "Out",
+      "typeSpec" : "ParamDict"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "2B1B7D69133E9BDC3FC71A57018DF8F4",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.getParams();\n}\n"
+  }

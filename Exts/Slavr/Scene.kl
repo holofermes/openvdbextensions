@@ -49,6 +49,7 @@ function Scene.initScene !() {
 function Scene.reset !() {
   this.lights.resize(0);
   this.materials.resize(0);
+  this.instances.clear();
   this.bboxs.resize(0);
   this.versions.resize(0);
   this.dirty = true;
@@ -90,6 +91,12 @@ function SlavrGeo Scene.addGeometry !(Ref<InlineInstance> instance) {
   rtcSetBoundsFunction(this.scene, geomID);
   rtcSetIntersectFunction(this.scene, geomID);
   rtcSetOccludedFunction(this.scene, geomID);
+  // if(!instance.isActive()){
+  //   rtcDisable(this.scene, geomID);
+  // }
+  // else{
+  //   rtcEnable(this.scene, geomID);
+  // }
 
   return geomID;
 }
@@ -131,16 +138,6 @@ function Scene.commitScene ? () {
          Float32(getSecondsBetweenTicks(start, end)));
 }
 
-function Boolean Scene.needsUpdate !() {
-  AutoLock AL(this.lock);
-
-  Boolean dirty = false;
-  Size expectedSize = this.instances.size();
-
-  if (expectedSize != this.materials.size())
-    this.materials.resize(expectedSize);
-  return dirty;
-}
 
 function Boolean Scene.updateScene !() {
   AutoLock AL(this.lock);
@@ -150,23 +147,43 @@ function Boolean Scene.updateScene !() {
 
   if (expectedSize != this.materials.size())
     this.materials.resize(expectedSize);
+  
+  for (geomID, sInstance in this.instances) {
 
-  for (geomID in this.instances) {
     Ref<InlineInstance> instance = this.bboxs[geomID].instance;
     Ref<InlineTransformBase> vltx = instance.transform;
     if (!vltx) {
-      report('WARNING: instance does not have a valid transform');
-      continue;
+      throw('WARNING: instance does not have a valid transform');
     }
     if (vltx.version != this.versions[geomID]) {
       this.versions[geomID] = vltx.version;
       Ref<SlavrMaterial> material = this.materialsRef[geomID];
       if (material.updateData(vltx.getGlobalXfo(0))) {
         this.materials[geomID] = material.dupe();
-        rtcUpdate(this.scene, geomID);
         dirty = true;
       }
     }
+    // // if (instance.version != this.versionsInst[geomID]) {
+    //   // this.versionsInst[geomID] = instance.version;
+    //   if(!instance.isActive()){
+    //     rtcDisable(this.scene, geomID);
+    //     dirty = true;
+    //   }
+    //   else{
+    //     rtcEnable(this.scene, geomID);
+    //     dirty = true;
+    //   }
+      // if this are not updated after a while
+      // the instance.lut<> becomes empty???
+      // 
+    SlavrVolumeInstance slavrInstance(this.bboxs);
+    slavrInstance.geomID = geomID;
+    sInstance = slavrInstance;
+    // }
+  
+    if(dirty)
+      rtcUpdate(this.scene, geomID);
   }
+  
   return dirty;
 }

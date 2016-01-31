@@ -65,6 +65,9 @@ inline SlavrVolumeInstance.boundsFunc?(Size item, io RTCBounds bounds_o){
 
 inline SlavrVolumeInstance.intersectFunc?(Size item, io RTCRay ray_o){
   BBoxInstance bbox = this.lut[this.geomID];
+  if(!bbox.world.size()){
+    throw('bbox.world<> not good (Slavr.scene.bbox[]');
+  }
   Float32 dirfrac_x = 1.0f / ray_o.dir.x;
   Float32 dirfrac_y = 1.0f / ray_o.dir.y;
   Float32 dirfrac_z = 1.0f / ray_o.dir.z;

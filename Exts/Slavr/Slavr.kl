@@ -6,7 +6,10 @@ object Slavr {
   Ref<Scene> scene;
   InlineViewportVDB mViewport;
   SimpleLock lock;
-  Boolean bbox;
+  /// viewport parameters
+  ParamDict params[String];
+  Boolean isBox;
+  Color bgColor;
   UInt32 seed;
   Ref<Object> preloadInstances[];
 };
@@ -29,7 +32,8 @@ function Slavr Slavr.getInstance(InlineViewportVDB viewport) {
 }
 
 function Slavr.init !() {
-  this.bbox = false;
+  this.bgColor = Color(0.0, 0.0, 0.0, 1.0);
+  this.isBox = false;
   this.seed = 4868;
 }
 
@@ -107,7 +111,6 @@ function Slavr.addMaterial !(io SlavrMaterial material) {
 //
 function Slavr.addGeometryInstance !(io Ref<InlineInstance> instance) {
   AutoLock AL(this.lock);
-
   Ref<Object> obj = instance;
   for (Size ic; ic < this.preloadInstances.size(); ic++) {
     Ref<Object> slInstance = this.preloadInstances[ic];
@@ -134,24 +137,46 @@ function Boolean Slavr.needsNewScene ? () {
   return false;
 }
 
+/// get Slavr parameters
+function ParamDict Slavr.getParams!() {
+  if(!this.params.has("Slavr"))
+    this.params["Slavr"] = ParamDict();
+  return this.params["Slavr"];
+
+}
+
+
 function Boolean Slavr.updateScene !() {
-  if (this.needsNewScene()) {
-    Size expectedSize = this.preloadInstances.size();
+  // report(statistics(this));
+  ParamDict params = this.getParams();
+  if(!params.has('bgColor'))
+  {
+    params.setColor('bgColor', this.bgColor);
+    params.setBoolean('isBox', this.isBox);
+  }
+  this.bgColor = params.getColor('bgColor');
+  this.isBox = params.getBoolean('isBox');
 
-    if (expectedSize != this.scene.materials.size())
-      this.scene.materials.resize(expectedSize);
 
-    for (Size ic; ic < this.preloadInstances.size(); ic++) {
-      Ref<InlineInstance> instance = this.preloadInstances[ic];
-      if (!instance)
-        throw('instance is no good');
-      SlavrGeo geomID = this.addInstanceRef(instance);
-      Ref<SlavrMaterial> material = this.scene.materialsRef[geomID];
-      this.scene.materials[geomID] = material;
-      // if(material.updateData(vltx.getGlobalXfo(0))){
-      // this.materials[geomID] = material.dupe();
-      // rtcUpdate(this.scene, geomID);
-      // dirty = true;
+
+  Boolean needsNew = this.needsNewScene();
+  Size expectedSize = this.preloadInstances.size();
+  Size offset = this.scene.materials.size();
+  if (expectedSize != offset)
+    this.scene.materials.resize(expectedSize);
+
+  if(needsNew){
+    for (Size ic=offset; ic < this.preloadInstances.size(); ic++) {
+        Ref<InlineInstance> instance = this.preloadInstances[ic];
+        if (!instance)
+          throw('instance is no good');
+        SlavrGeo geomID = this.addInstanceRef(instance);
+        Ref<SlavrMaterial> material = this.scene.materialsRef[geomID];
+        this.scene.materials[geomID] = material;
+        // if(material.updateData(vltx.getGlobalXfo(0))){
+        // this.materials[geomID] = material.dupe();
+        // rtcUpdate(this.scene, geomID);
+        // dirty = true;
     }
     return true;
   } else {
@@ -258,7 +283,7 @@ inline IntegrationResult Slavr.integrateRay ? (io ShadingGlobals sg) {
     sg.geo = embreeRay.geomID;
     if (sg.geo == RTC_INVALID_GEOMETRY_ID)
       break;
-    if (this.bbox) {
+    if (this.isBox) {
       Color rc(randomColor(this.seed, sg.geo, 0.0 /*gammaAdjustment*/));
       result = IntegrationResult(
           Vec3_d(Float32(rc.r), Float32(rc.g), Float32(rc.b)), Vec3_d(1.0));
@@ -329,7 +354,12 @@ inline RangeSize Slavr.getRangeFromChunk(Size chunk) {
   Size end = start + this.mViewport.offset;
   return RangeSize(start, end);
 }
+inline Float32 over(Float32 a, Float32 b, Float32 alpha){
+  return a + b * (1 - alpha);
 
+  // if(a < 0.5)return 2 * a * b;
+  // return 1 -(2*(1-a) * (1 - b));
+}
 inline Slavr.renderTileFromChunk ? (Size chunk) {
   RangeSize range = this.getRangeFromChunk(chunk);
 
@@ -356,10 +386,11 @@ inline Slavr.renderTileFromChunk ? (Size chunk) {
       // pick-a-pixel
       sg.pixel = Vec2(i, j);
       IntegrationResult result = this.integrateRay(sg);
-      pixels[index].r = Float32(result.luminance.x);
-      pixels[index].g = Float32(result.luminance.y);
-      pixels[index].b = Float32(result.luminance.z);
-      pixels[index].a = Float32(1.0f - result.transmittance.sum() / 3.0f);
+      Float32 alpha = Float32(1.0f - result.transmittance.sum() / 3.0f);
+      pixels[index].r = over(Float32(result.luminance.x), this.bgColor.r, alpha);
+      pixels[index].g = over(Float32(result.luminance.y), this.bgColor.g, alpha);
+      pixels[index].b = over(Float32(result.luminance.z), this.bgColor.b, alpha);
+      pixels[index].a = alpha + 1.0 * ( 1 - alpha);
     }  // Horizontal pixel scan
   }  // Vertical pixel scan
   end = getCurrentTicks();

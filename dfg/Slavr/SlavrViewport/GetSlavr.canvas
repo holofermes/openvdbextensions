@@ -2,28 +2,28 @@
 {
   "objectType" : "Func",
   "metadata" : {
-    "uiTooltip" : "\n\n Supported by Scene"
+    "uiTooltip" : "get Slavr\n\n Supported by SlavrViewport"
     },
-  "title" : "NeedsUpdate",
+  "title" : "GetSlavr",
   "ports" : [
     {
       "objectType" : "Port",
       "nodePortType" : "IO",
       "name" : "this",
       "execPortType" : "IO",
-      "typeSpec" : "Scene"
+      "typeSpec" : "SlavrViewport"
       },
     {
       "objectType" : "Port",
       "nodePortType" : "In",
       "name" : "result",
       "execPortType" : "Out",
-      "typeSpec" : "Boolean"
+      "typeSpec" : "Slavr"
       }
     ],
   "extDeps" : {
     "Slavr" : "*"
     },
-  "presetGUID" : "718858B6D1FEF1E845CA603D08AE8E55",
-  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.needsUpdate();\n}\n"
+  "presetGUID" : "34A28342E461B15002B586647EE5CCB6",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.getSlavr();\n}\n"
   }

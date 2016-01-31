@@ -1,0 +1,144 @@
+// Created by kl2dfg (processFunction)
+{
+  "objectType" : "Func",
+  "metadata" : {
+    "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/InlineDrawing/DrawingHandle.html",
+    "uiTooltip" : "helper function to draw a VDBVolume\n\n Supported by DrawingHandle"
+    },
+  "title" : "DrawVolumeVDB",
+  "ports" : [
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "this",
+      "execPortType" : "IO",
+      "typeSpec" : "DrawingHandle"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "IO",
+      "name" : "sViewport",
+      "execPortType" : "IO",
+      "typeSpec" : "SlavrViewport"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "name",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 0,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "Color" : {
+          "r" : 0.6000000238418579,
+          "g" : 0.8999999761581421,
+          "b" : 0.8999999761581421,
+          "a" : 1
+          }
+        },
+      "name" : "scattering",
+      "execPortType" : "In",
+      "typeSpec" : "Color"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 0,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "Color" : {
+          "r" : 0.699999988079071,
+          "g" : 0.699999988079071,
+          "b" : 0.699999988079071,
+          "a" : 1
+          }
+        },
+      "name" : "absorption",
+      "execPortType" : "In",
+      "typeSpec" : "Color"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "Float32" : 1
+        },
+      "name" : "primaryStep",
+      "execPortType" : "In",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "defaultValues" : {
+        "Float32" : 3
+        },
+      "name" : "secondaryStep",
+      "execPortType" : "In",
+      "typeSpec" : "Float32"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 249,\n  \"g\" : 157,\n  \"b\" : 28\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "transforms",
+      "execPortType" : "In",
+      "typeSpec" : "Xfo[]"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "volume",
+      "execPortType" : "In",
+      "typeSpec" : "VDBVolumes"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "active",
+      "execPortType" : "In",
+      "typeSpec" : "Boolean"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "doubleSided",
+      "execPortType" : "In",
+      "typeSpec" : "Boolean"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+        },
+      "nodePortType" : "In",
+      "name" : "dummyResult",
+      "execPortType" : "Out",
+      "typeSpec" : "Vec3"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "instance",
+      "execPortType" : "Out",
+      "typeSpec" : "InlineInstance"
+      }
+    ],
+  "extDeps" : {
+    "Slavr" : "*"
+    },
+  "presetGUID" : "45ADD8CA41EE4A94750528145A47796B",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.drawVolumeVDB(sViewport, name, scattering, absorption, primaryStep, secondaryStep, transforms, volume, active, doubleSided, dummyResult, instance);\n}\n"
+  }

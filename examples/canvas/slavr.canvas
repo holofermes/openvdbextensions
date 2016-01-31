@@ -1,35 +1,18 @@
 {
   "objectType" : "Graph",
   "metadata" : {
-    "camera_mat44" : "{\n  \"row0\" : {\n    \"x\" : 0.8975251317024231,\n    \"y\" : 0.02181423269212246,\n    \"z\" : 0.4404639899730682,\n    \"t\" : 99.52906036376953\n    },\n  \"row1\" : {\n    \"x\" : 1.778856471901236e-06,\n    \"y\" : 0.9987512230873108,\n    \"z\" : -0.04947188869118691,\n    \"t\" : 43.51052856445313\n    },\n  \"row2\" : {\n    \"x\" : -0.4410019516944885,\n    \"y\" : 0.04440025612711906,\n    \"z\" : 0.8964301347732544,\n    \"t\" : 215.1473541259766\n    },\n  \"row3\" : {\n    \"x\" : 0,\n    \"y\" : 0,\n    \"z\" : 0,\n    \"t\" : 1\n    }\n  }",
+    "camera_mat44" : "{\n  \"row0\" : {\n    \"x\" : -0.5775039196014404,\n    \"y\" : -0.05753610283136368,\n    \"z\" : 0.8147996664047241,\n    \"t\" : 331.5437927246094\n    },\n  \"row1\" : {\n    \"x\" : 3.299886202512425e-06,\n    \"y\" : 0.997406005859375,\n    \"z\" : 0.07050015777349472,\n    \"t\" : 48.16749572753906\n    },\n  \"row2\" : {\n    \"x\" : -0.8168118596076965,\n    \"y\" : 0.040683314204216,\n    \"z\" : -0.5760809779167175,\n    \"t\" : -176.0072326660156\n    },\n  \"row3\" : {\n    \"x\" : 0,\n    \"y\" : 0,\n    \"z\" : 0,\n    \"t\" : 1\n    }\n  }",
     "timeline_start" : "1",
     "timeline_loopMode" : "1",
-    "uiGraphZoom" : "{\n  \"value\" : 0.7461559176445007\n  }",
+    "uiGraphZoom" : "{\n  \"value\" : 0.5428692102432251\n  }",
     "timeline_simMode" : "0",
-    "camera_focalDistance" : "240.8837585449219",
+    "camera_focalDistance" : "379.0787353515625",
     "timeline_current" : "1",
     "timeline_end" : "50",
-    "uiGraphPan" : "{\n  \"x\" : -277.284423828125,\n  \"y\" : -21.96519470214844\n  }"
+    "uiGraphPan" : "{\n  \"x\" : -826.8073120117188,\n  \"y\" : 1.185501098632813\n  }"
     },
   "title" : "",
   "ports" : [
-    {
-      "objectType" : "Port",
-      "nodePortType" : "In",
-      "name" : "value_2",
-      "execPortType" : "Out",
-      "typeSpec" : "String"
-      },
-    {
-      "objectType" : "Port",
-      "metadata" : {
-        "uiPersistValue" : "true"
-        },
-      "nodePortType" : "Out",
-      "name" : "path1",
-      "execPortType" : "In",
-      "typeSpec" : "String"
-      },
     {
       "objectType" : "Port",
       "metadata" : {
@@ -56,9 +39,33 @@
         "uiPersistValue" : "true"
         },
       "nodePortType" : "Out",
+      "name" : "path1",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiPersistValue" : "true"
+        },
+      "nodePortType" : "Out",
       "name" : "field2",
       "execPortType" : "In",
       "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "this",
+      "execPortType" : "Out",
+      "typeSpec" : "ParamDict"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "In",
+      "name" : "this_2",
+      "execPortType" : "Out",
+      "typeSpec" : "ParamDict"
       }
     ],
   "extDeps" : {},
@@ -66,7 +73,7 @@
     {
       "objectType" : "Inst",
       "metadata" : {
-        "uiGraphPos" : "{\"x\":156.2033538818359,\"y\":616.1626586914063}"
+        "uiGraphPos" : "{\"x\":560.2835693359375,\"y\":502.6882629394531}"
         },
       "name" : "EmptyVDBVolume2",
       "ports" : [
@@ -82,7 +89,7 @@
     {
       "objectType" : "Inst",
       "metadata" : {
-        "uiGraphPos" : "{\"x\":429.7977600097656,\"y\":671.4984130859375}"
+        "uiGraphPos" : "{\"x\":867.3829345703125,\"y\":570.0853881835938}"
         },
       "name" : "AddFromFileField",
       "ports" : [
@@ -113,7 +120,7 @@
     {
       "objectType" : "Inst",
       "metadata" : {
-        "uiGraphPos" : "{\"x\":1061.022827148438,\"y\":280.7860717773438}"
+        "uiGraphPos" : "{\"x\":951.1261596679688,\"y\":198.8854370117188}"
         },
       "name" : "EmptySlavrViewport",
       "ports" : [
@@ -141,8 +148,8 @@
       "definition" : {
         "objectType" : "Graph",
         "metadata" : {
-          "uiGraphZoom" : "{\n  \"value\" : 1.165110588073731\n  }",
-          "uiGraphPan" : "{\n  \"x\" : -1456.62890625,\n  \"y\" : -53.50129699707031\n  }"
+          "uiGraphZoom" : "{\n  \"value\" : 0.8425065279006958\n  }",
+          "uiGraphPan" : "{\n  \"x\" : -741.2124633789063,\n  \"y\" : -126.1573028564453\n  }"
           },
         "title" : "",
         "ports" : [
@@ -179,7 +186,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":771.0743408203125,\"y\":240.4020385742188}"
+              "uiGraphPos" : "{\"x\":786.5044555664063,\"y\":220.2241363525391}"
               },
             "name" : "SlavrViewport",
             "ports" : [
@@ -215,7 +222,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":756.0,\"y\":332.0}",
+              "uiGraphPos" : "{\"x\":763.1217041015625,\"y\":322.5046081542969}",
               "uiCollapsedState" : "0"
               },
             "name" : "initSlavrFromViewport",
@@ -245,7 +252,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":762.0,\"y\":498.0}"
+              "uiGraphPos" : "{\"x\":726.3920288085938,\"y\":539.5426635742188}"
               },
             "name" : "Uid",
             "ports" : [
@@ -266,7 +273,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":877.0,\"y\":419.0}"
+              "uiGraphPos" : "{\"x\":841.3920288085938,\"y\":460.5425109863281}"
               },
             "name" : "String",
             "ports" : [
@@ -285,7 +292,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":1050.0,\"y\":448.0}",
+              "uiGraphPos" : "{\"x\":1014.391845703125,\"y\":489.5425109863281}",
               "uiNodeColor" : "{\n  \"r\" : 121,\n  \"g\" : 134,\n  \"b\" : 143\n  }",
               "uiTextColor" : "{\n  \"r\" : 20,\n  \"g\" : 20,\n  \"b\" : 20\n  }"
               },
@@ -314,7 +321,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":1187.0,\"y\":245.0}",
+              "uiGraphPos" : "{\"x\":1173.943969726563,\"y\":248.5608062744141}",
               "uiNodeColor" : "{\n  \"r\" : 121,\n  \"g\" : 134,\n  \"b\" : 143\n  }",
               "uiTextColor" : "{\n  \"r\" : 20,\n  \"g\" : 20,\n  \"b\" : 20\n  }",
               "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/Manipulation/ManipHandle.html",
@@ -372,7 +379,7 @@
                 "Manipulation" : "*"
                 },
               "origPresetGUID" : "C2B1A4EAB24A280397814D14360EC01C",
-              "code" : "require Manipulation;\n\ndfgEntry {\n  this.registerManipulator(name, manip);\n  manip.slavr.addLight(SlavrDirectionalLight(Vec3(-0.3), Vec3(0.8)));\n  manip.slavr.bbox = false;\n  // viewport.slavr.addGeometryInstance(instance);\n  report(statistics(manip.slavr));\n}\n"
+              "code" : "require Manipulation;\n\ndfgEntry {\n  this.registerManipulator(name, manip);\n  manip.slavr.addLight(SlavrDirectionalLight(Vec3(-0.3), Vec3(0.8)));\n//  manip.slavr.bbox = false;\n  // viewport.slavr.addGeometryInstance(instance);\n  report(statistics(manip.slavr));\n}\n"
               },
             "title" : "RegisterManipulator"
             },
@@ -395,7 +402,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":899.0,\"y\":510.0}"
+              "uiGraphPos" : "{\"x\":863.3920288085938,\"y\":551.5426635742188}"
               },
             "name" : "Convert",
             "ports" : [
@@ -416,7 +423,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":1438.0,\"y\":424.0}"
+              "uiGraphPos" : "{\"x\":1458.178100585938,\"y\":559.3101806640625}"
               },
             "name" : "getSlavr",
             "ports" : [
@@ -457,7 +464,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":1738.0,\"y\":575.0}"
+              "uiGraphPos" : "{\"x\":1773.607788085938,\"y\":772.0309448242188}"
               },
             "name" : "AddLight",
             "ports" : [
@@ -478,7 +485,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":1375.0,\"y\":608.0}"
+              "uiGraphPos" : "{\"x\":1410.607788085938,\"y\":805.0309448242188}"
               },
             "name" : "SlavrDirectionalLight",
             "ports" : [
@@ -518,7 +525,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":1575.0,\"y\":492.0}",
+              "uiGraphPos" : "{\"x\":1610.607788085938,\"y\":689.031005859375}",
               "uiNodeColor" : "{\n  \"r\" : 121,\n  \"g\" : 134,\n  \"b\" : 143\n  }",
               "uiTextColor" : "{\n  \"r\" : 20,\n  \"g\" : 20,\n  \"b\" : 20\n  }"
               },
@@ -562,7 +569,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":1386.0,\"y\":515.0}",
+              "uiGraphPos" : "{\"x\":1421.607788085938,\"y\":712.0309448242188}",
               "uiNodeColor" : "{\n  \"r\" : 121,\n  \"g\" : 134,\n  \"b\" : 143\n  }",
               "uiTextColor" : "{\n  \"r\" : 20,\n  \"g\" : 20,\n  \"b\" : 20\n  }"
               },
@@ -581,7 +588,7 @@
           {
             "objectType" : "Inst",
             "metadata" : {
-              "uiGraphPos" : "{\"x\":1546.831176757813,\"y\":184.0164642333984}"
+              "uiGraphPos" : "{\"x\":1506.475341796875,\"y\":85.5008544921875}"
               },
             "name" : "AddGeometryInstance2",
             "ports" : [
@@ -631,7 +638,8 @@
             ],
           "RegisterManipulator.manip" : [
             "getSlavr.this",
-            "AddGeometryInstance2.this"
+            "AddGeometryInstance2.this",
+            "slavrViewportVar.value"
             ],
           "Clear3.this" : [
             "value"
@@ -650,9 +658,6 @@
             ],
           "Boolean.value" : [
             "getSlavr_2.drawBBox"
-            ],
-          "AddGeometryInstance2.this" : [
-            "slavrViewportVar.value"
             ]
           }
         },
@@ -661,53 +666,7 @@
     {
       "objectType" : "Inst",
       "metadata" : {
-        "uiGraphPos" : "{\"x\":712.076416015625,\"y\":506.8782958984375}"
-        },
-      "name" : "DrawSlavrVDBVolumes",
-      "ports" : [
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "Out",
-          "name" : "volumeInstance"
-          },
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "IO",
-          "name" : "result"
-          },
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "IO",
-          "name" : "handle"
-          },
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "IO",
-          "name" : "volume"
-          },
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "In",
-          "name" : "xfo"
-          },
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "In",
-          "name" : "path"
-          },
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "In",
-          "name" : "field"
-          }
-        ],
-      "executable" : "Slavr.Func.DrawSlavrVDBVolumes",
-      "presetGUID" : "26F424CAA26C06CA52DC8E964E782C6C"
-      },
-    {
-      "objectType" : "Inst",
-      "metadata" : {
-        "uiGraphPos" : "{\"x\":176.5357360839844,\"y\":787.3011474609375}",
+        "uiGraphPos" : "{\"x\":580.615966796875,\"y\":673.8268432617188}",
         "uiNodeColor" : "{\n  \"r\" : 121,\n  \"g\" : 134,\n  \"b\" : 143\n  }",
         "uiTextColor" : "{\n  \"r\" : 20,\n  \"g\" : 20,\n  \"b\" : 20\n  }"
         },
@@ -726,45 +685,7 @@
     {
       "objectType" : "Inst",
       "metadata" : {
-        "uiGraphPos" : "{\"x\":1133.930053710938,\"y\":785.762939453125}"
-        },
-      "name" : "Xfo_3",
-      "ports" : [
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "In",
-          "name" : "ori"
-          },
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "In",
-          "defaultValues" : {
-            "Vec3" : {
-              "x" : 5,
-              "y" : 1,
-              "z" : 0
-              }
-            },
-          "name" : "tr"
-          },
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "In",
-          "name" : "sc"
-          },
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "Out",
-          "name" : "result"
-          }
-        ],
-      "executable" : "Fabric.Exts.Math.Xfo.ComposeXfo",
-      "presetGUID" : "C61287D19D84D9733903DDC14FABD4AF"
-      },
-    {
-      "objectType" : "Inst",
-      "metadata" : {
-        "uiGraphPos" : "{\"x\":162.8643493652344,\"y\":59.51953125}"
+        "uiGraphPos" : "{\"x\":442.9669799804688,\"y\":135.9111022949219}"
         },
       "name" : "EmptyManipHandle_2",
       "ports" : [
@@ -780,23 +701,7 @@
     {
       "objectType" : "Inst",
       "metadata" : {
-        "uiGraphPos" : "{\"x\":194.2666320800781,\"y\":134.6117858886719}"
-        },
-      "name" : "EmptyDrawingHandle",
-      "ports" : [
-        {
-          "objectType" : "InstPort",
-          "nodePortType" : "Out",
-          "name" : "handle"
-          }
-        ],
-      "executable" : "Fabric.Exts.InlineDrawing.DrawingHandle.EmptyDrawingHandle",
-      "presetGUID" : "2440020BA6A1CAB1CEB690A198F99C70"
-      },
-    {
-      "objectType" : "Inst",
-      "metadata" : {
-        "uiGraphPos" : "{\"x\":311.7543334960938,\"y\":426.49609375}"
+        "uiGraphPos" : "{\"x\":472.5787353515625,\"y\":217.4243316650391}"
         },
       "name" : "EmptyDrawingHandle_2",
       "ports" : [
@@ -812,71 +717,551 @@
     {
       "objectType" : "Inst",
       "metadata" : {
-        "uiGraphPos" : "{\"x\":1334.088256835938,\"y\":640.312255859375}"
+        "uiGraphPos" : "{\"x\":1940.41064453125,\"y\":326.4556579589844}"
         },
-      "name" : "changeVolumeStuff",
+      "name" : "DrawVolumeVDB",
       "ports" : [
         {
           "objectType" : "InstPort",
-          "nodePortType" : "In",
-          "name" : "handle"
+          "nodePortType" : "IO",
+          "name" : "this"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "IO",
+          "name" : "sViewport"
           },
         {
           "objectType" : "InstPort",
           "nodePortType" : "In",
-          "name" : "xfo"
+          "defaultValues" : {
+            "String" : "mysmoke"
+            },
+          "name" : "name"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Color" : {
+              "r" : 0.6700000166893005,
+              "g" : 0.6000000238418579,
+              "b" : 0.6700000166893005,
+              "a" : 1
+              }
+            },
+          "name" : "scattering"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Color" : {
+              "r" : 0.699999988079071,
+              "g" : 0.699999988079071,
+              "b" : 0.699999988079071,
+              "a" : 1
+              }
+            },
+          "name" : "absorption"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Float32" : 5
+            },
+          "name" : "primaryStep"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Float32" : 3
+            },
+          "name" : "secondaryStep"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "transforms"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "volume"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "active"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "doubleSided"
           },
         {
           "objectType" : "InstPort",
           "nodePortType" : "Out",
-          "name" : "vsal"
+          "name" : "dummyResult"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "instance"
           }
         ],
-      "definition" : {
-        "objectType" : "Func",
-        "title" : "changeVolumeStuff",
-        "ports" : [
-          {
-            "objectType" : "Port",
-            "nodePortType" : "Out",
-            "name" : "handle",
-            "execPortType" : "In",
-            "typeSpec" : "DrawingHandle"
-            },
-          {
-            "objectType" : "Port",
-            "nodePortType" : "Out",
-            "name" : "xfo",
-            "execPortType" : "In",
-            "typeSpec" : "Xfo"
-            },
-          {
-            "objectType" : "Port",
-            "nodePortType" : "In",
-            "name" : "vsal",
-            "execPortType" : "Out",
-            "typeSpec" : "Vec3"
-            }
-          ],
-        "extDeps" : {},
-        "code" : "dfgEntry {\n  vsal = Vec3(0,0,0);\n  //result = lhs + rhs;\n  InlineTransform rootTfo = handle.getRootTransform();\n  report(rootTfo);\n  InlineTransform cubeTfo = rootTfo.getChild('volumesXfo');\n\n  //volumeInstance = cubeTfo.getChild('volumeInst');\n\n  // Mat44 colorMap(Vec4(0.3, 0.9, 0.3, 1.0), Vec4(0.9, 0.3, 0.3, 1.0),\n                 // Vec4(0.9, 0.9, 0.3, 1.0), Vec4(0.3, 0.3, 0.9, 1.0));\n  if(!cubeTfo){\n  report(\"noooooooo\");\n  return;\n  }\n  Size count = 1;\n  cubeTfo.setLocalCount(count);\n  for (Size i = 0; i < count; i++) {\n    cubeTfo.setLocalXfo(i, xfo);\n\n    // Color color1;\n    // color1.r = mathRandomScalar(17, i * 2) * 0.75 + 0.25;\n    // color1.g = mathRandomScalar(18, i * 3) * 0.75 + 0.25;\n    // color1.b = mathRandomScalar(19, i * 4) * 0.75 + 0.25;\n  }\n  \n\n}\n"
-        }
+      "executable" : "Slavr.DrawingHandle.DrawVolumeVDB",
+      "presetGUID" : "45ADD8CA41EE4A94750528145A47796B"
       },
     {
       "objectType" : "Inst",
       "metadata" : {
-        "uiGraphPos" : "{\"x\":1064.50244140625,\"y\":586.9623413085938}"
+        "uiGraphPos" : "{\"x\":1240.754272460938,\"y\":293.4661254882813}",
+        "uiNodeColor" : "{\n  \"r\" : 121,\n  \"g\" : 134,\n  \"b\" : 143\n  }",
+        "uiTextColor" : "{\n  \"r\" : 20,\n  \"g\" : 20,\n  \"b\" : 20\n  }"
         },
-      "name" : "EmptyDrawingHandle_3",
+      "name" : "getSlavr_2",
       "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "IO",
+          "name" : "this"
+          },
         {
           "objectType" : "InstPort",
           "nodePortType" : "Out",
           "name" : "handle"
           }
         ],
-      "executable" : "Fabric.Exts.InlineDrawing.DrawingHandle.EmptyDrawingHandle",
-      "presetGUID" : "2440020BA6A1CAB1CEB690A198F99C70"
+      "definition" : {
+        "objectType" : "Func",
+        "title" : "getSlavr",
+        "ports" : [
+          {
+            "objectType" : "Port",
+            "nodePortType" : "IO",
+            "name" : "this",
+            "execPortType" : "IO",
+            "typeSpec" : "SlavrViewport"
+            },
+          {
+            "objectType" : "Port",
+            "nodePortType" : "In",
+            "name" : "handle",
+            "execPortType" : "Out",
+            "typeSpec" : "DrawingHandle"
+            }
+          ],
+        "extDeps" : {},
+        "code" : "dfgEntry {\n  //result = lhs + rhs;\n  Ref<SlavrViewportManipulator> self = this;\n  \n  handle = this.handle;\n}\n"
+        },
+      "title" : "getHandle"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":1667.322265625,\"y\":425.8413391113281}"
+        },
+      "name" : "Xfo_5",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "element"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "count"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "array"
+          }
+        ],
+      "executable" : "Fabric.Exts.Math.Constants.XfoArray",
+      "presetGUID" : "A574B316321209337ABEAC56EF1FA6B9"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":1502.8525390625,\"y\":408.4013366699219}"
+        },
+      "name" : "Xfo_4",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "ori"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Vec3" : {
+              "x" : -30,
+              "y" : -10,
+              "z" : -30
+              }
+            },
+          "name" : "tr"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Vec3" : {
+              "x" : 1,
+              "y" : 1,
+              "z" : 1
+              }
+            },
+          "name" : "sc"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "result"
+          }
+        ],
+      "executable" : "Fabric.Exts.Math.Xfo.Xfo",
+      "presetGUID" : "A0F6CD63A2069530481F214C62A069AA"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":2414.706298828125,\"y\":651.0128784179688}"
+        },
+      "name" : "DrawVolumeVDB_2",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "IO",
+          "name" : "this"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "IO",
+          "name" : "sViewport"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "String" : "mysmoke2"
+            },
+          "name" : "name"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "scattering"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "absorption"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Float32" : 5
+            },
+          "name" : "primaryStep"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Float32" : 5
+            },
+          "name" : "secondaryStep"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "transforms"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "volume"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "active"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "doubleSided"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "dummyResult"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "instance"
+          }
+        ],
+      "executable" : "Slavr.DrawingHandle.DrawVolumeVDB",
+      "presetGUID" : "45ADD8CA41EE4A94750528145A47796B"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":1935.355224609375,\"y\":704.419677734375}"
+        },
+      "name" : "Xfo5",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "element"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "count"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "array"
+          }
+        ],
+      "executable" : "Fabric.Exts.Math.Constants.XfoArray",
+      "presetGUID" : "A574B316321209337ABEAC56EF1FA6B9"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":1656.225463867188,\"y\":716.763427734375}"
+        },
+      "name" : "Xfo4",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "ori"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Vec3" : {
+              "x" : 30,
+              "y" : 0,
+              "z" : 30
+              }
+            },
+          "name" : "tr"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Vec3" : {
+              "x" : 1,
+              "y" : 1,
+              "z" : 1
+              }
+            },
+          "name" : "sc"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "result"
+          }
+        ],
+      "executable" : "Fabric.Exts.Math.Xfo.Xfo",
+      "presetGUID" : "A0F6CD63A2069530481F214C62A069AA"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":679.7763061523438,\"y\":1002.232299804688}"
+        },
+      "name" : "EmptyVDBVolume2_2",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "volume"
+          }
+        ],
+      "executable" : "OpenVDBWrapper.EmptyVDBVolume",
+      "presetGUID" : "EE821C8FD27CAC712CED6FF60E9C597F"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":891.0545654296875,\"y\":1076.598022460938}"
+        },
+      "name" : "AddFromFileField_2",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "IO",
+          "name" : "this"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "filePath"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "fieldName"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "levelSet"
+          }
+        ],
+      "executable" : "OpenVDBGeometry.VDBVolumes.AddFromFileField",
+      "presetGUID" : "B678309B6BDC297A9036C494436B8CE2"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":700.1087036132813,\"y\":1173.370727539063}",
+        "uiNodeColor" : "{\n  \"r\" : 121,\n  \"g\" : 134,\n  \"b\" : 143\n  }",
+        "uiTextColor" : "{\n  \"r\" : 20,\n  \"g\" : 20,\n  \"b\" : 20\n  }"
+        },
+      "name" : "Boolean_3",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "name" : "value"
+          }
+        ],
+      "executable" : "Fabric.Core.Constants.Boolean",
+      "presetGUID" : "AC57A4CE7AD2AF05FAECFA35F4E8C2F6",
+      "title" : "false"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":2226.699462890625,\"y\":107.1465606689453}"
+        },
+      "name" : "GetSlavr",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "IO",
+          "name" : "this"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "result"
+          }
+        ],
+      "executable" : "Slavr.SlavrViewport.GetSlavr",
+      "presetGUID" : "34A28342E461B15002B586647EE5CCB6"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":2476.0302734375,\"y\":112.7888946533203}"
+        },
+      "name" : "GetParams",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "IO",
+          "name" : "this"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "Out",
+          "name" : "result"
+          }
+        ],
+      "executable" : "Slavr.Slavr.GetParams",
+      "presetGUID" : "2B1B7D69133E9BDC3FC71A57018DF8F4"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":2706.77392578125,\"y\":77.86457824707031}"
+        },
+      "name" : "SetColor",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "IO",
+          "name" : "this"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "String" : "bgColor"
+            },
+          "name" : "name"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Color" : {
+              "r" : 0.4980392158031464,
+              "g" : 0.4980392158031464,
+              "b" : 0.4980392158031464,
+              "a" : 0
+              }
+            },
+          "name" : "value"
+          }
+        ],
+      "executable" : "Fabric.Exts.Parameters.ParamDict.SetColor",
+      "presetGUID" : "9F856C89B68CB97ED5587A2BEA307BED"
+      },
+    {
+      "objectType" : "Inst",
+      "metadata" : {
+        "uiGraphPos" : "{\"x\":2719.51318359375,\"y\":297.7242126464844}"
+        },
+      "name" : "SetBoolean",
+      "ports" : [
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "IO",
+          "name" : "this"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "String" : "isBox"
+            },
+          "name" : "name"
+          },
+        {
+          "objectType" : "InstPort",
+          "nodePortType" : "In",
+          "defaultValues" : {
+            "Boolean" : false
+            },
+          "name" : "value"
+          }
+        ],
+      "executable" : "Fabric.Exts.Parameters.ParamDict.SetBoolean",
+      "presetGUID" : "ACEFC253AC4D37FA2F1F99F4435AA387"
       }
     ],
   "connections" : {
@@ -886,32 +1271,76 @@
     "field1" : [
       "AddFromFileField.fieldName"
       ],
+    "path1" : [
+      "AddFromFileField_2.filePath"
+      ],
+    "field2" : [
+      "AddFromFileField_2.fieldName"
+      ],
     "EmptyVDBVolume2.volume" : [
       "AddFromFileField.this"
       ],
     "AddFromFileField.this" : [
-      "DrawSlavrVDBVolumes.volume"
+      "DrawVolumeVDB.volume"
       ],
-    "DrawSlavrVDBVolumes.volumeInstance" : [
-      "EmptySlavrViewport.instance"
+    "EmptySlavrViewport.value" : [
+      "getSlavr_2.this",
+      "GetSlavr.this"
       ],
     "Boolean.value" : [
       "AddFromFileField.levelSet"
       ],
-    "Xfo_3.result" : [
-      "changeVolumeStuff.xfo"
-      ],
     "EmptyManipHandle_2.value" : [
       "EmptySlavrViewport.manipulator"
       ],
-    "EmptyDrawingHandle.handle" : [
+    "EmptyDrawingHandle_2.handle" : [
       "EmptySlavrViewport.handle"
       ],
-    "EmptyDrawingHandle_2.handle" : [
-      "DrawSlavrVDBVolumes.handle"
+    "DrawVolumeVDB.this" : [
+      "DrawVolumeVDB_2.this"
       ],
-    "EmptyDrawingHandle_3.handle" : [
-      "changeVolumeStuff.handle"
+    "DrawVolumeVDB.sViewport" : [
+      "DrawVolumeVDB_2.sViewport"
+      ],
+    "getSlavr_2.this" : [
+      "DrawVolumeVDB.sViewport"
+      ],
+    "getSlavr_2.handle" : [
+      "DrawVolumeVDB.this"
+      ],
+    "Xfo_5.array" : [
+      "DrawVolumeVDB.transforms"
+      ],
+    "Xfo_4.result" : [
+      "Xfo_5.element"
+      ],
+    "Xfo5.array" : [
+      "DrawVolumeVDB_2.transforms"
+      ],
+    "Xfo4.result" : [
+      "Xfo5.element"
+      ],
+    "EmptyVDBVolume2_2.volume" : [
+      "AddFromFileField_2.this"
+      ],
+    "AddFromFileField_2.this" : [
+      "DrawVolumeVDB_2.volume"
+      ],
+    "Boolean_3.value" : [
+      "AddFromFileField_2.levelSet"
+      ],
+    "GetSlavr.result" : [
+      "GetParams.this"
+      ],
+    "GetParams.result" : [
+      "SetColor.this",
+      "SetBoolean.this"
+      ],
+    "SetColor.this" : [
+      "this"
+      ],
+    "SetBoolean.this" : [
+      "this_2"
       ]
     },
   "requiredPresets" : {
@@ -1238,157 +1667,6 @@
       "presetGUID" : "C76EA08D6DD6356A60E23A83105FCF8A",
       "code" : "require Slavr;\n\ndfgEntry {\n  this.addGeometryInstance(instance);\n}\n"
       },
-    "Slavr.Func.DrawSlavrVDBVolumes" : {
-      "objectType" : "Func",
-      "title" : "DrawSlavrVDBVolumes",
-      "ports" : [
-        {
-          "objectType" : "Port",
-          "nodePortType" : "In",
-          "name" : "volumeInstance",
-          "execPortType" : "Out",
-          "typeSpec" : "InlineInstance"
-          },
-        {
-          "objectType" : "Port",
-          "metadata" : {
-            "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
-            },
-          "nodePortType" : "IO",
-          "name" : "result",
-          "execPortType" : "IO",
-          "typeSpec" : "Vec3"
-          },
-        {
-          "objectType" : "Port",
-          "nodePortType" : "IO",
-          "name" : "handle",
-          "execPortType" : "IO",
-          "typeSpec" : "DrawingHandle"
-          },
-        {
-          "objectType" : "Port",
-          "metadata" : {
-            "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
-            },
-          "nodePortType" : "IO",
-          "name" : "volume",
-          "execPortType" : "IO",
-          "typeSpec" : "VDBVolumes"
-          },
-        {
-          "objectType" : "Port",
-          "metadata" : {
-            "uiColor" : "{\n  \"r\" : 249,\n  \"g\" : 157,\n  \"b\" : 28\n  }"
-            },
-          "nodePortType" : "Out",
-          "name" : "xfo",
-          "execPortType" : "In",
-          "typeSpec" : "Xfo"
-          },
-        {
-          "objectType" : "Port",
-          "nodePortType" : "Out",
-          "name" : "path",
-          "execPortType" : "In",
-          "typeSpec" : "String"
-          },
-        {
-          "objectType" : "Port",
-          "nodePortType" : "Out",
-          "defaultValues" : {
-            "String" : "density"
-            },
-          "name" : "field",
-          "execPortType" : "In",
-          "typeSpec" : "String"
-          }
-        ],
-      "extDeps" : {
-        "Slavr" : "*"
-        },
-      "presetGUID" : "26F424CAA26C06CA52DC8E964E782C6C",
-      "code" : "require Slavr;\n\ndfgEntry {\n  drawSlavrVDBVolumes(volumeInstance, result, handle, volume, xfo, path, field);\n}\n"
-      },
-    "Fabric.Exts.Math.Xfo.ComposeXfo" : {
-      "objectType" : "Func",
-      "metadata" : {
-        "uiNodeColor" : "{\n  \"r\" : 99,\n  \"g\" : 129,\n  \"b\" : 92\n  }",
-        "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/Math/Xfo.html"
-        },
-      "title" : "-> Xfo",
-      "ports" : [
-        {
-          "objectType" : "Port",
-          "metadata" : {
-            "uiColor" : "{\n  \"r\" : 0,\n  \"g\" : 191,\n  \"b\" : 232\n  }"
-            },
-          "nodePortType" : "Out",
-          "defaultValues" : {
-            "Quat" : {
-              "v" : {
-                "x" : 0,
-                "y" : 0,
-                "z" : 0
-                },
-              "w" : 1
-              }
-            },
-          "name" : "ori",
-          "execPortType" : "In",
-          "typeSpec" : "Quat"
-          },
-        {
-          "objectType" : "Port",
-          "metadata" : {
-            "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
-            },
-          "nodePortType" : "Out",
-          "defaultValues" : {
-            "Vec3" : {
-              "x" : 0,
-              "y" : 0,
-              "z" : 0
-              }
-            },
-          "name" : "tr",
-          "execPortType" : "In",
-          "typeSpec" : "Vec3"
-          },
-        {
-          "objectType" : "Port",
-          "metadata" : {
-            "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
-            },
-          "nodePortType" : "Out",
-          "defaultValues" : {
-            "Vec3" : {
-              "x" : 1,
-              "y" : 1,
-              "z" : 1
-              }
-            },
-          "name" : "sc",
-          "execPortType" : "In",
-          "typeSpec" : "Vec3"
-          },
-        {
-          "objectType" : "Port",
-          "metadata" : {
-            "uiColor" : "{\n  \"r\" : 249,\n  \"g\" : 157,\n  \"b\" : 28\n  }"
-            },
-          "nodePortType" : "In",
-          "name" : "result",
-          "execPortType" : "Out",
-          "typeSpec" : "Xfo"
-          }
-        ],
-      "extDeps" : {
-        "Math" : "*"
-        },
-      "presetGUID" : "C61287D19D84D9733903DDC14FABD4AF",
-      "code" : "require Math;\n\ndfgEntry {\n  result.ori = ori;\n  result.tr = tr;\n  result.sc = sc;\n}\n"
-      },
     "Fabric.Exts.Manipulation.ManipHandle.EmptyManipHandle" : {
       "objectType" : "Graph",
       "title" : "Empty ManipHandle",
@@ -1632,17 +1910,412 @@
         },
       "presetGUID" : "39E8D81FA7C7C4A825877F16EFE3564F",
       "code" : "require InlineDrawing;\n\ndfgEntry {\n  this.clear();\n}\n"
+      },
+    "Slavr.DrawingHandle.DrawVolumeVDB" : {
+      "objectType" : "Func",
+      "metadata" : {
+        "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/InlineDrawing/DrawingHandle.html",
+        "uiTooltip" : "helper function to draw a VDBVolume\n\n Supported by DrawingHandle"
+        },
+      "title" : "DrawVolumeVDB",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "IO",
+          "name" : "this",
+          "execPortType" : "IO",
+          "typeSpec" : "DrawingHandle"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "IO",
+          "name" : "sViewport",
+          "execPortType" : "IO",
+          "typeSpec" : "SlavrViewport"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "name",
+          "execPortType" : "In",
+          "typeSpec" : "String"
+          },
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 0,\n  \"b\" : 0\n  }"
+            },
+          "nodePortType" : "Out",
+          "defaultValues" : {
+            "Color" : {
+              "r" : 0.6000000238418579,
+              "g" : 0.8999999761581421,
+              "b" : 0.8999999761581421,
+              "a" : 1
+              }
+            },
+          "name" : "scattering",
+          "execPortType" : "In",
+          "typeSpec" : "Color"
+          },
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 0,\n  \"b\" : 0\n  }"
+            },
+          "nodePortType" : "Out",
+          "defaultValues" : {
+            "Color" : {
+              "r" : 0.699999988079071,
+              "g" : 0.699999988079071,
+              "b" : 0.699999988079071,
+              "a" : 1
+              }
+            },
+          "name" : "absorption",
+          "execPortType" : "In",
+          "typeSpec" : "Color"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "defaultValues" : {
+            "Float32" : 1
+            },
+          "name" : "primaryStep",
+          "execPortType" : "In",
+          "typeSpec" : "Float32"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "defaultValues" : {
+            "Float32" : 3
+            },
+          "name" : "secondaryStep",
+          "execPortType" : "In",
+          "typeSpec" : "Float32"
+          },
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 249,\n  \"g\" : 157,\n  \"b\" : 28\n  }"
+            },
+          "nodePortType" : "Out",
+          "name" : "transforms",
+          "execPortType" : "In",
+          "typeSpec" : "Xfo[]"
+          },
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
+            },
+          "nodePortType" : "Out",
+          "name" : "volume",
+          "execPortType" : "In",
+          "typeSpec" : "VDBVolumes"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "active",
+          "execPortType" : "In",
+          "typeSpec" : "Boolean"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "doubleSided",
+          "execPortType" : "In",
+          "typeSpec" : "Boolean"
+          },
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+            },
+          "nodePortType" : "In",
+          "name" : "dummyResult",
+          "execPortType" : "Out",
+          "typeSpec" : "Vec3"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "In",
+          "name" : "instance",
+          "execPortType" : "Out",
+          "typeSpec" : "InlineInstance"
+          }
+        ],
+      "extDeps" : {
+        "Slavr" : "*"
+        },
+      "presetGUID" : "45ADD8CA41EE4A94750528145A47796B",
+      "code" : "require Slavr;\n\ndfgEntry {\n  this.drawVolumeVDB(sViewport, name, scattering, absorption, primaryStep, secondaryStep, transforms, volume, active, doubleSided, dummyResult, instance);\n}\n"
+      },
+    "Fabric.Exts.Math.Constants.XfoArray" : {
+      "objectType" : "Func",
+      "metadata" : {
+        "uiNodeColor" : "{\n  \"r\" : 99,\n  \"g\" : 129,\n  \"b\" : 92\n  }",
+        "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/Math/Xfo.html"
+        },
+      "title" : "Xfo[]",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 249,\n  \"g\" : 157,\n  \"b\" : 28\n  }"
+            },
+          "nodePortType" : "Out",
+          "defaultValues" : {
+            "Xfo[]" : [
+              {
+                "ori" : {
+                  "v" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0
+                    },
+                  "w" : 1
+                  },
+                "tr" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+                  },
+                "sc" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+                  }
+                }
+              ]
+            },
+          "name" : "element",
+          "execPortType" : "In",
+          "typeSpec" : "Xfo"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "defaultValues" : {
+            "SInt32" : 1
+            },
+          "name" : "count",
+          "execPortType" : "In",
+          "typeSpec" : "SInt32"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "In",
+          "name" : "array",
+          "execPortType" : "Out",
+          "typeSpec" : "Xfo[]"
+          }
+        ],
+      "extDeps" : {
+        "Math" : "*"
+        },
+      "presetGUID" : "A574B316321209337ABEAC56EF1FA6B9",
+      "code" : "dfgEntry {\n  array.resize(count);\n  for(Size i=0;i<count;i++)\n    array[i] = element;\n}\n"
+      },
+    "Fabric.Exts.Math.Xfo.Xfo" : {
+      "objectType" : "Func",
+      "metadata" : {
+        "uiNodeColor" : "{\n  \"r\" : 99,\n  \"g\" : 129,\n  \"b\" : 92\n  }",
+        "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/Math/Xfo.html",
+        "uiTooltip" : "Constructor from the orientation, translation and scaling\n\n Supported by Xfo"
+        },
+      "title" : "Xfo",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 0,\n  \"g\" : 191,\n  \"b\" : 232\n  }"
+            },
+          "nodePortType" : "Out",
+          "name" : "ori",
+          "execPortType" : "In",
+          "typeSpec" : "Quat"
+          },
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+            },
+          "nodePortType" : "Out",
+          "name" : "tr",
+          "execPortType" : "In",
+          "typeSpec" : "Vec3"
+          },
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 242,\n  \"b\" : 0\n  }"
+            },
+          "nodePortType" : "Out",
+          "defaultValues" : {
+            "Vec3" : {
+              "x" : 1,
+              "y" : 1,
+              "z" : 1
+              }
+            },
+          "name" : "sc",
+          "execPortType" : "In",
+          "typeSpec" : "Vec3"
+          },
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 249,\n  \"g\" : 157,\n  \"b\" : 28\n  }"
+            },
+          "nodePortType" : "In",
+          "name" : "result",
+          "execPortType" : "Out",
+          "typeSpec" : "Xfo"
+          }
+        ],
+      "extDeps" : {
+        "Math" : "*"
+        },
+      "presetGUID" : "A0F6CD63A2069530481F214C62A069AA",
+      "code" : "require Math;\n\ndfgEntry {\n  result = Xfo(ori, tr, sc);\n}\n"
+      },
+    "Slavr.SlavrViewport.GetSlavr" : {
+      "objectType" : "Func",
+      "metadata" : {
+        "uiTooltip" : "get Slavr\n\n Supported by SlavrViewport"
+        },
+      "title" : "GetSlavr",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "IO",
+          "name" : "this",
+          "execPortType" : "IO",
+          "typeSpec" : "SlavrViewport"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "In",
+          "name" : "result",
+          "execPortType" : "Out",
+          "typeSpec" : "Slavr"
+          }
+        ],
+      "extDeps" : {
+        "Slavr" : "*"
+        },
+      "presetGUID" : "34A28342E461B15002B586647EE5CCB6",
+      "code" : "require Slavr;\n\ndfgEntry {\n  result = this.getSlavr();\n}\n"
+      },
+    "Slavr.Slavr.GetParams" : {
+      "objectType" : "Func",
+      "metadata" : {
+        "uiTooltip" : "get Slavr parameters\n\n Supported by Slavr"
+        },
+      "title" : "GetParams",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "IO",
+          "name" : "this",
+          "execPortType" : "IO",
+          "typeSpec" : "Slavr"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "In",
+          "name" : "result",
+          "execPortType" : "Out",
+          "typeSpec" : "ParamDict"
+          }
+        ],
+      "extDeps" : {
+        "Slavr" : "*"
+        },
+      "presetGUID" : "2B1B7D69133E9BDC3FC71A57018DF8F4",
+      "code" : "require Slavr;\n\ndfgEntry {\n  result = this.getParams();\n}\n"
+      },
+    "Fabric.Exts.Parameters.ParamDict.SetColor" : {
+      "objectType" : "Func",
+      "metadata" : {
+        "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/Parameters/ParamDict.html",
+        "uiTooltip" : "setting a Color value on the ParamDict\n\n Supported by ParamDict"
+        },
+      "title" : "SetColor",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "IO",
+          "name" : "this",
+          "execPortType" : "IO",
+          "typeSpec" : "ParamDict"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "name",
+          "execPortType" : "In",
+          "typeSpec" : "String"
+          },
+        {
+          "objectType" : "Port",
+          "metadata" : {
+            "uiColor" : "{\n  \"r\" : 255,\n  \"g\" : 0,\n  \"b\" : 0\n  }"
+            },
+          "nodePortType" : "Out",
+          "name" : "value",
+          "execPortType" : "In",
+          "typeSpec" : "Color"
+          }
+        ],
+      "extDeps" : {
+        "Parameters" : "*"
+        },
+      "presetGUID" : "9F856C89B68CB97ED5587A2BEA307BED",
+      "code" : "require Parameters;\n\ndfgEntry {\n  this.setColor(name, value);\n}\n"
+      },
+    "Fabric.Exts.Parameters.ParamDict.SetBoolean" : {
+      "objectType" : "Func",
+      "metadata" : {
+        "uiDocUrl" : "http://docs.fabric-engine.com/FabricEngine/2.0.0/HTML/KLExtensionsGuide/Parameters/ParamDict.html",
+        "uiTooltip" : "setting a Boolean value on the ParamDict\n\n Supported by ParamDict"
+        },
+      "title" : "SetBoolean",
+      "ports" : [
+        {
+          "objectType" : "Port",
+          "nodePortType" : "IO",
+          "name" : "this",
+          "execPortType" : "IO",
+          "typeSpec" : "ParamDict"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "name",
+          "execPortType" : "In",
+          "typeSpec" : "String"
+          },
+        {
+          "objectType" : "Port",
+          "nodePortType" : "Out",
+          "name" : "value",
+          "execPortType" : "In",
+          "typeSpec" : "Boolean"
+          }
+        ],
+      "extDeps" : {
+        "Parameters" : "*"
+        },
+      "presetGUID" : "ACEFC253AC4D37FA2F1F99F4435AA387",
+      "code" : "require Parameters;\n\ndfgEntry {\n  this.setBoolean(name, value);\n}\n"
       }
     },
   "args" : [
-    {
-      "type" : "String",
-      "value" : null
-      },
-    {
-      "type" : "String",
-      "value" : "C:\\Users\\holofermes\\f.dot\\smoke.vdb"
-      },
     {
       "type" : "String",
       "value" : "C:\\Users\\holofermes\\f.dot\\fire.vdb"
@@ -1653,7 +2326,21 @@
       },
     {
       "type" : "String",
+      "value" : "C:\\Users\\holofermes\\f.dot\\smoke.vdb"
+      },
+    {
+      "type" : "String",
       "value" : "density"
+      },
+    {
+      "type" : "ParamDict",
+      "value" : null,
+      "ext" : "Parameters"
+      },
+    {
+      "type" : "ParamDict",
+      "value" : null,
+      "ext" : "Parameters"
       }
     ]
   }
