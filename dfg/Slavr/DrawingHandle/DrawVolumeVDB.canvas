@@ -96,16 +96,6 @@
       },
     {
       "objectType" : "Port",
-      "metadata" : {
-        "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
-        },
-      "nodePortType" : "Out",
-      "name" : "volume",
-      "execPortType" : "In",
-      "typeSpec" : "VDBVolumes"
-      },
-    {
-      "objectType" : "Port",
       "nodePortType" : "Out",
       "name" : "active",
       "execPortType" : "In",
@@ -114,9 +104,50 @@
     {
       "objectType" : "Port",
       "nodePortType" : "Out",
-      "name" : "doubleSided",
+      "name" : "field",
+      "execPortType" : "In",
+      "typeSpec" : "String"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "minCutoff",
+      "execPortType" : "In",
+      "typeSpec" : "Scalar"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "maxCutoff",
+      "execPortType" : "In",
+      "typeSpec" : "Scalar"
+      },
+    {
+      "objectType" : "Port",
+      "nodePortType" : "Out",
+      "name" : "cull",
       "execPortType" : "In",
       "typeSpec" : "Boolean"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 249,\n  \"g\" : 157,\n  \"b\" : 28\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "boxCull",
+      "execPortType" : "In",
+      "typeSpec" : "Xfo"
+      },
+    {
+      "objectType" : "Port",
+      "metadata" : {
+        "uiColor" : "{\n  \"r\" : 51,\n  \"g\" : 1,\n  \"b\" : 106\n  }"
+        },
+      "nodePortType" : "Out",
+      "name" : "volume",
+      "execPortType" : "In",
+      "typeSpec" : "VDBVolumes"
       },
     {
       "objectType" : "Port",
@@ -139,6 +170,6 @@
   "extDeps" : {
     "Slavr" : "*"
     },
-  "presetGUID" : "45ADD8CA41EE4A94750528145A47796B",
-  "code" : "require Slavr;\n\ndfgEntry {\n  this.drawVolumeVDB(sViewport, name, scattering, absorption, primaryStep, secondaryStep, transforms, volume, active, doubleSided, dummyResult, instance);\n}\n"
+  "presetGUID" : "7A4370745639ED91CFC65EE2339575B6",
+  "code" : "require Slavr;\n\ndfgEntry {\n  this.drawVolumeVDB(sViewport, name, scattering, absorption, primaryStep, secondaryStep, transforms, active, field, minCutoff, maxCutoff, cull, boxCull, volume, dummyResult, instance);\n}\n"
   }

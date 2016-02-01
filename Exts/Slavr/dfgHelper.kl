@@ -1,5 +1,6 @@
 require Math;
 require Slavr;
+require VdbVoxelizer;
 
 function String statistics(Ref<Slavr> slavr) {
   String sout = '\nSlavr has\n';
@@ -15,7 +16,6 @@ function String statistics(Ref<Slavr> slavr) {
   sout += 'Dirty: ' + slavr.scene.dirty + '\n';
   sout += 'Lock: ' + slavr.scene.lock + '\n';
   return sout;
-
 }
 
 /// helper function to draw a VDBVolume
@@ -24,69 +24,112 @@ function String statistics(Ref<Slavr> slavr) {
 /// \dfgPresetDefault absorption {"r": 0.7, "g": 0.7, "b": 0.7, "a": 1.0}
 /// \dfgPresetDefault primaryStep 1.0
 /// \dfgPresetDefault secondaryStep 3.0
-function DrawingHandle.drawVolumeVDB!(io SlavrViewport sViewport, String name, Color scattering, Color absorption, Float32 primaryStep, Float32 secondaryStep, Xfo transforms[], VDBVolumes volume, Boolean active, Boolean doubleSided, out Vec3 dummyResult, out InlineInstance instance)
+function DrawingHandle.drawVolumeVDB !(io SlavrViewport sViewport,
+                                       String name,
+                                       Color scattering,
+                                       Color absorption,
+                                       Float32 primaryStep,
+                                       Float32 secondaryStep,
+                                       Xfo transforms[],
+                                       Boolean active,
+                                       String field,
+                                       Scalar minCutoff,
+                                       Scalar maxCutoff,
+                                       Boolean cull,
+                                       Xfo boxCull,
+                                       in VDBVolumes volume,
+                                       out Vec3 dummyResult,
+                                       out InlineInstance instance) 
 {
   String uidName = this.uid() + '_' + name;
-  report("drawVolumeVDB start: "+uidName);
-
+  report("drawVolumeVDB start: " + uidName);
 
   InlineDrawing draw = this.getDrawing();
-  if(draw.getShapeAdaptorIndex("InlineVDBVolumesShape") == -1)draw.registerShapeAdaptor(OGLVDBVolumesShapeAdaptor());
-  SlavrMediumShader volumeShader = draw.registerShader(SlavrMediumShader(uidName,OGLFloatGridVertexSS()));
+  if (draw.getShapeAdaptorIndex("InlineVDBVolumesShape") == -1)
+    draw.registerShapeAdaptor(OGLVDBVolumesShapeAdaptor());
+  // InlineShader vShader = createVoxelizerShader(uidName, draw);
+  InlineShader vShader = OGLFloatGridVertexSS();
+  SlavrMediumShader volumeShader = draw.registerShader(
+      SlavrMediumShader(uidName, vShader /*OGLFloatGridVertexSS()*/));
   InlineVDBVolumesShape volumeShape = draw.getShape(uidName);
-  if(volumeShape == null){
+  if (volumeShape == null) {
     report("drawVolumeVDB registering new shape");
     volumeShape = draw.registerShape(InlineVDBVolumesShape(uidName, volume));
   }
 
-  // if(volumeShape != null)
-  //   volumeShape.setMesh(mesh);
-
-
-  // SlavrVolumeMaterial volumeMaterialSlavr =
-  //     volumeShader.getOrCreateSlavrMaterial(SlavrVolumeMaterial());
-  // volumeMaterialSlavr.setScattering(scattering);
-  // volumeMaterialSlavr.setAbsorption(absorption);
-  // volumeMaterialSlavr.setPrimaryStep(primaryStep);
-  // volumeMaterialSlavr.setShadowStep(secondaryStep);
-
-
-
-  // InlineShader shader = volumeShader;
-  // InlineMaterial volumeMaterial = this.drawShapeInstances(name, volumeShader, transforms, volumeShape, dummyResult, instance);
-
-
-
-  // InlineMaterial volumeMaterial = shader.getOrCreateMaterial(uidName);
-  SlavrVolumeMaterial volumeMaterialSlavr = volumeShader.getOrCreateSlavrMaterial(SlavrVolumeMaterial(uidName));
+  SlavrVolumeMaterial volumeMaterialSlavr =
+      volumeShader.getOrCreateSlavrMaterial(SlavrVolumeMaterial(uidName));
   volumeMaterialSlavr.setScattering(scattering);
   volumeMaterialSlavr.setAbsorption(absorption);
   volumeMaterialSlavr.setPrimaryStep(primaryStep);
   volumeMaterialSlavr.setShadowStep(secondaryStep);
-  // volumeMaterialSlavr.material.setActive(active);
+
+  InlineMaterial volumeMaterial = volumeMaterialSlavr.material;
+  // Ref<GeometryAttributes> volAttr = volume.getAttributes();
+  // Ref<FloatGridAttribute> floatGrids = volume.gridAttributes;
+      // volAttr.getOrCreateFloatGridAttribute(field);
+
+  // Xfo voxelXfo();
+  // voxelXfo.sc = Vec3(floatGrids.voxelSize());
+  // Xfo cullXfo(voxelXfo.inverse() * boxCull.toMat44());
+  // Vec3 minBBox = cullXfo.transformVector(Vec3(-1.0, -1.0, -1.0));
+  // Vec3 maxBBox = cullXfo.transformVector(Vec3(1.0, 1.0, 1.0));
 
   StaticInlineTransform xform = this.rootTransform.getChild(uidName);
-  if(xform == null)
-  {
+  if (xform == null) {
+
+    // Ref<FloatGrid> grid_ref = floatGrids.getGrid();
+    // GeometryAttributes attributes = volume.getAttributes();
+    // Vec3Attribute positions = attributes.getOrCreateAttribute('positions', Vec3Attribute);
+    // Vec3Attribute normals = attributes.getOrCreateAttribute('normals', Vec3Attribute);
+    // ScalarAttribute samples = attributes.getOrCreateAttribute('samples', ScalarAttribute);
+    // generatePointsAndValuesFromVolume(grid_ref, false/*sampleGradient*/, volume, positions, normals, samples);
+
+
     // report("drawVolumeVDB: "+"creating new volume instance from dfgHelper");
     xform = StaticInlineTransform(uidName);
     this.rootTransform.addChild(xform);
-    InlineMaterial volumeMaterial = volumeMaterialSlavr.material;
-    instance = SimpleInlineInstance(uidName, xform, volumeShape, volumeMaterial);
+    instance =
+        SimpleInlineInstance(uidName, xform, volumeShape, volumeMaterial);
     Ref<InlineInstance> instance_ref = instance;
     sViewport.addGeometryInstance(instance_ref);
+
     volumeMaterial.setUniform('u_screenWidth', 12.5f);
     volumeMaterial.setUniform('u_vertexMult', 3.0f);
     volumeMaterial.setUniform('u_levelSet', Integer(false));
     volumeMaterial.setUniform('u_mapMinMax', 0);
+
+    // volumeMaterial.setUniform(
+    //     InlineUniform('u_voxelScaler', voxelXfo.toMat44()));
+    // volumeMaterial.setUniform(InlineUniform('u_maxSample', maxCutoff));
+    // volumeMaterial.setUniform(InlineUniform('u_minSample', minCutoff));
+    // volumeMaterial.setUniform(
+    //     InlineUniform('u_sampleGradient', Integer(false)));
+    // volumeMaterial.setUniform(InlineUniform('u_cull', Integer(cull)));
+    // volumeMaterial.setUniform(InlineUniform('u_minBBox', minBBox));
+    // volumeMaterial.setUniform(InlineUniform('u_maxBBox', maxBBox));
   }
 
-  if(xform)
-  {
+  if (xform) {
     // report("drawVolumeVDB: "+"modifying transforms instance from dfgHelper");
     xform.setLocalCount(transforms.size());
-    for(Size i=0;i<transforms.size();i++)
+    for (Size i = 0; i < transforms.size(); i++)
       xform.setLocalXfo(i, transforms[i]);
+
+    volumeMaterial.setUniform('u_screenWidth', 12.5f);
+    volumeMaterial.setUniform('u_vertexMult', 3.0f);
+    volumeMaterial.setUniform('u_levelSet', Integer(false));
+    volumeMaterial.setUniform('u_mapMinMax', 0);
+
+    // volumeMaterial.setUniform(
+    //     InlineUniform('u_voxelScaler', voxelXfo.toMat44()));
+    // volumeMaterial.setUniform(InlineUniform('u_maxSample', maxCutoff));
+    // volumeMaterial.setUniform(InlineUniform('u_minSample', minCutoff));
+    // volumeMaterial.setUniform(
+    //     InlineUniform('u_sampleGradient', Integer(false)));
+    // volumeMaterial.setUniform(InlineUniform('u_cull', Integer(cull)));
+    // volumeMaterial.setUniform(InlineUniform('u_minBBox', minBBox));
+    // volumeMaterial.setUniform(InlineUniform('u_maxBBox', maxBBox));
   }
 
   // report("drawVolumeVDB end: "+uidName);
@@ -98,12 +141,25 @@ function DrawingHandle.drawVolumeVDB!(io SlavrViewport sViewport, String name, C
 /// \dfgPresetDefault absorption {"r": 0.7, "g": 0.7, "b": 0.7, "a": 1.0}
 /// \dfgPresetDefault primaryStep 1.0
 /// \dfgPresetDefault secondaryStep 3.0
-function DrawingHandle.drawVolumeVDB!(io SlavrViewport sViewport, String name, Color scattering, Color absorption, Float32 primaryStep, Float32 secondaryStep, Xfo transform, VDBVolumes volume, Boolean active, Boolean doubleSided, out Vec3 dummyResult, out InlineInstance instance)
-{
+function DrawingHandle.drawVolumeVDB !(io SlavrViewport sViewport,
+                                       String name,
+                                       Color scattering,
+                                       Color absorption,
+                                       Float32 primaryStep,
+                                       Float32 secondaryStep,
+                                       Xfo transform,
+                                       Boolean active,
+                                       String field,
+                                       Scalar minCutoff,
+                                       Scalar maxCutoff,
+                                       Boolean cull,
+                                       Xfo boxCull,
+                                       in VDBVolumes volume,
+                                       out Vec3 dummyResult,
+                                       out InlineInstance instance) {
   Xfo transforms[];
   transforms.push(transform);
-  this.drawVolumeVDB(sViewport, name, scattering, absorption, primaryStep, secondaryStep, transforms, volume, active, doubleSided, dummyResult, instance);
+  this.drawVolumeVDB(sViewport, name, scattering, absorption, primaryStep,
+                     secondaryStep, transforms, active, field, minCutoff,
+                     maxCutoff, cull, boxCull, volume, dummyResult, instance);
 }
-
-
-
