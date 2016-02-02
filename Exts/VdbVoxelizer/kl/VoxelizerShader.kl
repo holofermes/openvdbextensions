@@ -43,11 +43,13 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
       uniform float u_minSample;
       uniform float u_maxSample;
       uniform int u_sampleGradient;
+      uniform int u_showSamples;
       uniform int u_cull;
       uniform vec3 u_minBBox;
       uniform vec3 u_maxBBox;
 
       out float v_ratio;
+      out float v_samples;
       out vec3 v_normal;
       out vec3 v_lightDir;
       out vec4 v_lightColor;
@@ -59,7 +61,8 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
       } input1[];
 
       void main(){
-        if(!( input1[0].sample < u_maxSample && input1[0].sample > u_minSample ))return;
+        float v_sample = input1[0].sample;
+        if(!( v_sample < u_maxSample && v_sample > u_minSample ))return;
 
         if(u_cull == 1){
           if (!( gl_in[0].gl_Position.x >= u_minBBox.x && gl_in[0].gl_Position.x <= u_maxBBox.x &&
@@ -75,7 +78,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -89,7 +95,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -103,7 +112,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -117,7 +129,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -134,7 +149,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -148,7 +166,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -162,7 +183,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -176,7 +200,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -193,7 +220,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -207,7 +237,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -221,7 +254,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -235,7 +271,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -252,7 +291,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -266,7 +308,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -280,7 +325,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -294,7 +342,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -311,7 +362,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -325,7 +379,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -339,7 +396,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -353,7 +413,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -370,7 +433,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -384,7 +450,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -398,7 +467,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -412,7 +484,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
         v_eyeVec = -v_positionInv.xyz;
         v_lightDir = (u_viewMatrix * vec4(u_light0Position, 1.0)).xyz - v_positionInv.xyz;
         v_lightColor = u_light0Color;
-        if(u_sampleGradient == 1){
+        if(u_showSamples == 1){
+          v_samples = v_sample;
+        }
+        else if(u_sampleGradient == 1){
           v_normal = input1[0].normal;
         }
         else{
@@ -430,8 +505,10 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
       // uniform vec4 u_tipColor;
       
       in float v_ratio;
+      in float v_samples;
       in vec3 v_normal;
 
+      uniform int u_showSamples;
       uniform vec4 u_ambientColor;
       uniform vec4 u_diffuseColor;
       uniform vec4 u_specularColor;
@@ -446,27 +523,29 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
       void main(){
 
         vec4 final_color = u_ambientColor;
-        // v_vertexColor
+        if(u_showSamples == 0){
+          vec3 N;
+          // N = normalize(v_normal);
+          N = normalize(cross(v_normal, cross(v_normal, v_eyeVec)));
 
-        vec3 N;
-        // N = normalize(v_normal);
-        N = normalize(cross(v_normal, cross(v_normal, v_eyeVec)));
-
-        if(dot(N, v_eyeVec) < 0.0)
-          N = -N;
-        vec3 L = normalize(v_lightDir);
-        
-        float lambertTerm = dot(N,L);
-        
-        if(lambertTerm > 0.0)
-        {
-          final_color += v_lightColor * u_diffuseColor * lambertTerm; 
-          vec3 E = normalize(v_eyeVec);
-          vec3 R = reflect(-L, N);
-          float specular = pow( max(dot(R, E), 0.0), u_specularFactor );
-          final_color += u_specularColor * specular;  
+          if(dot(N, v_eyeVec) < 0.0)
+            N = -N;
+          vec3 L = normalize(v_lightDir);
+          
+          float lambertTerm = dot(N,L);
+          
+          if(lambertTerm > 0.0)
+          {
+            final_color += v_lightColor * u_diffuseColor * lambertTerm; 
+            vec3 E = normalize(v_eyeVec);
+            vec3 R = reflect(-L, N);
+            float specular = pow( max(dot(R, E), 0.0), u_specularFactor );
+            final_color += u_specularColor * specular;  
+          }
         }
-
+        else{
+          final_color += u_diffuseColor * v_samples;
+        }
         out_fragColor = final_color;
         // out_fragColor = v_normal;
         // out_fragColor = mix(u_rootColor, u_tipColor, v_ratio);
@@ -491,6 +570,7 @@ function OGLInlineShader createVoxelizerShader(String name, io InlineDrawing dra
   vShader.defineUniform(InlineUniform("u_minSample", -1.0));
   vShader.defineUniform(InlineUniform("u_maxSample", 1.0));
   vShader.defineUniform(InlineUniform("u_sampleGradient", Integer(1)));
+  vShader.defineUniform(InlineUniform("u_showSamples", Integer(0)));
   vShader.defineUniform(InlineUniform("u_cull", Integer(0)));
   vShader.defineUniform(InlineUniform("u_minBBox", Vec3(-1, -1, -1)));
   vShader.defineUniform(InlineUniform("u_maxBBox", Vec3(1, 1, 1)));

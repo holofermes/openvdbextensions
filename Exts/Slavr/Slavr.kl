@@ -147,7 +147,6 @@ function ParamDict Slavr.getParams!() {
 
 
 function Boolean Slavr.updateScene !() {
-  // report(statistics(this));
   ParamDict params = this.getParams();
   if(!params.has('bgColor'))
   {
@@ -233,10 +232,10 @@ function Slavr.setViewport !(Ref<InlineViewport> viewport, PixelRegion region) {
 }
 
 inline Boolean transformByXfo(io Transform tx, Xfo xfo) {
-  tx.postTranslate(Vec3_d(xfo.tr.x, xfo.tr.y, xfo.tr.z));
   Float64 avg((xfo.sc.x + xfo.sc.y + xfo.sc.z) * (1.0f / 3.0f));
   if (avg != 0.0f)
     tx.preScale(avg);
+  tx.postTranslate(Vec3_d(xfo.tr.x, xfo.tr.y, xfo.tr.z));
   return true;
 }
 
@@ -354,12 +353,11 @@ inline RangeSize Slavr.getRangeFromChunk(Size chunk) {
   Size end = start + this.mViewport.offset;
   return RangeSize(start, end);
 }
+
 inline Float32 over(Float32 a, Float32 b, Float32 alpha){
   return a + b * (1 - alpha);
-
-  // if(a < 0.5)return 2 * a * b;
-  // return 1 -(2*(1-a) * (1 - b));
 }
+
 inline Slavr.renderTileFromChunk ? (Size chunk) {
   RangeSize range = this.getRangeFromChunk(chunk);
 
