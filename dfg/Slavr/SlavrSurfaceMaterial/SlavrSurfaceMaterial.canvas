@@ -2,28 +2,28 @@
 {
   "objectType" : "Func",
   "metadata" : {
-    "uiTooltip" : "\n\n Supported by SlavrInstance,SlavrVolumeInstance"
+    "uiTooltip" : "\n\n Supported by SlavrSurfaceMaterial"
     },
-  "title" : "ItemCount",
+  "title" : "SlavrSurfaceMaterial",
   "ports" : [
     {
       "objectType" : "Port",
       "nodePortType" : "Out",
-      "name" : "this",
+      "name" : "name",
       "execPortType" : "In",
-      "typeSpec" : "$TYPE$"
+      "typeSpec" : "String"
       },
     {
       "objectType" : "Port",
       "nodePortType" : "In",
       "name" : "result",
       "execPortType" : "Out",
-      "typeSpec" : "Size"
+      "typeSpec" : "SlavrSurfaceMaterial"
       }
     ],
   "extDeps" : {
     "Slavr" : "*"
     },
-  "presetGUID" : "DC7959824CA22BD30386DB25652C0546",
-  "code" : "require Slavr;\n\ndfgEntry {\n  result = this.itemCount();\n}\n"
+  "presetGUID" : "332471599A855BB80C36406C1BE67CFA",
+  "code" : "require Slavr;\n\ndfgEntry {\n  result = SlavrSurfaceMaterial(name);\n}\n"
   }

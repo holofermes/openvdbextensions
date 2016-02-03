@@ -9,6 +9,7 @@
     "Material/SlavrMaterial.kl",
     "Material/SlavrMediumShader.kl",
     "Material/SlavrVolumeMaterial.kl",
+    "Material/SlavrSurfaceMaterial.kl",
     "InlineViewportSlavr.kl",
     "Scene.kl",
     "Slavr.kl",

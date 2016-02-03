@@ -2,7 +2,7 @@
 {
   "objectType" : "Func",
   "metadata" : {
-    "uiTooltip" : "\n\n Supported by EmbreeInstanceBase,SlavrInstance,SlavrVolumeInstance"
+    "uiTooltip" : "\n\n Supported by SlavrInstance,SlavrVolumeInstance"
     },
   "title" : "OccludedFunc",
   "ports" : [
@@ -31,6 +31,6 @@
   "extDeps" : {
     "Slavr" : "*"
     },
-  "presetGUID" : "596F62E8222D9B21C4EA8DCB9022FC41",
+  "presetGUID" : "3D39A536CB6CA3032704C2C1E9853A74",
   "code" : "require Slavr;\n\ndfgEntry {\n  this.occludedFunc(item, rayO);\n}\n"
   }

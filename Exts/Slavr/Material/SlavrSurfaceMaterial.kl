@@ -1,0 +1,53 @@
+object SlavrSurfaceMaterial : SlavrMaterial{
+  String name;
+  Vec2 gridWidths;
+  Xfo currentXfo;
+
+};
+
+function SlavrSurfaceMaterial(String name){
+  this.name = name;
+  this.parent.init(name);
+  this.gridWidths = Vec2(5.0, 5.0);
+
+}
+
+function Boolean SlavrSurfaceMaterial.createData!(Ref<InlineInstance> instance){
+  return this.parent.createData(instance);
+}
+// internal
+function Boolean SlavrSurfaceMaterial.createData!(Xfo xfo){
+  // Ref<PolygonMesh> mesh = this.parent.geo;
+  this.currentXfo = xfo;
+  return true;
+}
+
+function Boolean SlavrSurfaceMaterial.updateData!(Xfo xfo){
+  // Ref<PolygonMesh> mesh = this.parent.geo;
+  this.currentXfo = xfo;
+  return true;
+}
+
+
+
+inline Vec3_d SlavrSurfaceMaterial.accumulateTransmittance?(Size tid, Vec3 wsP, Vec3 wi)
+{
+  Vec3_d sTrans(1.0);
+
+  return sTrans;
+}
+
+function Boolean SlavrSurfaceMaterial.evaluate?(Size tid,
+                                               ShadingGlobals sg,
+                                               Vec3 wsP,
+                                               Vec3 wo,
+                                               io Vec3_d luminance,
+                                               io Vec3_d transmittance) 
+{
+  // Vec3_d sTrans(1.0);
+  luminance = Vec3_d(wsP.x, wsP.y, wsP.z);
+
+
+  return true;
+}
+

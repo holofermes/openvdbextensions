@@ -159,7 +159,7 @@ function Boolean Scene.updateScene !() {
       this.versions[geomID] = vltx.version;
       Ref<SlavrMaterial> material = this.materialsRef[geomID];
       if (material.updateData(vltx.getGlobalXfo(0))) {
-        this.materials[geomID] = material.dupe();
+        this.materials[geomID] = material;
         dirty = true;
       }
     }

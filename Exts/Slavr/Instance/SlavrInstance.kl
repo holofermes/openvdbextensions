@@ -1,34 +1,27 @@
 require OpenVDB;
 require embree;
 
-interface EmbreeInstanceBase{
-  boundsFunc?(Size item, io RTCBounds bounds_o);
-  intersectFunc?(Size item, io RTCRay ray_o);
-  occludedFunc?(Size item, io RTCRay ray_o);
-  Size itemCount?();
-
-};
-
-object SlavrInstance: RTCBoundsFunc, EmbreeInstanceBase{
+object SlavrInstance: RTCBoundsFunc{
   RTCBounds bbox;
 };
 
 function SlavrInstance.boundsFunc?(Size item, io RTCBounds bounds_o){
-  Ref<EmbreeInstanceBase> bounds = this;
+  report("SlavrInstance.boundsFunc");
+  Ref<RTCBoundsFunc> bounds = this;
   bounds.boundsFunc(item, bounds_o);
 }
 
 function SlavrInstance.intersectFunc?(Size item, io RTCRay ray_o){
-  Ref<EmbreeInstanceBase> bounds = this;
+  Ref<RTCBoundsFunc> bounds = this;
   bounds.intersectFunc(item, ray_o);
 }
 
 function SlavrInstance.occludedFunc?(Size item, io RTCRay ray_o){
-  Ref<EmbreeInstanceBase> bounds = this;
+  Ref<RTCBoundsFunc> bounds = this;
   bounds.occludedFunc(item, ray_o);
 }
 
 function Size SlavrInstance.itemCount?(){
-  Ref<EmbreeInstanceBase> bounds = this;
+  Ref<RTCBoundsFunc> bounds = this;
   return bounds.itemCount();
 }

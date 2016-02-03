@@ -76,8 +76,11 @@ function Vec3_d SlavrMaterial.accumulateTransmittance?(Size tid,
 
 
 function Boolean SlavrMaterial.createData!(Ref<InlineInstance> instance){
-  Ref<InlineVDBVolumesShape> vs = instance.shape;
-  this.geo = vs.volumes;
+  Ref<InlineVDBVolumesShape> shape = instance.shape;
+  if(shape){
+    this.geo = shape.volumes;
+  }
+
   Ref<InlineTransform> vltx = instance.transform;
   Ref<SlavrMaterialBase> material = this;
   return material.createData(vltx.getGlobalXfo(0));
@@ -87,7 +90,6 @@ function Boolean SlavrMaterial.createData!(Xfo xfo){
   setError("SlavrMaterial.createData!(Xfo xfo): use base class!");
   return false;
 }
-
 
 function Boolean SlavrMaterial.updateData!(Xfo xfo){
   Ref<SlavrMaterialBase> material = this;

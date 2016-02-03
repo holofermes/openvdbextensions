@@ -97,6 +97,9 @@
     {
       "objectType" : "Port",
       "nodePortType" : "Out",
+      "defaultValues" : {
+        "Boolean" : true
+        },
       "name" : "active",
       "execPortType" : "In",
       "typeSpec" : "Boolean"
@@ -111,6 +114,9 @@
     {
       "objectType" : "Port",
       "nodePortType" : "Out",
+      "defaultValues" : {
+        "Scalar" : 0
+        },
       "name" : "minCutoff",
       "execPortType" : "In",
       "typeSpec" : "Scalar"
@@ -118,6 +124,9 @@
     {
       "objectType" : "Port",
       "nodePortType" : "Out",
+      "defaultValues" : {
+        "Scalar" : 10
+        },
       "name" : "maxCutoff",
       "execPortType" : "In",
       "typeSpec" : "Scalar"
@@ -125,6 +134,9 @@
     {
       "objectType" : "Port",
       "nodePortType" : "Out",
+      "defaultValues" : {
+        "Boolean" : false
+        },
       "name" : "cull",
       "execPortType" : "In",
       "typeSpec" : "Boolean"
