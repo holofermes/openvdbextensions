@@ -35,7 +35,7 @@ function SlavrViewportManipulator.init!(io DrawingHandle handle) {
 
   this.viewportMaterial = viewportShader.getOrCreateMaterial("VolumeRender_Viewport");
   PolygonMesh plane();
-  plane.addPlane(Xfo(Quat(Vec3(1,0,0), HALF_PI)), 1, 1, 1, 1, true, true);
+  plane.addPlane(Xfo(Quat(Vec3(1,0,0), HALF_PI)), 0.5, 0.5, 1, 1, true, true);
   InlineShape shape = InlineMeshShape('VolumeRender_Viewport', plane);
   drawing.registerShape(shape);
 
